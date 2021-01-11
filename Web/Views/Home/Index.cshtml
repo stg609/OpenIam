@@ -1,0 +1,121 @@
+﻿@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"]</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link href="~/lib/font-awesome-4.7.0/css/font-awesome.min.css" rel="stylesheet" />
+    <link href="~/lib/layui-v2.5.7/css/layui.css" rel="stylesheet" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link href="~/css/home.css" rel="stylesheet" asp-append-version="true" />
+</head>
+<body class="layui-layout-body">
+    <div class="layui-layout layui-layout-admin">
+        <nav class="navbar navbar-expand-lg fixed-top navbar-dark bg-dark">
+            <a class="navbar-brand" href="#">OpenIam</a>
+
+            <!-- Sidebar Toggle Button-->
+            <button class="btn btn-outline-info" id="menu-toggle"><i class="fa fa-bars" aria-hidden="true"></i> </button>
+
+            <!-- Navbar Right icon -->
+            <div class="pmd-navbar-right-icon ml-auto">
+                <partial name="_LoginPartial" />
+            </div>
+        </nav>
+        <nav>
+            <div class="layui-side layui-bg-black sidebar">
+                <div class="layui-side-scroll">
+                    <ul class="layui-nav layui-nav-tree" lay-filter="test">
+                        <li class="layui-nav-item layui-nav-itemed">
+                            <a class="" href="javascript:;">后台管理</a>
+                            <dl class="layui-nav-child">
+                                <dd>
+                                    <a href='javascript:;' lay-href="/Client/Index" lay-id="client">客户端管理</a>
+                                </dd>
+                                <dd>
+                                    <a href='javascript:;' lay-href="/Permission/Index" lay-id="permission">权限管理</a>
+                                </dd>
+                                <dd>
+                                    <a href='javascript:;' lay-href="/Role/Index" lay-id="role">角色管理</a>
+                                </dd>
+                                <dd>
+                                    <a href='javascript:;' lay-href="/Organization/Index" lay-id="org">组织机构管理</a>
+                                </dd>
+                                <dd>
+                                    <a href='javascript:;' lay-href="/User/Index" lay-id="user">用户管理</a>
+                                </dd>
+                            </dl>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+        <main role="main" class="layui-body d-flex flex-column" id="main">
+            <div class="layui-tab layui-tab-brief flex-fill d-flex flex-column" lay-allowClose="true" lay-filter="pages">
+
+                <div class="tab-toolbar pl-3"><button type="button" class="btn btn-outline-default btn-refresh-tab"><i class="fa fa-refresh" aria-hidden="true"></i></button></div>
+                <ul class="layui-tab-title pl-3">
+                </ul>
+
+                <div class="layui-tab-content flex-fill d-flex flex-column">
+                </div>
+            </div>
+        </main>
+
+        <footer class="layui-footer text-muted">
+            <div class="container text-center">
+                Copyright &copy; 2021 OpenIam
+            </div>
+        </footer>
+    </div>
+    <script src="/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/lib/layui-v2.5.7/layui.js"></script>
+    <script>
+       
+        layui.use('element', function () {
+            var element = layui.element;
+            $("[lay-href]").click(function (e) {
+                let $el = $(e.currentTarget);
+                let href = $el.attr("lay-href");
+                let val = $el.text();
+                let id = $el.attr("lay-id");
+                var existed = $("#main ul li[lay-id='" + id + "'");
+                if (existed.length) {
+                    element.tabChange('pages', id);
+                }
+                else {
+                    element.tabAdd('pages', {
+                        title: val
+                        , content: '<iframe src="' + href + '" frameborder="0" width="100%" class="flex-fill" scrolling="yes"></iframe>' //支持传入html
+                        , id: id
+                    });
+                    element.tabChange('pages', id);
+                }
+            })
+
+            var currentTabIndex;
+            element.on('tab(pages)', function (data) {
+                currentTabIndex = data.index;
+            });
+
+            $("#menu-toggle").click(function (e) {
+                e.preventDefault();
+                $(".layui-layout-admin").toggleClass("toggled");
+            });
+
+            $(".tab-toolbar .btn-refresh-tab").click(function () {
+                $($(".layui-tab-content").children()[currentTabIndex]).children("iframe")[0].contentDocument.location.reload(true);
+            });
+
+        });
+    </script>
+    <script src="./js/site.js" asp-append-version="true"></script>
+</body>
+</html>
+

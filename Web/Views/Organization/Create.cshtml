@@ -1,0 +1,121 @@
+﻿@{
+    Layout = "_AdminLayout";
+}
+
+<div style="padding-top: 20px; margin-right: 20px;">
+    <div class="layui-form" lay-filter="Details" id="Details" style="padding: 20px 0 0 0;">
+        <div class="layui-form-item">
+            <label class="layui-form-label">组织名称：</label>
+            <div class="layui-input-inline">
+                <input type="text" name="name" lay-verify="required" placeholder="请输入组织名称" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item" id="selectParent">
+            <label class="layui-form-label">上级组织</label>
+            <div id ="parentId" class="layui-input-inline">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">描述：</label>
+            <div class="layui-input-inline">
+                <textarea type="text" name="desc" placeholder="请输入描述" autocomplete="off" class="layui-textarea"></textarea>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">联系电话：</label>
+            <div class="layui-input-inline">
+                <input type="text" name="mobile" placeholder="请输入联系电话" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">联系地址：</label>
+            <div class="layui-input-inline">
+                <input type="text" name="address" placeholder="请输入联系地址" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">是否激活</label>
+            <div class="layui-input-inline">
+                <input name="isActive" lay-skin="switch" lay-text="是|否" type="checkbox" value="true">
+            </div>
+        </div>
+        <div class="layui-form-item layui-hide">
+            <input type="button" lay-submit lay-filter="btn_submit" id="btn_submit" value="确认">
+        </div>
+    </div>
+</div>
+
+@section Scripts{
+    <script>
+        layui.config({
+            base: '/lib/layui-v2.5.7/extends/'
+        }).extend({
+            xmSelect: 'xm-select'
+        }).use(['form', 'xmSelect'], function () {
+            var form = layui.form, xmSelect = layui.xmSelect;
+
+            $.ajax({
+                url: "../admin/api/organizations?treeview=true",
+                type: "GET",
+                contentType: "application/json"
+            }).done(function (data) {
+                var arr = renderTreeToSelect(data);
+
+                xmSelect.render({
+                    el: "#parentId",
+                    radio: true,
+                    filterable: true,
+                    name: 'parentId',
+                    toolbar: { show: true },
+                    data: arr
+                });
+            }).fail(function (jqXHR, error) {
+                if (jqXHR.responseJSON) {
+                    layer.msg('读取权限数据失败！ ' + jqXHR.responseJSON.detail);
+                }
+                else {
+                    layer.msg('读取权限数据失败！ ' + jqXHR.responseText);
+                }
+            });
+
+            function renderTreeToSelect(data) {
+                var arr = data.map(function (itm) {
+                    var children;
+                    if (itm.children) {
+                        children = renderTreeToSelect(itm.children);
+                    }
+                    return { "name": itm.name, "value": itm.id, "selected": "", "disabled": "", children: children };
+                });
+
+                return arr;
+            }
+
+            form.render();
+            form.on('submit(btn_submit)', function (data) {
+                var field = data.field;
+                field.isEnabled = field.isEnabled == "true";
+
+                $.ajax({
+                    url: "../admin/api/organizations/",
+                    type: 'POST',
+                    contentType: "application/json",
+                    data: JSON.stringify(field)
+                }).done(function () {
+                    $.modalClose();
+                    window.parent.$.reload('LAY-org-manage');//表格刷新
+                }).fail(function (jqXHR, error) {
+                    if (jqXHR.responseJSON) {
+                        layer.msg('添加失败！ ' + jqXHR.responseJSON.detail);
+                    }
+                    else {
+                        layer.msg('添加失败！ ' + jqXHR.responseText);
+                    }
+                });
+            })
+        })
+
+        function submitForm() {
+            $("#btn_submit").trigger('click');//模擬表單提交
+        }
+    </script>
+}

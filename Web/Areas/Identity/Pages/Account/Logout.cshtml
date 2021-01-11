@@ -1,0 +1,29 @@
+﻿@page
+@model LogoutModel
+@{
+    ViewData["Title"] = "Log out";
+}
+
+@section Styles
+{
+    <style>
+        .logoutBox {
+            width: 450px;
+        }
+    </style>
+}
+<div class="layui-card layui-container logoutBox">
+    <div class="layui-card-header"><b>确定要登出吗？</b></div>
+    <div class="layui-card-body">
+        <form class="layui-form layui-form-pane" method="post">
+            <div class="layui-form-item">
+                注，登出操作将登出所有已经登陆的客户端.
+            </div>
+            <input type="hidden" asp-for="@Model.LogoutId" value="@Model.LogoutId" />
+            <div class="layui-form-item">
+                <input type="button" lay-submit lay-filter="btn_cancel" id="btn_cancel" value="取 消" class="layui-btn layui-btn-primary" onclick="window.history.go(-1); return false;">
+                <input type="submit" lay-submit lay-filter="btn_submit" id="btn_submit" value="确认登出" class="layui-btn layui-btn-normal">
+            </div>
+        </form>
+    </div>
+</div>

@@ -1,0 +1,91 @@
+﻿
+
+.login-container {
+    background-color: #f0f2f5;
+    background-image: url(https://gw.alipayobjects.com/zos/rmsportal/TVYTbAXWheQpRcWDaDMu.svg);
+    background-repeat: no-repeat;
+    background-position: center 110px;
+    background-size: 100%;
+    height: 100vh;
+    overflow: auto;
+}
+    .login-container .main-background {
+        position: absolute;
+        display: block;
+        top: 0;
+        left: 0;
+        z-index: 0;
+        width: 100%
+    }
+
+    .login-container main {
+        position: relative;
+    }
+
+    .login-container .login-panel section {
+        background: white;
+    }
+
+    .login-container .text-danger-container {
+        min-height: 20px;
+    }
+
+    .login-container .summary-danger-container li {
+       padding-bottom:10px;
+    }
+
+    .card-body,.card-group .card{
+        padding-bottom:0;
+        margin-bottom:0;
+    }
+.login-panel{
+    z-index:1;
+    min-height:390px;
+}
+.login-panel .pwdform, .login-panel .qrform {
+    width: 328px;
+}
+
+.login-from-iframe {
+    border: none;
+    width: 100%;
+    height: 280px;
+}
+
+@media (min-width:768px) {
+    .toggleLogin {
+        display: none;
+    }
+
+    .login-panel-container {
+        background-image: url(../imgs/cyber-security.webp);
+        background-position: center;
+        background-repeat: no-repeat;
+        background-size: cover;
+    }
+
+    .login-container .login-panel section {
+        max-width:680px;
+    }
+
+}
+
+@media(max-width:767px) {
+    .qrcard {
+        z-index: 9999;
+    }
+
+    .login-panel .card-group {
+        position: relative;
+    }
+
+    .pwdcard {
+        position: absolute;
+        left: 0;
+        top: 0;
+    }
+
+    .login-container .login-panel section {
+        max-width: 330px;
+    }
+}

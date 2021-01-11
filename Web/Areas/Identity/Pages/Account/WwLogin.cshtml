@@ -1,0 +1,44 @@
+﻿@page
+@model WwLoginModel
+
+@{
+    ViewData["Title"] = "Log in";
+    Layout = null;
+}
+
+<html>
+<body>
+    <div id="ww-qr"></div>
+    <script src="~/js/wwLoginWithoutLocationChange-1.0.0.js"></script>
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script>
+        window.onload = function () {
+           window.WwLogin({
+                id: "ww-qr",
+                appid: "@Model.AppId",
+                agentid: "@Model.AgentId",
+                state: "@Model.State",
+                redirect_uri: encodeURIComponent("@Model.RedirectUri"),
+                href:"https://localhost:5001/css/wwLogin.css"
+           });
+
+            var $frm = $("#ww-qr iframe");
+            $frm.width("250px");
+        };
+
+        var handleMessage = function (event) {
+            if (event.origin == "https://open.work.weixin.qq.com") {
+                window.top.location.href = event.data;
+            }
+
+            console.log("---"+event.origin);
+        };
+        if (typeof window.addEventListener != 'undefined') {
+            window.addEventListener('message', handleMessage, false);
+        } else if (typeof window.attachEvent != 'undefined') {
+            window.attachEvent('onmessage', handleMessage);
+        }
+    </script>
+</body>
+</html>
+

@@ -1,0 +1,294 @@
+﻿@{
+    Layout = "_AdminLayout";
+}
+
+<div class="layui-card-body">
+    <div class="layui-form page-bar">
+        <div class="layui-inline">
+            <div class="layui-input-inline" style="width: 120px;">
+                <input type="text" name="lastName" placeholder="姓氏" autocomplete="off" class="layui-input search-input">
+            </div>
+            <div class="layui-input-inline" style="width: 120px;">
+                <input type="text" name="firstName" placeholder="名称" autocomplete="off" class="layui-input search-input">
+            </div>
+            <div class="layui-input-inline">
+                <input type="text" name="jobNo" id="saler" placeholder="请输入 工号" autocomplete="off" class="layui-input search-input">
+            </div>
+            <div class="layui-input-inline">
+                <input type="text" name="phone" id="phone" placeholder="请输入 手机号" autocomplete="off" class="layui-input search-input">
+            </div>
+            <div class="layui-input-inline">
+                <input type="text" name="idCard" id="idCard" placeholder="请输入 身份证号" autocomplete="off" class="layui-input search-input">
+            </div>
+            <div class="layui-input-inline">
+                <select name="isActive">
+                    <option value="">是否激活</option>
+                    <option value=true>激活</option>
+                    <option value=false>未激活</option>
+                </select>
+            </div>
+            <button class="layui-btn layui-btn-normal" lay-submit lay-filter="btn_Search" id="btn_Search">
+                <i class="layui-icon layui-icon-search layuiadmin-button-btn" title="点击查询"></i>
+            </button>
+        </div>
+    </div>
+    <table id="LAY-user-manage" lay-filter="LAY-user-manage"></table>
+</div>
+
+@section Scripts{
+    <!-- 表格操作列 -->
+    <script type="text/html" id="toolbar-div">
+        <div class="layui-btn-container">
+            <button class="layui-btn layui-btn-sm" lay-event="batchdel">删除</button>
+            <button class="layui-btn layui-btn-sm" lay-event="add">添加</button>
+        </div>
+    </script>
+    <script type="text/html" id="tbBar">
+        <a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="active" onclick="active('{{d.id}}', {{!d.isActive}})">
+            {{# if(d.isActive){}}
+            冻结
+            {{# }else{}}
+            激活
+            {{# } }}
+        </a>
+        <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="resetPwd" onclick="resetPwd('{{d.id}}', '{{d.name}}')">重置密码</a>
+    </script>
+
+    <script>
+        var table;
+        layui.use(['form', 'element', 'table'], function () {
+            var form = layui.form;
+            table = layui.table;
+
+            form.render();
+
+            table.render({
+                elem: '#LAY-user-manage'
+                , url: "../admin/api/users"
+                , toolbar: '#toolbar-div'
+                , defaultToolbar: ['filter']
+                , cols: [[
+                    { type: 'checkbox', fixed: 'left' }
+                    , { field: 'id', title: 'Id', width: 100, sort: true, hide: true }
+                    , { field: 'jobNo', title: '工号', width: 80, sort: true }
+                    , { field: 'lastName', title: '姓氏', width: 80, sort: true }
+                    , { field: 'firstName', title: '名称', width: 80, sort: true }
+                    , { field: 'idCard', title: '身份证', width: 180, sort: false }
+                    , { field: 'phone', title: '手机号', width: 140, sort: false }
+                    , {
+                        field: 'organizations', title: '所属组织', width: 160, sort: false, templet: function (item) {
+                            if (item.organizations) {
+                                var orgs = item.organizations.map(function (idx, item) {
+                                    return idx;
+                                }).join(",");
+                                return orgs;
+                            }
+                            else {
+                                return "-";
+                            }
+                        }
+                    }
+                    , {
+                        title: '角色', width: 88, align: 'center', templet: function (item) {
+                            return "<a class='layui-btn layui-btn-xs' title='用户角色' lay-event='assignRole' onclick='assignRoles(\"" + item.id + "\")'><i class='layui-icon layui-icon-auz'></i></a>"
+                        }
+                    }
+                    , {
+                        title: '权限', width: 88, align: 'center', templet: function (item) {
+                            return "<a class='layui-btn layui-btn-xs' title='用户权限' lay-event='assignPermissions' onclick='assignPermissions(\"" + item.id + "\")'><i class='layui-icon layui-icon-component'></i></a>"
+                        }
+                    }
+                    , { field: 'lastIp', title: '最后登陆IP', width: 140 }
+                    , { field: 'lastLoginAt', title: '最后登陆时间', width: 180, sort: true }
+                    , { field: 'createdAt', title: '创建时间', width: 180, sort: true }
+                    , { field: 'isActive', title: '是否激活', width: 100, align: 'center', templet: function (item) { return $.renderEnabled(item.isActive) } }
+                    , {
+                        title: '操作', fixed: 'right', width: 160, templet: '#tbBar'
+                    }
+
+                ]]
+                , page: true
+                , loading: true
+                , height: 'full-78'
+                , text: {
+                    none: ' 暂无相关数据!'
+                }
+                , request: {
+                    pageName: 'pageindex' //页码的参数名称，默认：page
+                    , limitName: 'pagesize' //每页数据量的参数名，默认：limit
+                }
+                , parseData: function (res) {
+                    return {
+                        "code": 0,
+                        "message": "",
+                        "data": res.data,
+                        "count": res.total
+                    };
+                }
+                , done: function (res, curr, count) { // 隐藏列
+                }
+            });
+
+            //监听搜索
+            form.on('submit(btn_Search)', function (data) {
+                var field = data.field;
+                //去除前后的空格
+                $.each(field, function (i) {
+                    field[i] = $.trim(field[i]);
+                    if (field[i] === "") {
+                        field[i] = null;
+                    }
+                });
+                //执行重载
+                table.reload('LAY-user-manage', {
+                    where: field
+                    , page: {
+                        curr: 1 //重新从第 1 页开始
+                    }
+                    , url: "../admin/api/users"
+                });
+                return false;
+            });
+
+            //监听行单击事件（单击事件为：rowDouble,单击row）
+            table.on('rowDouble(LAY-user-manage)', function (obj) {
+                var data = obj.data;
+                //标注选中样式
+                $.modalOpen({
+                    id: "Details",
+                    type: 2,
+                    title: "编辑用户",
+                    url: "../user/details?id=" + data.id,
+                    width: "560px",
+                    height: "480px",
+                    btn: ['确定', '取消'],
+                    callBack: function (index, layero, iframeId) {
+                        window['layui-layer-iframe' + index].submitForm();
+                    }
+                });
+            });
+
+            //头工具栏事件
+            table.on('toolbar(LAY-user-manage)', function (obj) {
+                var checkStatus = table.checkStatus(obj.config.id);
+                switch (obj.event) {
+                    case 'batchdel':
+                        var checkStatus = table.checkStatus('LAY-user-manage')
+                            , checkData = checkStatus.data; //得到选中的数据
+
+                        if (checkData.length === 0) {
+                            return layer.msg('请选择数据');
+                        }
+
+                        layer.confirm('确定删除吗？', function (index) {
+                            var ids = checkData.map(function (idx, item) {
+                                return idx.id
+                            }).join(",");
+
+                            $.ajax({
+                                url: "/admin/api/users/" + ids,
+                                type: "DELETE"
+                            }).done(function () {
+                                table.reload('LAY-user-manage');
+                                layer.msg('删除成功！');
+                            }).fail(function () {
+                                layer.msg('删除失败！');
+                            });
+                        });
+                        break;
+                    case 'add':
+                        $.modalOpen({
+                            id: "Create",
+                            type: 2,
+                            title: "新增用户",
+                            url: "../user/create",
+                            width: "560px",
+                            height: "480px",
+                            btn: ['确定', '取消'],
+                            callBack: function (index, layero, iframeId) {
+                                window['layui-layer-iframe' + index].submitForm();
+                            }
+                        });
+                        break;
+                };
+            });
+        });
+
+
+        function assignRoles(id) {
+            $.modalOpen({
+                id: "Role",
+                type: 2,
+                title: "用户角色",
+                url: "../user/roles?userId=" + id,
+                width: "400px",
+                height: "460px",
+                btn: ['确定', '取消'],
+                callBack: function (index, layero, iframeId) {
+                    window['layui-layer-iframe' + index].submitForm();
+                }
+            });
+        }
+
+        function assignPermissions(id) {
+            $.modalOpen({
+                id: "User",
+                type: 2,
+                title: "用户的权限",
+                url: "../user/permissions?userId=" + id,
+                width: "1100px",
+                height: "650px",
+                btn: [],
+                callBack: function (index, layero, iframeId) {
+                    window['layui-layer-iframe' + index].submitForm();
+                }
+            });
+        }
+
+        function active(id, isActive) {
+            var action = (isActive ? '激活' : '冻结');
+            layer.confirm('确定要' + action + '吗？', function (index) {
+
+                $.ajax({
+                    url: "/admin/api/users/" + id + "/activity",
+                    contentType: 'application/json',
+                    data: JSON.stringify({ "isActive": isActive }),
+                    type: "PUT"
+                }).done(function () {
+                    table.reload('LAY-user-manage');
+                    layer.msg(action + '成功！');
+                }).fail(function (jqXHR, error) {
+                    if (jqXHR.responseJSON) {
+                        layer.msg(action + '失败！ ' + jqXHR.responseJSON.detail);
+                    }
+                    else {
+                        layer.msg(action + '失败！ ' + jqXHR.responseText);
+                    }
+                });
+            });
+        }
+
+        function resetPwd(id, name) {
+            layer.confirm('确定要重置用户（' + name + '）的密码吗？', function (index) {
+                $.ajax({
+                    url: "/admin/api/users/" + id + "/pwd",
+                    contentType: 'application/json',
+                    type: "POST"
+                }).done(function (data) {
+                    layer.alert('密码已经重置，新的密码为：</p><p style="text-align: center;"><b>' + data + '</b></p><p style="color:red">* 请务必确保已经妥善保存了，因为一旦关闭您将无法在系统中查到该密钥</p>', function (index) {
+                        layer.close(index);
+                        $.modalClose();
+                        window.parent.$.reload('LAY-user-manage');//表格刷新
+                    });
+                }).fail(function (jqXHR, error) {
+                    if (jqXHR.responseJSON) {
+                        layer.msg('密码重置失败！ ' + jqXHR.responseJSON.detail);
+                    }
+                    else {
+                        layer.msg('密码重置失败！ ' + jqXHR.responseText);
+                    }
+                });
+            });
+        }
+    </script>
+}

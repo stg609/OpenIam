@@ -1,0 +1,142 @@
+﻿@page
+@model LoginModel
+
+@{
+    ViewData["Title"] = "Log in";
+    Layout = "_Layout";
+}
+<div class="login-panel-container row flex-fill d-flex flex-column justify-content-center mt-5 mb-5">
+    <div class="login-panel d-flex justify-content-center justify-content-lg-end  pr-lg-5">
+        <section class="border shadow-sm mr-lg-5">
+            <div class="card-group">
+                <div class="card border-light qrcard">
+                    <div style="position: absolute; top: 0px; right: 0px; cursor: pointer;">
+                        <img class="toggleLogin" style="" src="~/imgs/pwdlogin.png">
+                    </div>
+                    <div class="card-body layui-tab layui-tab-brief qrform" lay-filter="login">
+                        <ul class="layui-tab-title">
+                            @{
+                                int index = 0;
+                                foreach (var login in Model.ExternalLogins)
+                                {
+                                    <li class="login-title" lay-id="@index">
+                                        @login.DisplayName
+                                    </li>
+                                    index++;
+                                }
+                            }
+                        </ul>
+                        <div class="layui-tab-content login-form-body">
+                            @foreach (var login in Model.ExternalLogins)
+                            {
+                                <div class="layui-tab-item pt-3">
+                                    <form asp-page="./ExternalLogin" asp-route-returnUrl="@Model.ReturnUrl" method="post" class="form-horizontal" target="ifm@(login.Name)" style="display:none">
+                                        <div>
+                                            <p>
+                                                <button type="submit" class="btn btn-primary" name="provider" value="@login.Name"></button>
+                                            </p>
+                                        </div>
+                                    </form>
+                                    <iframe name="ifm@(login.Name)" scrolling="no" class="login-from-iframe">
+                                    </iframe>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                </div>
+                <div class="card border-light pwdcard">
+                    <div class="card-body layui-tab layui-tab-brief pwdform">
+                        <div style="position: absolute; top: 0px; right: 0px; cursor: pointer;">
+                            <img class="toggleLogin" style="" src="~/imgs/qr_code.png">
+                        </div>
+                        <ul class="layui-tab-title">
+                            <li class="login-title layui-this">密码登录</li>
+                        </ul>
+                        <div class="layui-tab-content layui-show pt-4">
+                            <form id="account" method="post">
+                                <div class="form-group  mb-2">
+                                    <div class="input-group">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text"><i class="fa fa-user" aria-hidden="true"></i></span>
+                                        </div>
+                                        <input asp-for="Input.Username" class="form-control" />
+                                    </div>
+                                    <div class="text-danger-container">
+                                        <span asp-validation-for="Input.Username" class="text-danger"></span>
+                                    </div>
+                                </div>
+                                <div class="form-group  mb-2">
+                                    <div class="input-group">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text" id="basic-addon1"><i class="fa fa-lock" aria-hidden="true"></i></span>
+                                        </div>
+                                        <input asp-for="Input.Password" class="form-control" />
+                                    </div>
+                                    <div class="text-danger-container">
+                                        <span asp-validation-for="Input.Password" class="text-danger"></span>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label asp-for="Input.RememberMe">
+                                        <input asp-for="Input.RememberMe" />
+                                        @Html.DisplayNameFor(m => m.Input.RememberMe)
+                                    </label>
+                                    <a id="forgot-password" asp-page="./ForgotPassword" class="float-right">忘记密码?</a>
+                                </div>
+                                <div class="form-group mt-5">
+                                    <button type="submit" class="btn btn-primary btn-block">登 录</button>
+                                </div>
+                                @*<div class="form-group">
+                                        <p>
+                                            <a asp-page="./Register" asp-route-returnUrl="@Model.ReturnUrl">Register as a new user</a>
+                                        </p>
+                                        <p>
+                                        </p>
+                                    </div>*@
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div asp-validation-summary="All" class="text-danger text-center summary-danger-container"></div>
+        </section>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script>
+        layui.use(['form', 'element'], function () {
+            var $ = layui.jquery
+                , form = layui.form
+                , element = layui.element; //Tab的切换功能，切换事件监听等，需要依赖element模块
+
+            element.on('tab(login)', function (data) {
+                var $tab = $(".layui-tab-content").children().eq(data.index);
+                if ($tab.children("iframe")[0].contentDocument.URL.indexOf("http")<0) {
+                    var $btn = $tab.find("button[type=submit]");
+                    $btn.click();
+                }
+            });
+
+            form.render();
+
+            element.tabChange('login', "0");
+            var qrLogin = true;
+            $(".toggleLogin").click(function () {
+                if (qrLogin) {
+                    $(".pwdcard").css("z-index", "9999");
+                    $(".qrcard").css("z-index", "0");
+                    qrLogin = false;
+                }
+                else {
+                    $(".qrcard").css("z-index", "9999");
+                    $(".pwdcard").css("z-index", "0");
+                    qrLogin = true;
+                }
+            })           
+        });
+
+        
+    </script>
+}

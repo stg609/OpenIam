@@ -1,0 +1,28 @@
+﻿@page
+@model Demo.Pages.IndexModel
+@{
+}
+
+
+Hello World
+<div id="result">正在发起 ajax 调用受保护的 Api....</div>
+
+<script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.5.1/jquery.js"></script>
+<script>
+    $.ajax({
+        url: "./about",
+        success: function (result) {
+            $("#result").html("<strong>" + result + "</strong>");
+        }
+    });
+
+    var token = "@Model.AccessToken";
+
+    $.ajax({
+        url: "https://localhost:44357/weatherforecast",
+        headers: { "Authorization": "Bearer " + token }.done(function (result) {
+            $("#result").html("<strong>" + result + "</strong>");
+        }).fail(function (e1, e2) {
+            $("#result").html("<strong>error</strong>");
+        });
+</script>

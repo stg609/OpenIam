@@ -1,0 +1,670 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Charlie.OpenIam.Web</name>
+    </assembly>
+    <members>
+        <member name="T:Charlie.OpenIam.Web.Areas.Admin.Controllers.ClientsController">
+            <summary>
+            Client 管理
+            </summary>
+        </member>
+        <member name="M:Charlie.OpenIam.Web.Areas.Admin.Controllers.ClientsController.#ctor(Charlie.OpenIam.Core.Services.Abstractions.IClientService,AutoMapper.IMapper)">
+            <summary>
+            构造函数
+            </summary>
+        </member>
+        <member name="M:Charlie.OpenIam.Web.Areas.Admin.Controllers.ClientsController.GetClients(System.String,System.String,System.Int32,System.Int32)">
+            <summary>
+            获取 Client 集合
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Charlie.OpenIam.Web.Areas.Admin.Controllers.ClientsController.GetClient(System.String)">
+            <summary>
+            获取某个 Client
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Charlie.OpenIam.Web.Areas.Admin.Controllers.ClientsController.AddClient(Charlie.OpenIam.Web.Areas.Admin.ViewModels.ClientNewViewModel)">
+            <summary>
+            添加 Client 
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Charlie.OpenIam.Web.Areas.Admin.Controllers.ClientsController.UpdateClient(System.String,Charlie.OpenIam.Core.Services.Dtos.ClientUpdateDto)">
+            <summary>
+            更新 Client 
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Charlie.OpenIam.Web.Areas.Admin.Controllers.ClientsController.EnableClient(System.String,Charlie.OpenIam.Web.Areas.Admin.ViewModels.EnableClientViewModel)">
+            <summary>
+            启用/禁用
+            </summary>
+            <param name="clientId">clientId</param>
+            <param name="model"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Charlie.OpenIam.Web.Areas.Admin.Controllers.ClientsController.UpdateClientSecret(System.String)">
+            <summary>
+            刷新 Client 的密钥
+            </summary>
+            <param name="clientId">clientId</param>
+            <returns></returns>
+        </member>
+        <member name="M:Charlie.OpenIam.Web.Areas.Admin.Controllers.ClientsController.RemoveClient(Charlie.OpenIam.Web.Areas.Admin.ViewModels.ClientRemoveViewModel)">
+            <summary>
+            删除 Client
+            </summary>
+            <param name="model">要移除的clientId</param>
+            <returns></returns>
+        </member>
+        <member name="T:Charlie.OpenIam.Web.Areas.Admin.Controllers.OrganizationsController">
+            <summary>
+            组织机构管理
+            </summary>
+        </member>
+        <member name="M:Charlie.OpenIam.Web.Areas.Admin.Controllers.OrganizationsController.#ctor(Charlie.OpenIam.Core.Services.Abstractions.IOrgService)">
+            <summary>
+            构造函数
+            </summary>
+        </member>
+        <member name="M:Charlie.OpenIam.Web.Areas.Admin.Controllers.OrganizationsController.GetOrganizations(System.String,System.Boolean)">
+            <summary>
+            获取组织机构集合
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Charlie.OpenIam.Web.Areas.Admin.Controllers.OrganizationsController.GetOrganizationById(System.String)">
+            <summary>
+            通过机构编号获取机构信息
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Charlie.OpenIam.Web.Areas.Admin.Controllers.OrganizationsController.GetRolesByOrgId(System.String,System.Boolean)">
+            <summary>
+            通过机构编号获取机构的默认角色
+            </summary>
+            <param name="id"></param>
+            <param name="getAll">是否要获取所有可用的角色</param>
+            <returns></returns>
+        </member>
+        <member name="M:Charlie.OpenIam.Web.Areas.Admin.Controllers.OrganizationsController.AddOrganization(Charlie.OpenIam.Core.Services.Dtos.OrganizationNewDto)">
+            <summary>
+            新增机构
+            </summary>
+            <param name="organization"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Charlie.OpenIam.Web.Areas.Admin.Controllers.OrganizationsController.UpdateOrganization(System.String,Charlie.OpenIam.Core.Services.Dtos.OrganizationUpdateDto)">
+            <summary>
+            更新机构基本信息
+            </summary>
+            <param name="id">组织编号</param>
+            <param name="organization"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Charlie.OpenIam.Web.Areas.Admin.Controllers.OrganizationsController.DeleteOrganization(System.String)">
+            <summary>
+            删除组织机构
+            </summary>
+            <param name="ids">机构编号，多个编号用,分隔</param>
+            <returns></returns>
+        </member>
+        <member name="M:Charlie.OpenIam.Web.Areas.Admin.Controllers.OrganizationsController.AddDefaultRole(System.String,Charlie.OpenIam.Core.Services.Dtos.AssignRoleToOrgDto)">
+            <summary>
+            增加默认角色
+            </summary>
+            <param name="id"></param>
+            <param name="model"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Charlie.OpenIam.Web.Areas.Admin.Controllers.OrganizationsController.DeleteDefaultRole(System.String,System.Collections.Generic.IEnumerable{System.String})">
+            <summary>
+            移除默认角色
+            </summary>
+            <param name="id"></param>
+            <param name="roleIds"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Charlie.OpenIam.Web.Areas.Admin.Controllers.OrganizationsController.UpdateDefaultRole(System.String,Charlie.OpenIam.Core.Services.Dtos.AssignRoleToOrgDto)">
+            <summary>
+            更新默认角色
+            </summary>
+            <param name="id"></param>
+            <param name="model"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Charlie.OpenIam.Web.Areas.Admin.Controllers.OrganizationsController.GetOrgUsers(System.String)">
+            <summary>
+            获取当前机构的所有用户，（不含子机构的人员）
+            </summary>
+            <param name="id">机构编号</param>
+            <returns></returns>
+        </member>
+        <member name="M:Charlie.OpenIam.Web.Areas.Admin.Controllers.OrganizationsController.UpdateOrgUsers(System.String,Charlie.OpenIam.Core.Services.Dtos.AssignUserToOrgDto)">
+            <summary>
+            更新机构的用户（用新的用户覆盖原先的用户）
+            </summary>
+            <param name="id"></param>
+            <param name="userIds"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Charlie.OpenIam.Web.Areas.Admin.Controllers.OrganizationsController.AddOrgUsers(System.String,Charlie.OpenIam.Core.Services.Dtos.AssignUserToOrgDto)">
+            <summary>
+            增加机构的用户
+            </summary>
+            <param name="id"></param>
+            <param name="userIds"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Charlie.OpenIam.Web.Areas.Admin.Controllers.OrganizationsController.RemoveOrgUsers(System.String,System.Collections.Generic.IEnumerable{System.String})">
+            <summary>
+            从机构中移除用户
+            </summary>
+            <param name="id"></param>
+            <param name="userIds"></param>
+            <returns></returns>
+        </member>
+        <member name="T:Charlie.OpenIam.Web.Areas.Admin.Controllers.PermissionsController">
+            <summary>
+            权限管理
+            </summary>
+        </member>
+        <member name="M:Charlie.OpenIam.Web.Areas.Admin.Controllers.PermissionsController.AddPermission(Charlie.OpenIam.Web.Areas.Admin.ViewModels.PermissionNewViewModel)">
+            <summary>
+            新增权限(仅可用于当前的 Client）
+            </summary>
+            <param name="permission"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Charlie.OpenIam.Web.Areas.Admin.Controllers.PermissionsController.GetPermissions(System.String,System.String,System.String,System.String,System.Nullable{Charlie.OpenIam.Abstraction.Dtos.PermissionType},System.Boolean)">
+            <summary>
+            获取拥有的所有权限
+            </summary>
+            <param name="name">权限的名称</param>
+            <param name="key">权限的 key </param>
+            <param name="url">权限对应的链接（用于菜单类型的权限）</param>
+            <param name="targetClientId">权限所属的 clientId</param>
+            <param name="type">权限类型</param>
+            <param name="treeView">是否以树形结构显示</param>
+            <returns></returns>
+        </member>
+        <member name="M:Charlie.OpenIam.Web.Areas.Admin.Controllers.PermissionsController.GetPermissionDetails(System.String)">
+            <summary>
+            获取权限详情
+            </summary>
+            <param name="id">权限编号</param>
+            <returns></returns>
+        </member>
+        <member name="M:Charlie.OpenIam.Web.Areas.Admin.Controllers.PermissionsController.UpdatePermissions(System.String,Charlie.OpenIam.Core.Services.Dtos.PermissionUpdateDto)">
+            <summary>
+            更新权限
+            </summary>
+            <param name="id"></param>
+            <param name="model"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Charlie.OpenIam.Web.Areas.Admin.Controllers.PermissionsController.DeletePermissions(System.String)">
+            <summary>
+            删除权限
+            </summary>
+            <param name="ids"></param>
+            <returns></returns>
+        </member>
+        <member name="T:Charlie.OpenIam.Web.Areas.Admin.Controllers.RolesController">
+            <summary>
+            角色管理
+            </summary>
+        </member>
+        <member name="M:Charlie.OpenIam.Web.Areas.Admin.Controllers.RolesController.AddRole(Charlie.OpenIam.Web.Areas.Admin.ViewModels.RoleNewViewModel)">
+            <summary>
+            新增角色
+            </summary>
+            <param name="role"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Charlie.OpenIam.Web.Areas.Admin.Controllers.RolesController.DeleteRole(System.String)">
+            <summary>
+            删除角色
+            </summary>
+            <param name="ids">角色的编号，多个编号用,分隔</param>
+            <returns></returns>
+        </member>
+        <member name="M:Charlie.OpenIam.Web.Areas.Admin.Controllers.RolesController.UpdateRole(System.String,Charlie.OpenIam.Core.Services.Dtos.RoleUpdateDto)">
+            <summary>
+            更新角色
+            </summary>
+            <param name="id">角色的编号</param>
+            <param name="role"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Charlie.OpenIam.Web.Areas.Admin.Controllers.RolesController.GetRoles(System.String,System.String,System.Boolean,System.Int32,System.Int32)">
+            <summary>
+            获取角色集合
+            </summary>
+            <param name="name">名称</param>
+            <param name="clientId">目标 ClientId</param>
+            <param name="withPerms">是否返回权限</param>
+            <param name="pageSize"></param>
+            <param name="pageIndex"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Charlie.OpenIam.Web.Areas.Admin.Controllers.RolesController.GetRoleDetails(System.String,System.Boolean)">
+            <summary>
+            获取角色详情
+            </summary>
+            <param name="id">角色编号</param>
+            <param name="withPerms">是否返回权限</param>
+            <returns></returns>
+        </member>
+        <member name="M:Charlie.OpenIam.Web.Areas.Admin.Controllers.RolesController.GetRolePermissions(System.String,System.Boolean,System.Boolean)">
+            <summary>
+            获取角色下的所有权限
+            </summary>
+            <param name="id">角色编号</param>
+            <param name="getAll">是否包含所有角色，（i.e. 包含当前用户没有的角色）</param>
+            <param name="treeView">是否以树形视图显示</param>
+            <returns></returns>
+        </member>
+        <member name="M:Charlie.OpenIam.Web.Areas.Admin.Controllers.RolesController.AssignPermissions(System.String,Charlie.OpenIam.Core.Services.Dtos.AssignPermissionDto)">
+            <summary>
+            保存角色关联的权限
+            </summary>
+            <param name="id">角色id</param>
+            <param name="model">权限id集合</param>
+            <returns></returns>
+        </member>
+        <member name="T:Charlie.OpenIam.Web.Areas.Admin.Controllers.UsersController">
+            <summary>
+            用户管理
+            </summary>
+        </member>
+        <member name="M:Charlie.OpenIam.Web.Areas.Admin.Controllers.UsersController.GetAllUsers(System.String,System.String,System.String,System.String,System.String,System.String,System.String,System.Int32,System.Int32,System.Nullable{System.Boolean})">
+            <summary>
+            获取所有用户
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Charlie.OpenIam.Web.Areas.Admin.Controllers.UsersController.GetUser(System.String)">
+            <summary>
+            获取用户详情
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Charlie.OpenIam.Web.Areas.Admin.Controllers.UsersController.GetUserRoles(System.String,System.Boolean)">
+            <summary>
+            获取用户的角色
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Charlie.OpenIam.Web.Areas.Admin.Controllers.UsersController.GetUserPermissions(System.String,System.Boolean)">
+            <summary>
+            获取用户的权限
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Charlie.OpenIam.Web.Areas.Admin.Controllers.UsersController.CreateUser(Microsoft.Extensions.Options.IOptionsSnapshot{Microsoft.AspNetCore.Identity.IdentityOptions},Charlie.OpenIam.Web.Areas.Admin.ViewModels.UserNewViewModel)">
+            <summary>
+            新建用户
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Charlie.OpenIam.Web.Areas.Admin.Controllers.UsersController.UpdateUser(System.String,Microsoft.Extensions.Options.IOptionsSnapshot{Microsoft.AspNetCore.Identity.IdentityOptions},Charlie.OpenIam.Core.Services.Dtos.UserUpdateDto)">
+            <summary>
+            更新用户
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Charlie.OpenIam.Web.Areas.Admin.Controllers.UsersController.InActive(System.String,Charlie.OpenIam.Core.Services.Dtos.ActiveUserDto)">
+            <summary>
+            激活/冻结用户
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Charlie.OpenIam.Web.Areas.Admin.Controllers.UsersController.Delete(System.String)">
+            <summary>
+            删除用户
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Charlie.OpenIam.Web.Areas.Admin.Controllers.UsersController.ResetPassword(System.String)">
+            <summary>
+            刷新密码
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Charlie.OpenIam.Web.Areas.Admin.Controllers.UsersController.AssignPermissions(System.String,Charlie.OpenIam.Core.Services.Dtos.AssignPermissionToUserDto)">
+            <summary>
+            赋予某个用户权限
+            </summary>
+            <param name="id">用户编号</param>
+            <param name="permissions"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Charlie.OpenIam.Web.Areas.Admin.Controllers.UsersController.RemovePermissions(System.String,Charlie.OpenIam.Core.Services.Dtos.AssignPermissionToUserDto)">
+            <summary>
+            移除某个用户权限
+            </summary>
+            <param name="id">用户编号</param>
+            <param name="permissions"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Charlie.OpenIam.Web.Areas.Admin.Controllers.UsersController.AssignRoles(System.String,Charlie.OpenIam.Core.Services.Dtos.AssignRoleToUserDto)">
+            <summary>
+            赋予某个用户角色 （会替换原先的角色）
+            </summary>
+            <param name="id"></param>
+            <param name="model">角色名称集合</param>7
+            <returns></returns>
+        </member>
+        <member name="P:Charlie.OpenIam.Web.Areas.Admin.ViewModels.ClientNewViewModel.AllowedScopes">
+            <summary>
+            允许的 Scope，多个 Scope 用英文逗号分隔
+            </summary>
+        </member>
+        <member name="P:Charlie.OpenIam.Web.Areas.Admin.ViewModels.ClientNewViewModel.AllowedCorsOrigins">
+            <summary>
+            允许的跨域地址，多个地址用英文逗号分隔
+            </summary>
+        </member>
+        <member name="P:Charlie.OpenIam.Web.Areas.Admin.ViewModels.ClientNewViewModel.ClientName">
+            <summary>
+            必须唯一
+            </summary>
+        </member>
+        <member name="P:Charlie.OpenIam.Web.Areas.Admin.ViewModels.ClientNewViewModel.ClientUri">
+            <summary>
+            客户端根地址，即：http://localhost:80
+            </summary>
+            <remarks>后续判断权限的时候，可用于比对当前访问目标</remarks>
+        </member>
+        <member name="P:Charlie.OpenIam.Web.Areas.Admin.ViewModels.ClientNewViewModel.RedirectUris">
+            <summary>
+            回调地址，多个地址用英文逗号分隔
+            </summary>
+        </member>
+        <member name="P:Charlie.OpenIam.Web.Areas.Admin.ViewModels.ClientNewViewModel.PostLogoutRedirectUris">
+            <summary>
+            登出地址，多个地址用英文逗号分隔
+            </summary>
+        </member>
+        <member name="P:Charlie.OpenIam.Web.Areas.Admin.ViewModels.EnableClientViewModel.IsEnabled">
+            <summary>
+            是否启用
+            </summary>
+        </member>
+        <member name="P:Charlie.OpenIam.Web.Areas.Admin.ViewModels.PermissionNewViewModel.ClientId">
+            <summary>
+            Client id，除了内置权限，其他添加的权限都需要有归属的 client id
+            </summary>
+        </member>
+        <member name="P:Charlie.OpenIam.Web.Areas.Admin.ViewModels.PermissionNewViewModel.Url">
+            <summary>
+            请求地址
+            </summary>
+        </member>
+        <member name="P:Charlie.OpenIam.Web.Areas.Admin.ViewModels.PermissionNewViewModel.Icon">
+            <summary>
+            图标
+            </summary>
+        </member>
+        <member name="P:Charlie.OpenIam.Web.Areas.Admin.ViewModels.PermissionNewViewModel.Order">
+            <summary>
+            顺序
+            </summary>
+        </member>
+        <member name="P:Charlie.OpenIam.Web.Areas.Admin.ViewModels.PermissionNewViewModel.Level">
+            <summary>
+            层级
+            </summary>
+        </member>
+        <member name="P:Charlie.OpenIam.Web.Areas.Admin.ViewModels.RoleListViewModel.Total">
+            <summary>
+            总数
+            </summary>
+        </member>
+        <member name="P:Charlie.OpenIam.Web.Areas.Admin.ViewModels.RoleNewViewModel.Name">
+            <summary>
+            角色名称
+            </summary>
+        </member>
+        <member name="P:Charlie.OpenIam.Web.Areas.Admin.ViewModels.RoleNewViewModel.IsAdmin">
+            <summary>
+            是否是当前客户端的管理员
+            </summary>
+        </member>
+        <member name="T:Charlie.OpenIam.Web.Areas.Admin.ViewModels.UserNewViewModel">
+            <summary>
+            新增用户的视图模型
+            </summary>
+        </member>
+        <member name="P:Charlie.OpenIam.Web.Areas.Admin.ViewModels.UserNewViewModel.JobNo">
+            <summary>
+            工号
+            </summary>
+        </member>
+        <member name="P:Charlie.OpenIam.Web.Areas.Admin.ViewModels.UserNewViewModel.Username">
+            <summary>
+            用户名
+            </summary>
+        </member>
+        <member name="P:Charlie.OpenIam.Web.Areas.Admin.ViewModels.UserNewViewModel.Email">
+            <summary>
+            邮箱
+            </summary>
+        </member>
+        <member name="P:Charlie.OpenIam.Web.Areas.Admin.ViewModels.UserNewViewModel.FirstName">
+            <summary>
+            名
+            </summary>
+        </member>
+        <member name="P:Charlie.OpenIam.Web.Areas.Admin.ViewModels.UserNewViewModel.LastName">
+            <summary>
+            姓
+            </summary>
+        </member>
+        <member name="P:Charlie.OpenIam.Web.Areas.Admin.ViewModels.UserNewViewModel.Gender">
+            <summary>
+            性别
+            </summary>
+        </member>
+        <member name="P:Charlie.OpenIam.Web.Areas.Admin.ViewModels.UserNewViewModel.Position">
+            <summary>
+            职务
+            </summary>
+        </member>
+        <member name="P:Charlie.OpenIam.Web.Areas.Admin.ViewModels.UserNewViewModel.Phone">
+            <summary>
+            手机号
+            </summary>
+        </member>
+        <member name="P:Charlie.OpenIam.Web.Areas.Admin.ViewModels.UserNewViewModel.IdCard">
+            <summary>
+            身份证号
+            </summary>
+        </member>
+        <member name="P:Charlie.OpenIam.Web.Areas.Admin.ViewModels.UserNewViewModel.HomeAddress">
+            <summary>
+            家庭住址
+            </summary>
+        </member>
+        <member name="P:Charlie.OpenIam.Web.Areas.Admin.ViewModels.UserNewViewModel.Password">
+            <summary>
+            初始密码
+            </summary>
+        </member>
+        <member name="P:Charlie.OpenIam.Web.Areas.Admin.ViewModels.UserNewViewModel.OrgIds">
+            <summary>
+            用户所属的组织机构编号，多个组织用逗号分隔
+            </summary>
+        </member>
+        <member name="P:Charlie.OpenIam.Web.Areas.Admin.ViewModels.UserNewViewModel.IsActive">
+            <summary>
+            是否激活
+            </summary>
+        </member>
+        <member name="P:Charlie.OpenIam.Web.Configurations.IamOptions.Host">
+            <summary>
+            部署的地址
+            </summary>
+        </member>
+        <member name="T:Charlie.OpenIam.Web.Controllers.Api.UserController">
+            <summary>
+            当前用户的控制器
+            </summary>
+        </member>
+        <member name="M:Charlie.OpenIam.Web.Controllers.Api.UserController.GetRoles">
+            <summary>
+            获取当前登陆用户的角色集合
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Charlie.OpenIam.Web.Controllers.Api.UserController.GetMenus(System.String,System.String,System.Boolean)">
+            <summary>
+            获取当前登陆用户的视图权限集合
+            </summary>
+            <param name="clientId">目标 clientId</param>
+            <param name="currentClientHost">当前发起调用的客户端地址。如果不是超级管理员，那么会以该地址对应的 client 作为目标 clientId。只有当未指定 clientId 时，会采用该值</param>
+            <param name="treeView">是否返回树形结构</param>
+            <returns></returns>
+        </member>
+        <member name="M:Charlie.OpenIam.Web.Controllers.Api.UserController.GetRoleAndPermissions(System.String)">
+            <summary>
+            获取当前登陆用户的角色权限集合
+            </summary>
+            <param name="currentClientHost">当前发起调用的客户端地址。如果不是超级管理员，那么会根据该地址返回对应的 client 所具有的权限</param>
+            <returns></returns>
+        </member>
+        <member name="M:Charlie.OpenIam.Web.Controllers.Api.UserController.GetOrgs">
+            <summary>
+            获取当前登陆用户可见的组织机构树
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Charlie.OpenIam.Web.Controllers.Api.UserController.GetUserInfo">
+            <summary>
+            获取当前登陆用户信息
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Charlie.OpenIam.Web.Controllers.Api.UserController.HasPermissionAsync(System.String,System.Boolean)">
+            <summary>
+            是否拥有权限
+            </summary>
+            <param name="permKey">权限 Key</param>
+            <param name="isAdmin">是否要求是管理员</param>
+            <returns></returns>
+        </member>
+        <member name="M:Charlie.OpenIam.Web.Controllers.ClientController.Details(System.String)">
+            <summary>
+            获取详情页
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Charlie.OpenIam.Web.Controllers.ClientController.Create">
+            <summary>
+            新增客户端
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Charlie.OpenIam.Web.Controllers.OrganizationController.Details(System.String)">
+            <summary>
+            获取详情页
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Charlie.OpenIam.Web.Controllers.OrganizationController.Create">
+            <summary>
+            新增
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Charlie.OpenIam.Web.Controllers.OrganizationController.Roles">
+            <summary>
+            角色
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Charlie.OpenIam.Web.Controllers.OrganizationController.Users">
+            <summary>
+            用户
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Charlie.OpenIam.Web.Controllers.PermissionController.Details(System.String)">
+            <summary>
+            获取详情页
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Charlie.OpenIam.Web.Controllers.PermissionController.Create">
+            <summary>
+            新增
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Charlie.OpenIam.Web.Controllers.RoleController.Details(System.String)">
+            <summary>
+            获取详情页
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Charlie.OpenIam.Web.Controllers.RoleController.Create">
+            <summary>
+            新增
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Charlie.OpenIam.Web.Controllers.RoleController.Permissions">
+            <summary>
+            关联的权限
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Charlie.OpenIam.Web.Controllers.UserController.Details(System.String)">
+            <summary>
+            获取详情页
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Charlie.OpenIam.Web.Controllers.UserController.Create">
+            <summary>
+            新增
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Charlie.OpenIam.Web.Controllers.UserController.Roles">
+            <summary>
+            角色
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Charlie.OpenIam.Web.Controllers.UserController.Permissions">
+            <summary>
+            权限
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Charlie.OpenIam.Web.Helpers.Helper.IsSuperAdmin(System.Security.Claims.ClaimsPrincipal)">
+            <summary>
+            是否是超级管理员（可以管理 所有 Client)
+            </summary>
+            <param name="user"></param>
+            <returns></returns>
+        </member>
+        <member name="T:Charlie.OpenIam.Web.Infra.EmptyUnitOfWork">
+            <summary>
+            空的 UnitOfWork，只用于不需要 UnitOfWork 的场景
+            </summary>
+        </member>
+    </members>
+</doc>

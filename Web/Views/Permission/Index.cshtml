@@ -1,0 +1,161 @@
+﻿@{
+    Layout = "_AdminLayout";
+}
+<div class="layui-card-body">
+    <div class="layui-form page-bar">
+        <div class="layui-inline">
+            <div class="layui-input-inline">
+                <select name="type">
+                    <option>权限类型</option>
+                    <option value="1">菜单</option>
+                    <option value="2">功能</option>
+                </select>
+            </div>
+            <div class="layui-input-inline">
+                <input type="text" name="name" id="name" placeholder="请输入 名称" autocomplete="off" class="layui-input search-input">
+            </div>
+            <div class="layui-input-inline">
+                <input type="text" name="clientId" id="clientId" placeholder="请输入 Client Id" autocomplete="off" class="layui-input search-input">
+            </div>
+            <div class="layui-input-inline">
+                <input type="text" name="key" id="key" placeholder="请输入 Key" autocomplete="off" class="layui-input search-input">
+            </div>
+            <div class="layui-input-inline">
+                <input type="text" name="url" id="url" placeholder="请输入 Url" autocomplete="off" class="layui-input search-input">
+            </div>
+            <button class="layui-btn layui-btn-normal" lay-submit lay-filter="btn_Search" id="btn_Search">
+                <i class="layui-icon layui-icon-search layuiadmin-button-btn" title="点击查询"></i>
+            </button>
+        </div>
+    </div>
+    <div class="pt-2 pb-2">
+        <div class="margin-bottom-0 treeTableSearch tablebar">
+            <button class="layui-btn layui-btn-sm" data-type="batchdel">删除</button>
+            <button class="layui-btn layui-btn-sm" data-type="add">添加</button>
+        </div>
+        <table class="layui-table layui-form tableList" id="LAY-perm-manage" lay-filter="LAY-perm-manage"></table>
+    </div>
+</div>
+
+@section Scripts{
+    <script>
+        layui.config({
+            base: '/lib/layui-v2.5.7/extends/'
+        }).extend({
+            treeTable: 'treeTable'
+        }).use(['form', 'element', 'table', 'treeTable'], function () {
+            var form = layui.form,
+                treeTable = layui.treeTable;
+
+            var re;
+            $.ajax({
+                url: "../admin/api/permissions",
+                type: "GET",
+                contentType: "application/json"
+            }).done(function (data) {
+                re = treeTable.render({
+                    elem: '#LAY-perm-manage'
+                    , data: data
+                    , is_checkbox: true
+                    , icon_key: 'name'
+                    , primary_key: 'id'
+                    , parent_key: 'parentId'
+                    , cols: [
+                        { key: 'name', title: '名称', width: 120 }
+                        , { key: 'clientId', title: 'Client Id', width: 120 }
+                        , { key: 'key', title: 'Key', width: 120 }
+                        , { key: 'desc', title: '描述' }
+                        , { key: 'type', title: '类型', width: 160 }
+                        , { key: 'url', title: '地址', width: 160 }
+                        , { key: 'order', title: '排序', width: 200 }
+                    ]
+                    , height: 'full-78'
+                    , end: function (e) {
+                        form.render();
+                    }
+                });
+
+
+                $("tbody tr").dblclick(function () {
+                    var id = $(event.currentTarget).data("id");
+                    //标注选中样式
+                    $.modalOpen({
+                        id: "Details",
+                        type: 2,
+                        title: "编辑权限",
+                        url: "../permission/details?id=" + id,
+                        width: "560px",
+                        height: "480px",
+                        btn: ['确定', '取消'],
+                        callBack: function (index, layero, iframeId) {
+                            window['layui-layer-iframe' + index].submitForm();
+                        }
+                    });
+                })
+            });
+
+            //监听搜索
+            $("#btn_Search").click(function () {
+                var name = $('#name').val();
+                var key = $('#key').val();
+                var clientId = $('#clietId').val();
+                var url = $('#url').val();
+
+                treeTable.openAll(re);
+
+            });
+
+            //事件
+            var active = {
+                batchdel: function (data) {
+                    var checkData = treeTable.checked(re); //得到选中的数据
+
+                    if (checkData.length === 0) {
+                        return layer.msg('请选择数据');
+                    }
+
+                    layer.confirm('确定删除吗？', function (index) {
+                        var ids = checkData.map(function (idx, item) {
+                            return idx;
+                        }).join(",");
+
+                        $.ajax({
+                            url: "/admin/api/permissions/" + ids,
+                            type: "DELETE"
+                        }).done(function (response) {
+                            treeTable.reload('LAY-perm-manage');
+                            layer.msg('删除成功！' + response);
+                        }).fail(function (jqXHR, error) {
+                            if (jqXHR.responseJSON) {
+                                layer.msg('删除失败！ ' + jqXHR.responseJSON.detail);
+                            }
+                            else {
+                                layer.msg('删除失败！ ' + jqXHR.responseText);
+                            }
+                        });
+                    });
+                },
+                add: function (data) {
+                    $.modalOpen({
+                        id: "Create",
+                        type: 2,
+                        title: "新增权限",
+                        url: "../permission/create",
+                        width: "560px",
+                        height: "480px",
+                        btn: ['确定', '取消'],
+                        callBack: function (index, layero, iframeId) {
+                            window['layui-layer-iframe' + index].submitForm();
+                        }
+                    });
+                }
+            };
+
+            $('.tablebar .layui-btn').on('click', function () {
+                var type = $(this).data('type');
+                active[type] ? active[type].call(this) : '';
+            });            
+        });
+
+    </script>
+}

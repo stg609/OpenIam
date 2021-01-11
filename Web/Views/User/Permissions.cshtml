@@ -1,0 +1,189 @@
+﻿@{
+    Layout = "_AdminLayout";
+}
+<div class="layui-fluid">
+    <div class="layui-card">
+        <div class="layui-card-body">
+            <div class="layui-row">
+                <div class="" style="width:47%;float: left;position: relative; display: block;box-sizing: border-box;">
+                    <fieldset class="layui-elem-field">
+                        <legend>已添加权限</legend>
+                        <div class="layui-card-body">
+                            <table id="useredTable" lay-filter="tableList" class="layui-table layui-form tableList"></table>
+                        </div>
+                    </fieldset>
+                </div>
+                <div class="" style="height:450px; display: flex; text-align: center;width:6%;float: left;position: relative;box-sizing: border-box;">
+                    <div style="margin:auto;">
+                        <a href="javascript:;" class="layui-btn-select" data-type="batchdel" title="移除权限">
+                            <i class="layui-icon layui-icon-right" style="font-size: 30px;"></i>
+                        </a>
+                        <br />
+                        <a href="javascript:;" class="layui-btn-select" data-type="add" title="添加权限">
+                            <i class="layui-icon layui-icon-left" style="font-size: 30px;"></i>
+                        </a>
+                    </div>
+                </div>
+                <div class="" style="width:47%;float: left;position: relative; display: block;box-sizing: border-box;">
+                    <fieldset class="layui-elem-field">
+                        <legend>待添加权限</legend>
+                        <div class="layui-card-body">
+                            <table id="userTable" lay-filter="tableList" class="layui-table layui-form tableList"></table>
+                        </div>
+                    </fieldset>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts{
+    <script type="text/html" id="toolbar-div">
+        <div class="layui-form-item margin-bottom-0" style="display:flex;flex-flow:row">
+            <div class="layui-inline  margin-bottom-0 w-100">
+                <input type="text" name="name" id="name" placeholder="名称" autocomplete="off" class="layui-input search-input ">
+            </div>
+            <div class="layui-inline  margin-bottom-0 ">
+                <input type="text" name="key" id="key" placeholder="Key" autocomplete="off" class="layui-input search-input">
+            </div>
+            <button class="layui-btn layui-btn-sm layui-btn-normal" lay-submit lay-filter="btn_Search" id="btn_Search ">
+                <i class="layui-icon layui-icon-search "></i>
+            </button>
+        </div>
+    </script>
+    <script type="text/html" id="toolbar-div-next">
+        <div class="layui-form-item margin-bottom-0" style="display:flex;flex-flow:row">
+            <div class="layui-inline  margin-bottom-0 w-100 ">
+                <input type="text" name="name" id="name1" placeholder="名称" autocomplete="off" class="layui-input search-input">
+            </div>
+            <div class="layui-inline  margin-bottom-0  ">
+                <input type="text" name="key" id="key1" placeholder="Key" autocomplete="off" class="layui-input search-input">
+            </div>
+            <button class="layui-btn layui-btn-sm layui-btn-normal" lay-submit lay-filter="btn_Search_next" id="btn_Search_next">
+                <i class="layui-icon layui-icon-search "></i>
+            </button>
+        </div>
+    </script>
+    <script>
+        var userId = $.request("userId");
+        var right, left;
+        var treeTable;
+        layui.config({
+            base: '/lib/layui-v2.5.7/extends/'
+        }).extend({
+            treeTable: 'treeTable'
+        }).use(['form', 'treeTable'], function () {
+            var form = layui.form;
+            treeTable = layui.treeTable;
+
+            left = treeTable.render({
+                elem: '#useredTable'
+                , url: "../admin/api/users/" + userId + "/permissions"
+                , is_checkbox: true
+                , icon_key: 'name'
+                , primary_key: 'id'
+                , parent_key: 'parentId'
+                , cols: [
+                    { key: 'name', title: '名称', width: 100 }
+                    , { key: 'clientId', title: 'Client Id', width: 60, align: 'center' }
+                    , { key: 'type', title: '类型', width: 60, align: 'center' }
+                ]
+                , parseData: function (res) {
+                    return {
+                        "data": res
+                    };
+                }
+                , end: function (e) {
+                    form.render();
+                }
+            });
+
+            right = treeTable.render({
+                elem: '#userTable'
+                , url: "../admin/api/permissions"
+                , is_checkbox: true
+                , icon_key: 'name'
+                , primary_key: 'id'
+                , parent_key: 'parentId'
+                , cols: [
+                    { key: 'name', title: '名称', width: 120 }
+                    , { key: 'clientId', title: 'Client Id', width: 120 }
+                    , { key: 'type', title: '类型', width: 160 }
+
+                ]
+                , parseData: function (res) {
+                    return {
+                        "data": res
+                    };
+                }
+                , end: function (e) {
+                    form.render();
+                }
+            });
+
+            //事件
+            var active = {
+                batchdel: function (data) {
+                    var checkData = treeTable.checked(left); //得到选中的数据
+
+                    if (checkData.length === 0) {
+                        return layer.msg('请选择数据');
+                    }
+                    var ids = checkData.map(function (idx, item) {
+                        return idx;
+                    });
+                    $.ajax({
+                        url: "../admin/api/users/" + userId + "/permissions",
+                        type: "DELETE",
+                        contentType: "application/json",
+                        data: JSON.stringify({ "permissionIds": ids })
+                    }).done(function (data) {
+                        reloadTreeTable(left);
+                        reloadTreeTable(right);
+                    }).fail(function (jqXHR, error) {
+                        if (jqXHR.responseJSON) {
+                            layer.msg('移除失败！ ' + jqXHR.responseJSON.detail);
+                        }
+                        else {
+                            layer.msg('移除失败！ ' + jqXHR.responseText);
+                        }
+                    });
+                }
+                , add: function (data) {
+                    var checkData = treeTable.checked(right); //得到选中的数据
+
+                    if (checkData.length === 0) {
+                        return layer.msg('请选择数据');
+                    }
+                    var ids = checkData.map(function (idx, item) {
+                        return idx;
+                    });
+                    $.ajax({
+                        url: "../admin/api/users/" + userId + "/permissions",
+                        type: "POST",
+                        contentType: "application/json",
+                        data: JSON.stringify({ "permissionIds": ids })
+                    }).done(function (data) {
+                        reloadTreeTable(left);
+                        reloadTreeTable(right);
+                    }).fail(function (jqXHR, error) {
+                        if (jqXHR.responseJSON) {
+                            layer.msg('添加失败！ ' + jqXHR.responseJSON.detail);
+                        }
+                        else {
+                            layer.msg('添加失败！ ' + jqXHR.responseText);
+                        }
+                    });
+                }
+            };
+            $('.layui-btn-select').on('click', function () {
+                var type = $(this).data('type');
+                active[type] ? active[type].call(this) : '';
+            });
+        });
+
+        function reloadTreeTable(re) {
+            treeTable.render(re);
+        };
+    </script>
+}

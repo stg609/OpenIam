@@ -1,0 +1,98 @@
+﻿@{
+    Layout = "_AdminLayout";
+}
+
+<div style="padding-top: 20px; margin-right: 20px;">
+    <div class="layui-form" lay-filter="Details" id="Details" style="padding: 20px 0 0 0;">
+        <div class="layui-form-item" id="selectParent">
+            <label class="layui-form-label">所属客户端</label>
+            <div class="layui-input-inline" id="clientId">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">名称：</label>
+            <div class="layui-input-inline">
+                <input type="text" name="name" lay-verify="required" placeholder="请输入名称" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">描述：</label>
+            <div class="layui-input-inline">
+                <textarea type="text" name="desc" placeholder="请输入描述" autocomplete="off" class="layui-textarea"></textarea>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">是否是管理员</label>
+            <div class="layui-input-inline">
+                <input name="isAdmin" lay-skin="switch" lay-text="是|否" type="checkbox" value="true">
+            </div>
+        </div>
+        <div class="layui-form-item layui-hide">
+            <input type="button" lay-submit lay-filter="btn_submit" id="btn_submit" value="确认">
+        </div>
+    </div>
+</div>
+
+@section Scripts{
+
+    <script>
+        layui.config({
+            base: '/lib/layui-v2.5.7/extends/'
+        }).extend({
+            xmSelect: 'xm-select'
+        }).use(['form', 'xmSelect'], function () {
+            var form = layui.form,
+                xmSelect = layui.xmSelect;
+
+            $.ajax({
+                url: "../admin/api/clients",
+                type: "GET",
+                contentType: "application/json"
+            }).done(function (data) {
+                var arr = data.data.map(function (itm) {
+                    return { "name": itm.clientName, "value": itm.clientId, "selected": "", "disabled": "" };
+                });
+
+                xmSelect.render({
+                    el: "#clientId",
+                    radio: true,
+                    filterable: true,
+                    name: 'clientId',
+                    layVerify: 'required',
+                    toolbar: { show: true },
+                    data: arr
+                });
+
+            }).fail(function (jqXHR, error) {
+                layer.msg('读取客户端数据失败！ ' + jqXHR.responseText);
+            });
+
+            form.render();
+            form.on('submit(btn_submit)', function (data) {
+                var field = data.field;
+                field.isAdmin = field.isAdmin == "true";
+
+                $.ajax({
+                    url: "../admin/api/roles/",
+                    type: 'POST',
+                    contentType: "application/json",
+                    data: JSON.stringify(field)
+                }).done(function () {
+                    $.modalClose();
+                    window.parent.$.reload('LAY-role-manage');//表格刷新
+                }).fail(function (jqXHR, error) {
+                    if (jqXHR.responseJSON) {
+                        layer.msg('添加失败！ ' + jqXHR.responseJSON.detail);
+                    }
+                    else {
+                        layer.msg('添加失败！ ' + jqXHR.responseText);
+                    }
+                });
+            })
+        })
+
+        function submitForm() {
+            $("#btn_submit").trigger('click');//模擬表單提交
+        }
+    </script>
+}

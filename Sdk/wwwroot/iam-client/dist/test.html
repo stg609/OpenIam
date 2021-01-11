@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="iam-client.js"></script>
+    <script>
+        var client = new iam.IdsApi({
+            Authority: 'https://localhost:59910'
+        });
+        client.hasPermission(
+                'eyJhbGciOiJSUzI1NiIsImtpZCI6IjlxUmxReVpOU3FQUFE4YUVOaHp1aHciLCJ0eXAiOiJhdCtqd3QifQ.eyJuYmYiOjE2MDg5ODIyMDIsImV4cCI6MTYwODk4OTQwMiwiaXNzIjoiaHR0cHM6Ly9sb2NhbGhvc3Q6NTk5MTAiLCJhdWQiOlsiaWFtQXBpIiwiYXBpMSJdLCJjbGllbnRfaWQiOiJmZTA0MzJiMy0wMTdlLTRlOTUtODI0MC1hNDQ1MGM4ZGY0ZjUiLCJzdWIiOiI5ZmI4ZjQzZC1iZDk0LTQ0ODAtYjU3Ni00YjExYWRkZTYyZmIiLCJhdXRoX3RpbWUiOjE2MDg5ODE3MTIsImlkcCI6ImxvY2FsIiwic2NvcGUiOlsib3BlbmlkIiwiaWFtIiwiaWFtQXBpIiwiYXBpMSIsIm9mZmxpbmVfYWNjZXNzIl0sImFtciI6WyJwd2QiXX0.APmxK2Y4zCaa0PAD8D8CfhL4xj9jqdY7YCQ7awdxzP2NYXA4ix4bMVGiEHbCvyTUui2G4gb4EAPMbLEjAbeTHzdkUGEsrkUvWxAVj38nTy9DG7I_o2ybWZgdkMHp7DhC9_o6cR74thZ4mjv1yyRc0oE3BDGLQ6LLpXIPrZk8CrHyNsRVKK0505NMMpFWuWJKEi9uGRYRV3gs0c9Db058Se_prnZWvmvVzXrdXSK5mI_UlJ_GQZFDL0iP3OVmJIcXZ3xGSJA-bs3X6_Cf9G7uuzysUKjhKEQZQKeClIAi6IFjqyk5Agfa27BHKSDU5JcnGnDX-KMHe8vcYt2johszvQ',
+                'aaa'
+            )
+            .then(function (e) {
+                console.log(e);
+            })
+            .catch(function (e) {
+                console.log(e);
+            })
+    </script>
+</body>
+
+</html>

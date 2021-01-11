@@ -1,0 +1,83 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - Web</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link href="~/lib/font-awesome-4.7.0/css/font-awesome.min.css" rel="stylesheet" />
+    <link href="~/lib/layui-v2.5.7/css/layui.css" rel="stylesheet" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link href="~/css/login.css" rel="stylesheet" asp-append-version="true" />
+    @RenderSection("Styles", required: false)
+</head>
+<body>
+    <div class="login-container d-flex flex-column">
+        <header>
+            <nav class="navbar topNav">
+                <a class="navbar-brand" href="#">统一身份认证系统 | OpenIam </a>
+                <div class="container">
+                    <!-- 后期可以放一个 语言切换 -->
+                </div>
+            </nav>
+        </header>
+        <main role="main" class="container-fluid flex-fill  d-flex flex-column">
+            <canvas class="main-background"></canvas>
+            @RenderBody()
+        </main>
+        <footer class="footer text-muted mx-auto mb-4 mt-3 text-center">
+            <div class="container">
+                Copyright &copy; 2021 OpenIam
+            </div>
+        </footer>
+    </div>
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/lib/layui-v2.5.7/layui.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    <script src="~/lib/particles/particles.min.js" async></script>
+    @RenderSection("Scripts", required: false)
+    <script>
+        window.onload = function () {
+            Particles.
+                init
+                ({
+                    selector: '.main-background',
+                    connectParticles: true,
+
+                    color: '#A0A0A0',
+
+                    responsive: [
+                        {
+                            breakpoint: 992,
+                            options: {
+                                maxParticles: 30,
+                            }
+                        },
+                        {
+                            breakpoint:768,
+                            options: {
+                                maxParticles:25,
+                            }
+                        },
+                        {
+                            breakpoint:425,
+                            options: {
+                                maxParticles:10
+                            }
+                        },
+                        {
+                            breakpoint:320,
+                            options: {
+                                maxParticles:
+                                    0
+                            }
+                        }
+                    ]
+
+                });
+        };
+    </script>
+</body>
+</html>

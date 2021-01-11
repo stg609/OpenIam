@@ -1,0 +1,210 @@
+﻿@{
+    Layout = "_AdminLayout";
+}
+
+<div class="layui-card-body">
+    <div class="layui-form page-bar">
+        <div class="layui-inline">
+            <div class="layui-input-inline">
+                <input type="text" name="name" id="name" placeholder="请输入 组织名称" autocomplete="off" class="layui-input search-input">
+            </div>
+            <div class="layui-input-inline">
+                <input type="text" name="city" id="city" placeholder="请输入 所在城市" autocomplete="off" class="layui-input search-input">
+            </div>
+            <div class="layui-input-inline">
+                <input type="text" name="creditCode" id="creditCode" placeholder="请输入 信用代码" autocomplete="off" class="layui-input search-input">
+            </div>
+            <div class="layui-input-inline">
+                <select name="isActive">
+                    <option>是否启用</option>
+                    <option value="1">启用</option>
+                    <option value="2">未启用</option>
+                </select>
+            </div>
+            <button class="layui-btn layui-btn-normal" lay-submit lay-filter="btn_Search" id="btn_Search">
+                <i class="layui-icon layui-icon-search layuiadmin-button-btn" title="点击查询"></i>
+            </button>
+        </div>
+    </div>
+    <div class="pt-2 pb-2">
+        <div class="margin-bottom-0 treeTableSearch tablebar">
+            <button class="layui-btn layui-btn-sm" data-type="batchdel">删除</button>
+            <button class="layui-btn layui-btn-sm" data-type="add">添加</button>
+        </div>
+        <table class="layui-table layui-form tableList" id="LAY-org-manage" lay-filter="LAY-org-manage"></table>
+    </div>
+</div>
+
+@section Scripts{
+    <!-- 表格操作列 -->
+    <script>
+        layui.config({
+            base: '/lib/layui-v2.5.7/extends/'
+        }).extend({
+            treeTable: 'treeTable'
+        }).use(['form', 'element', 'table', 'treeTable'], function () {
+            var form = layui.form,
+                treeTable = layui.treeTable,
+                table = layui.table;
+
+            form.render();
+            var re;
+            $.ajax({
+                url: "../admin/api/organizations",
+                type: "GET",
+                contentType: "application/json"
+            }).done(function (data) {
+                re = treeTable.render({
+                    elem: '#LAY-org-manage'
+                    , data: data
+                    , is_checkbox: true
+                    , icon_key: 'name'
+                    , primary_key: 'id'
+                    , parent_key: 'parentId'
+                    , cols: [
+                        { key: 'name', title: '组织名称', width: 120, sort: false }
+                        , { key: 'desc', title: '描述', width: 200, sort: false }
+                        , { key: 'mobile', title: '联系电话', width: 160, sort: false }
+                        , { key: 'city', title: '所在城市', width: 160, sort: false }
+                        , { key: 'address', title: '联系地址', width: 160, sort: false }
+                        , { key: 'isEnabled', title: '启用', width: 80, align: 'center', template: function (item) { return $.renderEnabled(item.isEnabled) } }
+                        , {
+                            title: '默认角色', width: 88, align: 'center', fixed: 'right', template: function (item) {
+                                return "<a class='layui-btn layui-btn-xs' title='默认角色' lay-event='edit' onclick='assignRoles(\"" + item.id + "\")'><i class='layui-icon layui-icon-auz'></i></a>"
+                            }
+                        }
+                        , {
+                            title: '用户', width: 88, align: 'center', fixed: 'right', template: function (item) {
+                                return "<a class='layui-btn layui-btn-xs' title='组织中的用户' lay-event='edit' onclick='assignUsers(\"" + item.id + "\")'><i class='layui-icon layui-icon-group'></i></a>"
+                            }
+                        }
+                        , { key: 'createdAt', title: '创建时间', width: 200, sort: true }
+
+                    ]
+                    , height: 'full-78'
+                    , end: function (e) {
+                        form.render();
+                    }
+                });
+
+                $("tbody tr").dblclick(function () {
+                    var id = $(event.currentTarget).data("id");
+                    //标注选中样式
+                    $.modalOpen({
+                        id: "Details",
+                        type: 2,
+                        title: "编辑组织",
+                        url: "../organization/details?id=" + id,
+                        width: "560px",
+                        height: "480px",
+                        btn: ['确定', '取消'],
+                        callBack: function (index, layero, iframeId) {
+                            window['layui-layer-iframe' + index].submitForm();
+                        }
+                    });
+                })
+
+            });
+
+
+            //监听搜索
+            form.on('submit(btn_Search)', function (data) {
+                var field = data.field;
+                //去除前后的空格
+                $.each(field, function (i) {
+                    field[i] = $.trim(field[i]);
+                });
+                //执行重载
+                table.reload('tableList', {
+                    where: field
+                    , page: {
+                        curr: 1 //重新从第 1 页开始
+                    }
+                    , url: "../RoleManage/GetRoleList"
+                });
+                return false;
+            });
+           
+            //事件
+            var active = {
+                batchdel: function (data) {
+                    var checkData = treeTable.checked(re);
+
+                    if (checkData.length === 0) {
+                        return layer.msg('请选择数据');
+                    }
+
+                    layer.confirm('确定删除吗？', function (index) {
+                        var ids = checkData.map(function (idx, item) {
+                            return idx;
+                        }).join(",");
+
+                        $.ajax({
+                            url: "/admin/api/organizations/" + ids,
+                            type: "DELETE"
+                        }).done(function (response) {
+                            treeTable.reload('LAY-org-manage');
+                            layer.msg('删除成功！' + response);
+                        }).fail(function (jqXHR, error) {
+                            if (jqXHR.responseJSON) {
+                                layer.msg('删除失败！ ' + jqXHR.responseJSON.detail);
+                            }
+                            else {
+                                layer.msg('删除失败！ ' + jqXHR.responseText);
+                            }
+                        });
+                    });
+                },
+                add: function (data) {
+                    $.modalOpen({
+                        id: "Create",
+                        type: 2,
+                        title: "新增组织",
+                        url: "../organization/create",
+                        width: "560px",
+                        height: "480px",
+                        btn: ['确定', '取消'],
+                        callBack: function (index, layero, iframeId) {
+                            window['layui-layer-iframe' + index].submitForm();
+                        }
+                    });
+                }
+            };
+
+            $('.tablebar .layui-btn').on('click', function () {
+                var type = $(this).data('type');
+                active[type] ? active[type].call(this) : '';
+            });    
+        });
+
+        function assignRoles(id) {
+            $.modalOpen({
+                id: "Role",
+                type: 2,
+                title: "默认角色",
+                url: "../organization/roles?orgId=" + id,
+                width: "400px",
+                height: "460px",
+                btn: ['确定', '取消'],
+                callBack: function (index, layero, iframeId) {
+                    window['layui-layer-iframe' + index].submitForm();
+                }
+            });
+        }
+
+        function assignUsers(id) {
+            $.modalOpen({
+                id: "User",
+                type: 2,
+                title: "组织中的用户",
+                url: "../organization/users?orgId=" + id,
+                width: "1100px",
+                height: "650px",
+                btn: [],
+                callBack: function (index, layero, iframeId) {
+                    window['layui-layer-iframe' + index].submitForm();
+                }
+            });
+        }
+    </script>
+}

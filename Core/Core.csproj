@@ -1,0 +1,22 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <AssemblyName>Charlie.OpenIam.Core.Models</AssemblyName>
+    <RootNamespace>Charlie.OpenIam.Core.Models</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="AutoMapper" Version="10.0.0" />
+    <PackageReference Include="IdentityServer4" Version="4.1.1" />
+    <PackageReference Include="IdentityServer4.EntityFramework.Storage" Version="4.1.1" />
+    <PackageReference Include="Microsoft.Extensions.Identity.Stores" Version="3.1.10" />
+    <PackageReference Include="Microsoft.Extensions.Localization.Abstractions" Version="5.0.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Abstraction\Abstraction.csproj" />
+    <ProjectReference Include="..\Common\Common.csproj" />
+  </ItemGroup>
+
+</Project>

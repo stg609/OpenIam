@@ -1,0 +1,228 @@
+﻿@{
+    Layout = "_AdminLayout";
+}
+<div class="layui-fluid">
+    <div class="layui-card">
+        <div class="layui-card-body">
+            <div class="layui-row">
+                <div class="" style="width:47%;float: left;position: relative; display: block;box-sizing: border-box;">
+                    <fieldset class="layui-elem-field">
+                        <legend>已添加用户</legend>
+                        <div class="layui-card-body">
+                            <table id="useredTable" lay-filter="tableList"></table>
+                        </div>
+                    </fieldset>
+                </div>
+                <div class="" style="height:450px; display: flex; text-align: center;width:6%;float: left;position: relative;box-sizing: border-box;">
+                    <div style="margin:auto;">
+                        <a href="javascript:;" class="layui-btn-select" data-type="batchdel" title="移除用户">
+                            <i class="layui-icon layui-icon-right" style="font-size: 30px;"></i>
+                        </a>
+                        <br />
+                        <a href="javascript:;" class="layui-btn-select" data-type="add" title="添加用户">
+                            <i class="layui-icon layui-icon-left" style="font-size: 30px;"></i>
+                        </a>
+                    </div>
+                </div>
+                <div class="" style="width:47%;float: left;position: relative; display: block;box-sizing: border-box;">
+                    <fieldset class="layui-elem-field">
+                        <legend>待添加用户</legend>
+                        <div class="layui-card-body">
+                            <table id="userTable" lay-filter="tableList"></table>
+                        </div>
+                    </fieldset>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts{
+
+    <script type="text/html" id="toolbar-div">
+        <div class="layui-form-item margin-bottom-0" style="display:flex;flex-flow:row">
+            <div class="layui-inline  margin-bottom-0 w-100">
+                <input type="text" name="name" id="name" placeholder="姓名" autocomplete="off" class="layui-input search-input ">
+            </div>
+            <div class="layui-inline  margin-bottom-0 ">
+                <input type="text" name="idCard" id="IdCard" placeholder="身份证" autocomplete="off" class="layui-input search-input">
+            </div>
+            <button class="layui-btn layui-btn-sm layui-btn-normal" lay-submit lay-filter="btn_Search" id="btn_Search ">
+                <i class="layui-icon layui-icon-search "></i>
+            </button>
+        </div>
+    </script>
+    <script type="text/html" id="toolbar-div-next">
+        <div class="layui-form-item margin-bottom-0" style="display:flex;flex-flow:row">
+            <div class="layui-inline  margin-bottom-0 w-100 ">
+                <input type="text" name="name" id="name1" placeholder="姓名" autocomplete="off" class="layui-input search-input">
+            </div>
+            <div class="layui-inline  margin-bottom-0  ">
+                <input type="text" name="idCard" id="IdCard1" placeholder="身份证" autocomplete="off" class="layui-input search-input">
+            </div>
+            <button class="layui-btn layui-btn-sm layui-btn-normal" lay-submit lay-filter="btn_Search_next" id="btn_Search_next">
+                <i class="layui-icon layui-icon-search "></i>
+            </button>
+        </div>
+    </script>
+    <script>
+        var orgId = $.request("orgId");
+        layui.use(['form', 'table'], function () {
+            var form = layui.form,
+                table = layui.table;
+
+            table.render({
+                elem: '#useredTable'
+                , url: "../admin/api/organizations/" + orgId + "/users"
+                , toolbar: '#toolbar-div'
+                , defaultToolbar: []//筛选默认显示的toolbar
+                , cols: [[
+                    { type: 'checkbox', fixed: 'left' }
+                    , { field: 'id', width: 100, title: 'ID', sort: true, hide: true }
+                    , { field: 'name', title: '姓名', width: 100 }
+                    , { field: 'saler', title: '工号', width: 60, align: 'center' }
+                    , { field: 'idCard', title: '身份证', align: 'center' }
+                ]]
+                , page: true
+                , limit: 10
+                , height: '450'
+                , loading: true
+                , text: {
+                    none: ' 暂无相关数据!'
+                }
+                , parseData: function (res) {
+                    return {
+                        "code": 0,
+                        "message": "",
+                        "data": res
+                    };
+                }
+                , done: function (res, curr, count) {
+                }
+            });
+            table.render({
+                elem: '#userTable'
+                , url: "../admin/api/users?excludeOrgId=" + orgId
+                , toolbar: '#toolbar-div-next'
+                , defaultToolbar: []//筛选默认显示的toolbar
+                , cols: [[
+                    { type: 'checkbox', fixed: 'left' }
+                    , { field: 'id', width: 100, title: 'ID', sort: true, hide: true }
+                    , { field: 'name', title: '姓名', width: 100 }
+                    , { field: 'saler', title: '工号', width: 60, align: 'center' }
+                    , { field: 'idCard', title: '身份证', align: 'center' }
+                ]]
+                , page: true
+                , limit: 10
+                , height: '450'
+                , loading: true
+                , text: {
+                    none: ' 暂无相关数据!'
+                }
+                , parseData: function (res) {
+                    return {
+                        "code": 0,
+                        "message": "",
+                        "data": res.users
+                    };
+                }
+                , done: function (res, curr, count) {
+                }
+            });
+
+            form.on('submit(btn_Search)', function (data) {
+                var field = data.field;
+                //去除前后的空格
+                $.each(field, function (i) {
+                    field[i] = $.trim(field[i]);
+                });
+                table.reload('useredTable', {
+                    where: field
+                    , page: {
+                        curr: 1 //重新从第 1 页开始
+                    }
+                    , done: function () {
+                        $("#name").val(field.Account);
+                        $("#idCard").val(field.IdCard);
+                    }
+                });
+                return false;
+            });
+            form.on('submit(btn_Search_next)', function (data) {
+                var field = data.field;
+                table.reload('userTable', {
+                    where: field
+                    , page: {
+                        curr: 1 //重新从第 1 页开始
+                    }
+                    , done: function () {
+                        $("#name1").val(field.Account);
+                        $("#idCard1").val(field.IdCard);
+                    }
+                });
+                return false;
+            });
+            //事件
+            var active = {
+                batchdel: function () {
+                    var checkStatus = table.checkStatus('useredTable')
+                        , checkData = checkStatus.data; //得到选中的数据
+
+                    if (checkData.length === 0) {
+                        return layer.msg('请选择数据');
+                    }
+                    var ids = checkData.map(function (idx, item) {
+                        return idx.id
+                    });
+                    $.ajax({
+                        url: "../admin/api/organizations/" + orgId + "/users",
+                        type: "DELETE",
+                        contentType: "application/json",
+                        data: JSON.stringify(ids)
+                    }).done(function (data) {
+                        $.reload('userTable');//表格刷新
+                        $.reload('useredTable');//表格刷新
+                    }).fail(function (jqXHR, error) {
+                        if (jqXHR.responseJSON) {
+                            layer.msg('移除失败！ ' + jqXHR.responseJSON.detail);
+                        }
+                        else {
+                            layer.msg('移除失败！ ' + jqXHR.responseText);
+                        }
+                    });
+                }
+                , add: function () {
+                    var checkStatus = table.checkStatus('userTable')
+                        , checkData = checkStatus.data; //得到选中的数据
+
+                    if (checkData.length === 0) {
+                        return layer.msg('请选择数据');
+                    }
+                    var ids = checkData.map(function (idx, item) {
+                        return idx.id
+                    });
+                    $.ajax({
+                        url: "../admin/api/organizations/" + orgId + "/users",
+                        type: "POST",
+                        contentType: "application/json",
+                        data: JSON.stringify({ "userIds": ids })
+                    }).done(function (data) {
+                        $.reload('userTable');//表格刷新
+                        $.reload('useredTable');//表格刷新
+                    }).fail(function (jqXHR, error) {
+                        if (jqXHR.responseJSON) {
+                            layer.msg('添加失败！ ' + jqXHR.responseJSON.detail);
+                        }
+                        else {
+                            layer.msg('添加失败！ ' + jqXHR.responseText);
+                        }
+                    });
+                }
+            };
+            $('.layui-btn-select').on('click', function () {
+                var type = $(this).data('type');
+                active[type] ? active[type].call(this) : '';
+            });
+        })
+    </script>
+}

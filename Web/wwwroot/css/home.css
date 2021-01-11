@@ -1,0 +1,84 @@
+﻿.sidebar {
+    -webkit-transition: margin .25s ease-out;
+    -moz-transition: margin .25s ease-out;
+    -o-transition: margin .25s ease-out;
+    transition: margin .25s ease-out;
+    width: 15rem;
+    margin-left: -15rem;
+}
+
+.layui-layout-admin.toggled .sidebar {
+    margin-left: 0;
+}
+
+.layui-layout-admin.toggled #main {
+    left: 0px;
+}
+
+.layui-layout-admin.toggled .layui-footer {
+    left: 0px;
+}
+
+.layui-layout-admin .layui-footer {
+    -webkit-transition: left .25s ease-out;
+    -moz-transition: left .25s ease-out;
+    -o-transition: left .25s ease-out;
+    transition: left .25s ease-out;
+}
+
+.layui-layout-admin .navbar {
+    height: 60px;
+}
+
+@media (max-width:767px) {
+    #main, .layui-layout-admin .layui-footer {
+        left: 0px;
+    }
+}
+
+@media (min-width: 768px) {
+    .sidebar {
+        margin-left: 0;
+    }
+
+    .layui-layout-admin.toggled .sidebar {
+        margin-left: -15rem;
+    }
+}
+
+#main {
+    -webkit-transition: left .25s ease-out;
+    -moz-transition: left .25s ease-out;
+    -o-transition: left .25s ease-out;
+    transition: left .25s ease-out;
+    background-color: #eee;
+}
+
+    #main .layui-tab {
+        margin: 0;
+    }
+
+        #main .layui-tab iframe {
+            border: none;
+            height: 100%;
+            overflow: scroll;
+        }
+
+    #main .layui-tab-item {
+        height: 100%;
+    }
+
+    #main .layui-tab-title {
+        background: white;
+        box-shadow: 0 1px 2px 0 rgba(0,0,0,.1);
+        height: 42px;
+    }
+
+
+
+.tab-toolbar {
+    background: white;
+    padding: 10px;
+}
+
+

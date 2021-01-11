@@ -1,0 +1,13 @@
+﻿.tablebar {
+    background-color: #f2f2f2;
+    border: 1px solid #e6e6e6;
+    padding: 10px;
+}
+
+.layui-form-label {
+    width: 100px;
+}
+
+.layui-form-item .layui-input-inline {
+    width: 350px;
+}

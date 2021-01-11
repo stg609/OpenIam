@@ -1,0 +1,83 @@
+﻿@{
+    Layout = "_AdminLayout";
+}
+
+@section Styles{
+    <link href="~/lib/layui-v2.5.7/css/modules/eleTree.css" rel="stylesheet" />
+}
+
+<div class="layui-form" lay-filter="permissions" id="permissions" style="padding: 20px 0 0 0;">
+    <div class="layui-card">
+        <div class="layui-card-body">
+            <div id="tree-table" class="layui-anim" style="padding-left:5%"></div>
+            <div class="layui-form-item layui-hide">
+                <input type="button" lay-submit lay-filter="btn_submit" id="btn_submit" value="确认">
+            </div>
+        </div>
+    </div>
+</div>
+@section Scripts{
+
+    <script>
+        var userId = $.request("userId");
+        layui.config({
+            base: '/lib/layui-v2.5.7/extends/'
+        }).use(['form', 'eleTree'], function () {
+            var form = layui.form,
+                eleTree = layui.eleTree;
+
+            var re;
+            $.ajax({
+                url: "../admin/api/users/" + userId + "/roles?getAll=true",
+                type: "GET",
+                contentType: "application/json"
+            }).done(function (data) {
+                re = eleTree.render({
+                    elem: '#tree-table',
+                    data: data,
+                    defaultExpandAll: true,
+                    showCheckbox: true,
+                    request: {
+                        name: "name",
+                        key: "id",
+                        checked: "isOwned"
+                    },
+                    done: function (e) {
+                    }
+                });
+            });
+            form.render();
+
+            form.on('submit(btn_submit)', function (data) {
+                var ids = {
+                    "roleIds": []
+                };
+                var result = re.getChecked(false, true);
+                for (var i = 0; i < result.length; i++) {
+                    ids.roleIds.push(result[i].id);
+                }
+                $.ajax({
+                    url: "../admin/api/users/" + userId + "/roles",
+                    type: 'PUT',
+                    contentType: "application/json",
+                    data: JSON.stringify(ids)
+                }).done(function () {
+                    $.modalClose();
+                    window.parent.$.reload('LAY-user-manage');//表格刷新
+                }).fail(function (jqXHR, error) {
+                    if (jqXHR.responseJSON) {
+                        layer.msg('保存失败！ ' + jqXHR.responseJSON.detail);
+                    }
+                    else {
+                        layer.msg('保存失败！ ' + jqXHR.responseText);
+                    }
+                });
+            });
+        })
+
+        function submitForm() {
+            $("#btn_submit").trigger('click');//模擬表單提交
+        }
+    </script>
+
+}

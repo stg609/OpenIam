@@ -1,0 +1,137 @@
+﻿
+@{
+    Layout = "_AdminLayout";
+}
+
+<div style="padding-top: 20px; margin-right: 20px;">
+    <div class="layui-form" lay-filter="Details" id="Details" style="padding: 20px 0 0 0;">
+        <div class="layui-form-item">
+            <label class="layui-form-label">Client Id：</label>
+            <div class="layui-input-inline">
+                <input type="text" name="clientId" lay-verify="required" readonly autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">名称(*)：</label>
+            <div class="layui-input-inline">
+                <input type="text" name="clientName" lay-verify="required" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">图标：</label>
+            <div class="layui-input-inline">
+                <input type="text" name="logoUri" placeholder="请输入图标地址" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">描述：</label>
+            <div class="layui-input-inline">
+                <textarea name="description" placeholder="请输入描述" autocomplete="off" class="layui-textarea"></textarea>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">客户端地址(*)：</label>
+            <div class="layui-input-inline">
+                <input name="clientUri" placeholder="请输入客户端系统的地址" lay-verify="required" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">回调地址：</label>
+            <div class="layui-input-inline">
+                <textarea name="redirectUris" placeholder="多个地址用英文逗号分隔" autocomplete="off" class="layui-textarea"></textarea>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">登出地址：</label>
+            <div class="layui-input-inline">
+                <textarea name="postLogoutRedirectUris" placeholder="多个地址用英文逗号分隔" autocomplete="off" class="layui-textarea"></textarea>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">允许的 Scopes(*)：</label>
+            <div class="layui-input-inline">
+                <input type="text" name="allowedScopes" placeholder="多个Scope用英文逗号分隔" autocomplete="off" class="layui-input">
+                <small style="color:red">iam,iamApi,openid,profile,offline_access 为内置 Scopes，不可删除</small>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">允许的跨域地址：</label>
+            <div class="layui-input-inline">
+                <textarea name="allowedCorsOrigins" placeholder="多个地址用英文逗号分隔" autocomplete="off" class="layui-textarea"></textarea>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">Access Token 生命周期(秒)：</label>
+            <div class="layui-input-inline">
+                <input name="accessTokenLifetime" lay-verify="number" type="number" value="0" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">Id Token 生命周期(秒)：</label>
+            <div class="layui-input-inline">
+                <input name="identityTokenLifetime" lay-verify="number" type="number" value="0" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">启用</label>
+            <div class="layui-input-inline">
+                <input name="isEnabled" lay-skin="switch" lay-text="是|否" type="checkbox" value="true">
+            </div>
+        </div>
+        <div class="layui-form-item layui-hide">
+            <input type="text" name="id" lay-verify="required" readonly autocomplete="off" class="layui-input">
+            <input type="button" lay-submit lay-filter="btn_submit" id="btn_submit" value="确认">
+        </div>
+    </div>
+</div>
+@section Scripts{
+    <script>
+        layui.use(['form'], function () {
+            var form = layui.form,
+                table = layui.table;
+
+            var id = $.request("id");
+            if (id != "" && id != null) {
+                $.ajax({
+                    type: 'get',
+                    url: '../admin/api/clients/' + id,
+                    dataType: "json",
+                    async: false,
+                    success: function (data) {
+                        form.val("Details", data);
+                    }
+                })
+            };
+
+            form.render();
+            form.on('submit(btn_submit)', function (data) {
+                var field = data.field;
+                field.accessTokenLifetime = parseInt(field.accessTokenLifetime);
+                field.identityTokenLifetime = parseInt(field.identityTokenLifetime);
+                field.isEnabled = field.isEnabled == "true";
+
+                $.ajax({
+                    url: "../admin/api/clients/" + id,
+                    type: 'PUT',
+                    contentType: "application/json",
+                    data: JSON.stringify(field)
+                }).done(function () {
+                    $.modalClose();
+                    window.parent.$.reload('LAY-client-manage');//表格刷新
+                }).fail(function (jqXHR, error) {
+                    if (jqXHR.responseJSON) {
+                        layer.msg('更新失败！ ' + jqXHR.responseJSON.detail);
+                    }
+                    else {
+                        layer.msg('更新失败！ ' + jqXHR.responseText);
+                    }
+                });
+            })
+        })
+
+        function submitForm() {
+            $("#btn_submit").trigger('click');//模擬表單提交
+        }
+    </script>
+
+}

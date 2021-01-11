@@ -1,0 +1,26 @@
+﻿@using Microsoft.AspNetCore.Identity
+@using Charlie.OpenIam.Core.Models
+@inject SignInManager<ApplicationUser> SignInManager
+@inject UserManager<ApplicationUser> UserManager
+
+<ul class="layui-nav layui-layout-right">
+    @if (SignInManager.IsSignedIn(User))
+    {
+        <li class="layui-nav-item">
+            <a href="javascript:;">
+                <img src="http://t.cn/RCzsdCq" class="layui-nav-img">
+                @User.Identity.Name
+            </a>
+            @*<dl class="layui-nav-child">
+                <dd><a href="">基本资料</a></dd>
+                <dd><a href="">安全设置</a></dd>
+            </dl>*@
+        </li>
+
+        <li class="layui-nav-item">
+            <form name="logout" class="form-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })">
+                <a href="javascript:document.logout.submit();">退 出</a>
+            </form>
+        </li>
+    }
+</ul>
