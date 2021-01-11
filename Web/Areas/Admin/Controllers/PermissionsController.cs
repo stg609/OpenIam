@@ -35,13 +35,11 @@ namespace Charlie.OpenIam.Web.Areas.Admin.Controllers
     {
         private readonly IPermissionService _permissionService;
         private readonly IMapper _mapper;
-        //private readonly IStringLocalizer<Messages> _localizer;
 
-        public PermissionsController(/*IStringLocalizer<Messages> localizer,*/ IPermissionService permissionService,IMapper mapper)
+        public PermissionsController(IPermissionService permissionService,IMapper mapper)
         {
             _permissionService = permissionService;
             _mapper = mapper;
-            //_localizer = localizer;
         }
 
         /// <summary>
@@ -72,7 +70,6 @@ namespace Charlie.OpenIam.Web.Areas.Admin.Controllers
             }
 
             var id = await _permissionService.AddAsync(_mapper.Map<PermissionNewDto>(permission));
-            //await _context.SaveChangesAsync();
             return Ok();
         }
 
@@ -151,7 +148,6 @@ namespace Charlie.OpenIam.Web.Areas.Admin.Controllers
 
             await _permissionService.UpdateAsync(id, model, allowedClientIds);
 
-            //await _context.SaveChangesAsync();
             return Ok();
         }
 
@@ -173,7 +169,6 @@ namespace Charlie.OpenIam.Web.Areas.Admin.Controllers
             }
                         
             await _permissionService.RemoveAsync(ids);
-            //await _context.SaveChangesAsync();
 
             return Ok();
         }

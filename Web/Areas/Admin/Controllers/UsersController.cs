@@ -162,7 +162,6 @@ namespace Charlie.OpenIam.Web.Areas.Admin.Controllers
             }
 
             await _userService.SwitchAsync(id, model);
-            //await _context.SaveChangesAsync();
             return Ok();
         }
 
@@ -256,7 +255,6 @@ namespace Charlie.OpenIam.Web.Areas.Admin.Controllers
             }
 
             await _userService.AssignPermissionsAsync(id, permissions, allowedClientIds);
-            //await _context.SaveChangesAsync();
             return Ok();
         }
 
@@ -284,7 +282,6 @@ namespace Charlie.OpenIam.Web.Areas.Admin.Controllers
             }
 
             await _userService.RemovePermissionsAsync(id, permissions.PermissionIds, allowedClientIds);
-
             return Ok();
         }
 

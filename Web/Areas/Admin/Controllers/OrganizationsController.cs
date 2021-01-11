@@ -107,8 +107,6 @@ namespace Charlie.OpenIam.Web.Areas.Admin.Controllers
 
             string id = _orgService.Add(organization, userId);
 
-            //await _context.SaveChangesAsync();
-
             return CreatedAtAction(nameof(GetOrganizationById), new
             {
                 Id = id
@@ -126,7 +124,6 @@ namespace Charlie.OpenIam.Web.Areas.Admin.Controllers
         public async Task<ActionResult> UpdateOrganization(string id, OrganizationUpdateDto organization)
         {
             await _orgService.UpdateAsync(id, organization);
-            //await _context.SaveChangesAsync();
             return Ok();
         }
 
@@ -146,7 +143,6 @@ namespace Charlie.OpenIam.Web.Areas.Admin.Controllers
             }
 
             await _orgService.RemoveAsync(userId, ids);
-
             return Ok();
         }
 
@@ -174,7 +170,6 @@ namespace Charlie.OpenIam.Web.Areas.Admin.Controllers
             }
 
             await _orgService.AddDefaultRolesAsync(id, model, allowedClientIds);
-            //await _context.SaveChangesAsync();
             return Ok();
         }
 
@@ -202,8 +197,6 @@ namespace Charlie.OpenIam.Web.Areas.Admin.Controllers
             }
 
             await _orgService.DeleteDefaultRolesAsync(id, roleIds, allowedClientIds);
-
-            //await _context.SaveChangesAsync();
             return Ok();
         }
 
@@ -226,8 +219,6 @@ namespace Charlie.OpenIam.Web.Areas.Admin.Controllers
             }
 
             await _orgService.UpdateDefaultRolesAsync(id, model, allowedClientIds);
-
-            //await _context.SaveChangesAsync();
             return Ok();
         }
 
@@ -254,8 +245,6 @@ namespace Charlie.OpenIam.Web.Areas.Admin.Controllers
         public async Task<ActionResult> UpdateOrgUsers(string id, AssignUserToOrgDto model)
         {            
             await _orgService.UpdateUsersAsync(id, model);
-
-            //await _context.SaveChangesAsync();
             return Ok();
         }
 
@@ -273,9 +262,8 @@ namespace Charlie.OpenIam.Web.Areas.Admin.Controllers
             {
                 return Ok();
             }
-            await _orgService.AddUsersAsync(id, model);
 
-            //await _context.SaveChangesAsync();
+            await _orgService.AddUsersAsync(id, model);
             return Ok();
         }
 
@@ -295,8 +283,6 @@ namespace Charlie.OpenIam.Web.Areas.Admin.Controllers
             }
 
             await _orgService.RemoveUsersAsync(id, userIds);
-            //await _context.SaveChangesAsync();
-
             return Ok();
         }
     }

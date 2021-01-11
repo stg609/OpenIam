@@ -115,7 +115,6 @@ namespace Charlie.OpenIam.Web.Areas.Admin.Controllers
             }
 
             await _clientService.UpdateAsync(clientId, model, allowedClientIds);
-
             return Ok();
         }
 
@@ -159,7 +158,6 @@ namespace Charlie.OpenIam.Web.Areas.Admin.Controllers
             }
 
             string secret = await _clientService.ResetSecretAsync(clientId, allowedClientIds);
-
             return secret;
         }
 
@@ -180,7 +178,6 @@ namespace Charlie.OpenIam.Web.Areas.Admin.Controllers
             }
 
             await _clientService.RemoveAsync(model.ClientIds, allowedClientIds);
-
             return Ok();
         }      
     }
