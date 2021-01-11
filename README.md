@@ -1,5 +1,5 @@
 # OpenIam
-提供通用的 Iam 解决方案
+提供通用的 Iam 解决方案，基于 `Asp.Net Core 3.1`, `EF Core 3.1`, `IdentityServer4`, `Layui 2.5.7` 实现。
 
 ## 效果图
 ### 登录（小屏）
