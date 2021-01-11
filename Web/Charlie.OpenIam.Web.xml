@@ -559,6 +559,11 @@
             <param name="isAdmin">是否要求是管理员</param>
             <returns></returns>
         </member>
+        <member name="T:Charlie.OpenIam.Web.Controllers.ClientController">
+            <summary>
+            客户端 管理界面 Mvc 控制器
+            </summary>
+        </member>
         <member name="M:Charlie.OpenIam.Web.Controllers.ClientController.Details(System.String)">
             <summary>
             获取详情页
@@ -571,6 +576,16 @@
             新增客户端
             </summary>
             <returns></returns>
+        </member>
+        <member name="T:Charlie.OpenIam.Web.Controllers.HomeController">
+            <summary>
+            管理界面首页控制器
+            </summary>
+        </member>
+        <member name="T:Charlie.OpenIam.Web.Controllers.OrganizationController">
+            <summary>
+            组织 管理界面 Mvc 控制器
+            </summary>
         </member>
         <member name="M:Charlie.OpenIam.Web.Controllers.OrganizationController.Details(System.String)">
             <summary>
@@ -597,6 +612,11 @@
             </summary>
             <returns></returns>
         </member>
+        <member name="T:Charlie.OpenIam.Web.Controllers.PermissionController">
+            <summary>
+            权限 管理界面 Mvc 控制器
+            </summary>
+        </member>
         <member name="M:Charlie.OpenIam.Web.Controllers.PermissionController.Details(System.String)">
             <summary>
             获取详情页
@@ -609,6 +629,11 @@
             新增
             </summary>
             <returns></returns>
+        </member>
+        <member name="T:Charlie.OpenIam.Web.Controllers.RoleController">
+            <summary>
+            角色 管理界面 Mvc 控制器
+            </summary>
         </member>
         <member name="M:Charlie.OpenIam.Web.Controllers.RoleController.Details(System.String)">
             <summary>
@@ -628,6 +653,11 @@
             关联的权限
             </summary>
             <returns></returns>
+        </member>
+        <member name="T:Charlie.OpenIam.Web.Controllers.UserController">
+            <summary>
+            用户 管理界面 Mvc 控制器
+            </summary>
         </member>
         <member name="M:Charlie.OpenIam.Web.Controllers.UserController.Details(System.String)">
             <summary>
@@ -653,6 +683,11 @@
             权限
             </summary>
             <returns></returns>
+        </member>
+        <member name="T:Charlie.OpenIam.Web.Helpers.Helper">
+            <summary>
+            帮助类
+            </summary>
         </member>
         <member name="M:Charlie.OpenIam.Web.Helpers.Helper.IsSuperAdmin(System.Security.Claims.ClaimsPrincipal)">
             <summary>
