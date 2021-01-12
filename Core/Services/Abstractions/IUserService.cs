@@ -12,6 +12,18 @@ namespace Charlie.OpenIam.Core.Services.Abstractions
     public interface IUserService
     {
         /// <summary>
+        /// 工号是否唯一
+        /// </summary>
+        /// <returns></returns>
+        Task<bool> IsJobNoUniqueAsync();
+
+        /// <summary>
+        /// 手机号是否唯一
+        /// </summary>
+        /// <returns></returns>
+        Task<bool> IsPhoneUnique();
+
+        /// <summary>
         /// 获取用户的角色及权限
         /// </summary>
         /// <param name="userId">用户编号</param>
@@ -41,7 +53,7 @@ namespace Charlie.OpenIam.Core.Services.Abstractions
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        Task<AdminUserDetailsDto> GetAsync(string id);
+        Task<AdminUserDetailsDto> GetAsync(string id = null, string phone = null, string jobNo = null);
 
         /// <summary>
         /// 获取用户的所有角色

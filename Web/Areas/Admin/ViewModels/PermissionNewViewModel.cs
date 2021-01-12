@@ -3,16 +3,31 @@ using Charlie.OpenIam.Abstraction.Dtos;
 
 namespace Charlie.OpenIam.Web.Areas.Admin.ViewModels
 {
+    /// <summary>
+    /// 新增权限 视图模型
+    /// </summary>
     public class PermissionNewViewModel
     {
+        /// <summary>
+        /// 权限的 Key
+        /// </summary>
         [Required]
         public string Key { get; set; }
 
+        /// <summary>
+        /// 名称
+        /// </summary>
         [Required]
         public string Name { get; set; }
 
-        public string Description { get; set; }
+        /// <summary>
+        /// 描述
+        /// </summary>
+        public string Desc { get; set; }
 
+        /// <summary>
+        /// 权限类型
+        /// </summary>
         public PermissionType Type { get; set; }
 
         /// <summary>
@@ -21,6 +36,9 @@ namespace Charlie.OpenIam.Web.Areas.Admin.ViewModels
         [Required]
         public string ClientId { get; set; }
 
+        /// <summary>
+        /// 父级权限编号
+        /// </summary>
         public string ParentId { get; set; }
 
         #region 用于 Type 为 View 的时候的额外字段

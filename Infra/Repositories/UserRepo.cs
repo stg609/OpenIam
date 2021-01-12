@@ -18,6 +18,38 @@ namespace Charlie.OpenIam.Infra.Repositories
             _context = context;
         }
 
+        public async Task<bool> IsExistedAsync(string id = null, string jobNo = null, string phone = null)
+        {
+            var query = _context.Users.AsNoTracking();
+
+            if (!String.IsNullOrWhiteSpace(id))
+            {
+                query = query.Where(itm => itm.Id == id);
+            }
+
+            if (!String.IsNullOrWhiteSpace(jobNo))
+            {
+                query = query.Where(itm => itm.JobNo == jobNo);
+            }
+
+            if (!String.IsNullOrWhiteSpace(phone))
+            {
+                query = query.Where(itm => itm.PhoneNumber == phone);
+            }
+
+            return await query.AnyAsync();
+        }
+
+        public async Task<bool> IsJobNoUniqueAsync()
+        {
+            return !await _context.Users.GroupBy(itm => itm.JobNo).AnyAsync(itm => itm.Count() > 1);
+        }
+
+        public async Task<bool> IsPhoneUniqueAsync()
+        {
+            return !await _context.Users.GroupBy(itm => itm.PhoneNumber).AnyAsync(itm => itm.Count() > 1);
+        }
+
         public async Task<PaginatedDto<ApplicationUser>> GetAllAsync(string firstName = null, string lastName = null, string jobNo = null, string idcard = null, string phone = null, string email = null, string excludeOrgId = null, bool? isActive = null, int pageSize = 10, int pageIndex = 0)
         {
             pageIndex = pageIndex < 1 ? 1 : pageIndex;
@@ -99,7 +131,7 @@ namespace Charlie.OpenIam.Infra.Repositories
             };
         }
 
-        public async Task<ApplicationUser> GetAsync(string id = null, string jobNo = null, bool isReadonly = true)
+        public async Task<ApplicationUser> GetAsync(string id = null, string jobNo = null, string phone = null, bool isReadonly = true)
         {
             var query = isReadonly ? _context.Users.AsNoTracking() :
                 _context.Users;
@@ -114,6 +146,11 @@ namespace Charlie.OpenIam.Infra.Repositories
                 query = query.Where(itm => itm.JobNo == jobNo);
             }
 
+            if (!String.IsNullOrWhiteSpace(phone))
+            {
+                query = query.Where(itm => itm.PhoneNumber == phone);
+            }
+
             var user = await query
               .Include(itm => itm.UserPermissions)
                     .ThenInclude(itm => itm.Permission)
@@ -122,7 +159,7 @@ namespace Charlie.OpenIam.Infra.Repositories
                    .ThenInclude(itm => itm.Organization)
                        .ThenInclude(itm => itm.OrganizationRoles)
                            .ThenInclude(itm => itm.Role)
-              .SingleOrDefaultAsync();
+              .FirstOrDefaultAsync();
 
             return user;
         }

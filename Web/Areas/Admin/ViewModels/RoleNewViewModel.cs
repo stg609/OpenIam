@@ -2,6 +2,9 @@
 
 namespace Charlie.OpenIam.Web.Areas.Admin.ViewModels
 {
+    /// <summary>
+    /// 新增角色 视图模型
+    /// </summary>
     public class RoleNewViewModel
     {
         /// <summary>
@@ -10,6 +13,9 @@ namespace Charlie.OpenIam.Web.Areas.Admin.ViewModels
         [Required]
         public string Name { get; set; }
 
+        /// <summary>
+        /// 所属的 Client Id
+        /// </summary>
         [Required]
         public string ClientId { get; set; }
 

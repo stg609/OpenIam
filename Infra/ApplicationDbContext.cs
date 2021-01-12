@@ -50,6 +50,11 @@ namespace Charlie.OpenIam.Infra
         /// </summary>
         public DbSet<Permission> Permissions { get; set; }
 
+        /// <summary>
+        /// 系统信息
+        /// </summary>
+        public DbSet<SystemInfo> SysInfo { get; set; }
+
         public override int SaveChanges()
         {
             Audit(ChangeTracker, _httpContextAccessor);

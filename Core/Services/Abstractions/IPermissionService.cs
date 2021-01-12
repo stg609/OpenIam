@@ -53,5 +53,12 @@ namespace Charlie.OpenIam.Core.Services.Abstractions
         /// <param name="ids"></param>
         /// <returns></returns>
         Task RemoveAsync(string ids);
+
+        /// <summary>
+        /// 同步权限（覆盖），可用于子系统启动的时候同步
+        /// </summary>
+        /// <param name="permissions"></param>
+        /// <returns></returns>
+        Task SyncPermissionsAsync(SyncPermissionDto permissions, IEnumerable<string> allowedClientIds = null);
     }
 }

@@ -13,11 +13,18 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="Areas\Admin\Controllers\PermissionBatchController.cs" />
     <Compile Remove="Areas\Admin\ViewModels\AdminOrganizationViewModel.cs" />
     <Compile Remove="Areas\Admin\ViewModels\AdminUserDetailsViewModel.cs" />
     <Compile Remove="Areas\Admin\ViewModels\AdminUserListViewModel.cs" />
     <Compile Remove="Areas\Admin\ViewModels\AdminUserViewModel.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Remove="Views\Sys\Create.cshtml" />
+    <Content Remove="Views\Sys\Details.cshtml" />
+    <Content Remove="Views\Sys\Index.cshtml" />
+    <Content Remove="Views\Sys\Permissions.cshtml" />
+    <Content Remove="Views\Sys\Roles.cshtml" />
   </ItemGroup>
 
   <ItemGroup>
@@ -33,6 +40,11 @@
     <None Include="Views\Role\Details.cshtml" />
     <None Include="Views\Role\Index.cshtml" />
     <None Include="Views\Role\Permissions.cshtml" />
+    <None Include="Views\Sys\Create.cshtml" />
+    <None Include="Views\Sys\Details.cshtml" />
+    <None Include="Views\Sys\Index.cshtml" />
+    <None Include="Views\Sys\Permissions.cshtml" />
+    <None Include="Views\Sys\Roles.cshtml" />
     <None Include="Views\User\Create.cshtml" />
     <None Include="Views\User\Details.cshtml" />
     <None Include="Views\User\Index.cshtml" />

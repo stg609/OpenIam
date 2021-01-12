@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Security.Claims;
-using System.Text;
 using System.Threading.Tasks;
 using AutoMapper;
 using Charlie.OpenIam.Abstraction.Dtos;
@@ -22,15 +21,27 @@ namespace Charlie.OpenIam.Core.Models.Services
         private readonly IUserRepo _userRepo;
         private readonly IRoleRepo _roleRepo;
         private readonly IOrgRepo _orgRepo;
+        private readonly ISysRepo _sysRepo;
         private readonly IMapper _mapper;
 
-        public UserService(UserManager<ApplicationUser> userManager, IUserRepo userRepo, IRoleRepo roleRepo, IOrgRepo orgRepo, IMapper mapper)
+        public UserService(UserManager<ApplicationUser> userManager, IUserRepo userRepo, IRoleRepo roleRepo, IOrgRepo orgRepo, ISysRepo sysRepo, IMapper mapper)
         {
             _userMgr = userManager;
             _userRepo = userRepo;
             _roleRepo = roleRepo;
             _orgRepo = orgRepo;
+            _sysRepo = sysRepo;
             _mapper = mapper;
+        }
+
+        public Task<bool> IsJobNoUniqueAsync()
+        {
+            return _userRepo.IsJobNoUniqueAsync();
+        }
+
+        public Task<bool> IsPhoneUnique()
+        {
+            return _userRepo.IsPhoneUniqueAsync();
         }
 
         public async Task<PaginatedDto<AdminUserDto>> GetAllAsync(string firstName = null, string lastName = null, string jobNo = null, string idcard = null, string phone = null, string email = null, string excludeOrgId = null, bool? isActive = null, int pageSize = 10, int pageIndex = 0)
@@ -62,9 +73,9 @@ namespace Charlie.OpenIam.Core.Models.Services
             };
         }
 
-        public async Task<AdminUserDetailsDto> GetAsync(string id)
+        public async Task<AdminUserDetailsDto> GetAsync(string id = null, string phone = null, string jobNo = null)
         {
-            var user = await _userRepo.GetAsync(id);
+            var user = await _userRepo.GetAsync(id, jobNo, phone);
             if (user == null)
             {
                 throw new IamException(System.Net.HttpStatusCode.NotFound, "用户不存在");
@@ -133,7 +144,7 @@ namespace Charlie.OpenIam.Core.Models.Services
                 IsSuperAdmin = itm.IsSuperAdmin,
                 IsOwned = userRoles.Any(role => itm.Id == role.Id) || orgRoles.Any(role => itm.Id == role.Id),
                 IsBelongToOrg = orgRoles.Any(role => itm.Id == role.Id)
-            }).ToList();          
+            }).ToList();
 
             return results.Distinct();
         }
@@ -228,14 +239,7 @@ namespace Charlie.OpenIam.Core.Models.Services
 
             model.JobNo = model.JobNo?.Trim();
 
-            if (!String.IsNullOrWhiteSpace(model.JobNo))
-            {
-                existed = await _userRepo.GetAsync(jobNo: model.JobNo);
-                if (existed != null)
-                {
-                    throw new IamException(HttpStatusCode.BadRequest, "该工号用户已经存在！");
-                }
-            }
+            await ValidateUserAsync(model.JobNo, model.Phone);
 
             var user = new ApplicationUser(model.Username, model.JobNo, model.Email, model.HomeAddress, model.IdCard, model.Phone, model.FirstName, model.LastName, model.Position, model.Gender, model.IsActive);
 
@@ -274,6 +278,19 @@ namespace Charlie.OpenIam.Core.Models.Services
             {
                 throw new IamException(HttpStatusCode.NotFound, "用户不存在");
             }
+
+            string toValidateJobNo = null;
+            string toValidatePhone = null;
+            if (!String.IsNullOrWhiteSpace(model.JobNo) && model.JobNo != user.JobNo)
+            {
+                toValidateJobNo = model.JobNo;
+            }
+            if (!String.IsNullOrWhiteSpace(model.Phone) && model.Phone != user.PhoneNumber)
+            {
+                toValidatePhone = model.Phone;
+            }
+
+            await ValidateUserAsync(toValidateJobNo, toValidatePhone);
 
             user.Update(model.JobNo, model.Email, model.HomeAddress, model.IdCard, model.Phone, model.FirstName, model.LastName, model.Position, model.Gender, model.IsActive);
 
@@ -514,5 +531,39 @@ namespace Charlie.OpenIam.Core.Models.Services
             var orgIds = user.UserOrganizations.Select(itm => itm.OrganizationId);
             return orgsInTree.FilterTree(orgIds);
         }
+
+        /// <summary>
+        /// 验证用户的手机号，工号是否符合系统配置
+        /// </summary>
+        /// <param name="jobNo"></param>
+        /// <param name="phone"></param>
+        /// <returns></returns>
+        private async Task ValidateUserAsync(string jobNo, string phone)
+        {
+            var sys = await _sysRepo.GetAsync();
+            if (sys == null)
+            {
+                return;
+            }
+
+            if (!String.IsNullOrWhiteSpace(jobNo) && sys.IsJobNoUnique)
+            {
+                // 如果新用户提供了工号，则必须检查
+                if (await _userRepo.IsExistedAsync(jobNo: jobNo))
+                {
+                    throw new IamException(HttpStatusCode.BadRequest, "该工号用户已经存在！");
+                }
+            }
+
+            if (!String.IsNullOrWhiteSpace(phone) && sys.IsUserPhoneUnique)
+            {
+                // 如果新用户提供了手机号，则必须检查
+                if (await _userRepo.IsExistedAsync(phone: phone))
+                {
+                    throw new IamException(HttpStatusCode.BadRequest, "该手机号用户已经存在！");
+                }
+            }
+        }
+
     }
 }

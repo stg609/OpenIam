@@ -33,10 +33,11 @@ namespace Charlie.OpenIam.Core.Models.Repositories
         /// <summary>
         /// 获取某个权限的详情
         /// </summary>
-        /// <param name="id"></param>
+        /// <param name="id">权限编号（与 Key 至少选择一个）</param>
+        /// <param name="key">权限的 Key</param>
         /// <param name="isReadonly"></param>
         /// <returns></returns>
-        Task<Permission> GetAsync(string id, bool isReadonly = true);
+        Task<Permission> GetAsync(string id = null, string key = null, string clientId = null, bool isReadonly = true);
 
         /// <summary>
         /// 新增
@@ -48,8 +49,9 @@ namespace Charlie.OpenIam.Core.Models.Repositories
         /// 移除权限
         /// </summary>
         /// <param name="targetIds"></param>
+        /// <param name="excludeKeys">不删除的 Keys</param>
         /// <param name="allowedClientIds"></param>
         /// <returns></returns>
-        Task RemoveAsync(IEnumerable<string> targetIds, IEnumerable<string> allowedClientIds = null);
+        Task RemoveAsync(IEnumerable<string> targetIds = null, IEnumerable<string> excludeKeys = null, IEnumerable<string> allowedClientIds = null);
     }
 }

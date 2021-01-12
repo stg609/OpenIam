@@ -102,7 +102,7 @@ namespace Charlie.OpenIam.Web.Areas.Identity.Pages.Account
                 }
                 else
                 {
-                    // 如果用户没有 DingDing 外部登陆，则创建一个 
+                    // 如果用户没有外部登陆，则创建一个 
                     if (user == null)
                     {
                         string jobNo = null;
@@ -125,6 +125,7 @@ namespace Charlie.OpenIam.Web.Areas.Identity.Pages.Account
                             return RedirectToPage("./Login", new { ReturnUrl = returnUrl });
                         }
 
+                        // 通过工号进行关联（前提工号必须唯一）
                         user = _userManager.Users.SingleOrDefault(itm => itm.JobNo == jobNo);
                         string err = null;
                         if (user != null)

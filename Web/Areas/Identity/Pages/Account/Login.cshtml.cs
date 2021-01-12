@@ -1,16 +1,18 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
-using System.Text.Encodings.Web;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authorization;
+using Charlie.OpenIam.Common;
 using Charlie.OpenIam.Core.Models;
+using Charlie.OpenIam.Core.Models.Services.Dtos;
+using Charlie.OpenIam.Core.Services.Abstractions;
 using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
 namespace Charlie.OpenIam.Web.Areas.Identity.Pages.Account
@@ -20,21 +22,35 @@ namespace Charlie.OpenIam.Web.Areas.Identity.Pages.Account
     {
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly SignInManager<ApplicationUser> _signInManager;
+        private readonly ISysService _sysService;
         private readonly ILogger<LoginModel> _logger;
+        private static readonly Regex _regexPhone;
 
-        public LoginModel(SignInManager<ApplicationUser> signInManager,
-            ILogger<LoginModel> logger,
-            UserManager<ApplicationUser> userManager)
+        static LoginModel()
+        {
+            _regexPhone = new Regex(RegularExps.Phone);
+        }
+
+        public LoginModel(UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager, ISysService sysService, ILogger<LoginModel> logger)
         {
             _userManager = userManager;
             _signInManager = signInManager;
+            _sysService = sysService;
+
             _logger = logger;
         }
+
+        public readonly string JobNoLoginType = "jobNo";
 
         [BindProperty]
         public InputModel Input { get; set; }
 
         public IList<AuthenticationScheme> ExternalLogins { get; set; }
+
+        /// <summary>
+        /// 系统信息
+        /// </summary>
+        public SysDto SysInfo { get; private set; }
 
         public string ReturnUrl { get; set; }
 
@@ -44,8 +60,7 @@ namespace Charlie.OpenIam.Web.Areas.Identity.Pages.Account
         public class InputModel
         {
             [Required]
-            [Display(Name = "用户名", Prompt = "用户名")]
-            public string Username { get; set; }
+            public string Account { get; set; }
 
             [Required]
             [DataType(DataType.Password)]
@@ -68,20 +83,59 @@ namespace Charlie.OpenIam.Web.Areas.Identity.Pages.Account
             // Clear the existing external cookie to ensure a clean login process
             await HttpContext.SignOutAsync(IdentityConstants.ExternalScheme);
 
+            SysInfo = await _sysService.GetAsync();
+
             ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
 
             ReturnUrl = returnUrl;
         }
 
-        public async Task<IActionResult> OnPostAsync(string returnUrl = null)
+        public async Task<IActionResult> OnPostAsync(string returnUrl = null, string type = null)
         {
             returnUrl = returnUrl ?? Url.Content("~/");
+            SysInfo = await _sysService.GetAsync();
+            ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
 
             if (ModelState.IsValid)
             {
+                ApplicationUser user;
+                if (type == JobNoLoginType && SysInfo.IsJobNoPwdLoginEnabled)
+                {
+                    // 工号登录
+                    user = await _userManager.Users.SingleOrDefaultAsync(itm => itm.JobNo == Input.Account && itm.IsActive);
+                    if (user == null)
+                    {
+                        ModelState.AddModelError(string.Empty, "账户名或密码不正确！");
+                        return Page();
+                    }
+                }
+
+                if (_regexPhone.IsMatch(Input.Account))
+                {
+                    if (SysInfo.IsPhonePwdLoginEnabled)
+                    {
+                        // 使用手机号登录
+                        user = await _userManager.Users.SingleOrDefaultAsync(itm => itm.PhoneNumber == Input.Account && itm.IsActive);
+                        if (user == null)
+                        {
+                            ModelState.AddModelError(string.Empty, "账户名或密码不正确！");
+                            return Page();
+                        }
+                    }
+                }
+
+                // 使用用户名登录
                 // This doesn't count login failures towards account lockout
                 // To enable password failures to trigger account lockout, set lockoutOnFailure: true
-                var result = await _signInManager.PasswordSignInAsync(Input.Username, Input.Password, Input.RememberMe, lockoutOnFailure: false);
+
+                user = await _userManager.Users.SingleOrDefaultAsync(itm => itm.NormalizedUserName == Input.Account.ToUpper() && itm.IsActive);
+                if (user == null)
+                {
+                    ModelState.AddModelError(string.Empty, "账户名或密码不正确！");
+                    return Page();
+                }
+
+                var result = await _signInManager.PasswordSignInAsync(user.UserName, Input.Password, Input.RememberMe, lockoutOnFailure: false);
                 if (result.Succeeded)
                 {
                     _logger.LogInformation("User logged in.");
@@ -98,8 +152,7 @@ namespace Charlie.OpenIam.Web.Areas.Identity.Pages.Account
                 }
                 else
                 {
-                    ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
-                    ModelState.AddModelError(string.Empty, "Invalid login attempt.");
+                    ModelState.AddModelError(string.Empty, "账户名或密码不正确！");
                     return Page();
                 }
             }

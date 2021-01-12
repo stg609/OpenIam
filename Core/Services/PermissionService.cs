@@ -104,7 +104,7 @@ namespace Charlie.OpenIam.Core.Models.Services
 
         public async Task UpdateAsync(string id, PermissionUpdateDto model, IEnumerable<string> allowedClientIds = null)
         {
-            var perm = await _permissionRepo.GetAsync(id, false);
+            var perm = await _permissionRepo.GetAsync(id, isReadonly: false);
 
             if (allowedClientIds != null && allowedClientIds.Contains(perm.ClientId))
             {
@@ -115,7 +115,7 @@ namespace Charlie.OpenIam.Core.Models.Services
             {
                 if (String.IsNullOrWhiteSpace(model.Url))
                 {
-                    throw new IamException(HttpStatusCode.BadRequest,"Url 不能为空");
+                    throw new IamException(HttpStatusCode.BadRequest, "Url 不能为空");
                 }
             }
 
@@ -144,6 +144,84 @@ namespace Charlie.OpenIam.Core.Models.Services
             }
 
             await _permissionRepo.RemoveAsync(targetIds);
+        }
+
+        public async Task SyncPermissionsAsync(SyncPermissionDto permissions, IEnumerable<string> allowedClientIds = null)
+        {
+            if (allowedClientIds!= null && !allowedClientIds.Contains(permissions.ClientId))
+            {
+                throw new IamException(HttpStatusCode.BadRequest, "无权操作！");
+            }
+
+            if (permissions.Permissions != null)
+            {
+                var syncPermKeys = permissions.Permissions.Select(itm => itm.Key);
+
+                // 移除被删除的
+                await _permissionRepo.RemoveAsync(excludeKeys: syncPermKeys, allowedClientIds: new[] { permissions.ClientId });
+
+                // 增加新增的
+                var exsitedPerms = await _permissionRepo.GetAllAsync(clientId: permissions.ClientId);
+                var toAdd = syncPermKeys.Except(exsitedPerms.Select(itm => itm.Key));
+                if (toAdd.Any())
+                {
+                    var toAddItms = permissions.Permissions.Where(itm => toAdd.Contains(itm.Key));
+                    foreach (var permission in toAddItms)
+                    {
+                        if (permission.Type == PermissionType.View)
+                        {
+                            if (String.IsNullOrWhiteSpace(permission.Url))
+                            {
+                                throw new IamException(HttpStatusCode.BadRequest, "Url 不能为空");
+                            }
+                        }
+
+                        if (!String.IsNullOrWhiteSpace(permission.ParentId))
+                        {
+                            var parent = await _permissionRepo.GetAsync(permission.ParentId, isReadonly: true);
+                            if (parent == null)
+                            {
+                                throw new IamException(HttpStatusCode.BadRequest, $"权限{permission.Key}父级{permission.ParentId}不存在！");
+                            }
+
+                            if (parent.ClientId != permission.ClientId)
+                            {
+                                throw new IamException(HttpStatusCode.BadRequest, $"权限{permission.Key}父级{permission.ParentId}并不属于客户端({permission.ClientId})！");
+                            }
+                        }
+
+                        string id = Guid.NewGuid().ToString();
+                        _permissionRepo.Add(new Models.Permission(id, permission.ClientId, permission.Type, permission.Key, permission.Name, permission.Desc, permission.ParentId, permission.Url, permission.Icon, permission.Order, permission.Level));
+                    }
+                }
+
+                // 更新已有的
+                foreach (var permission in permissions.Permissions.Where(itm => !toAdd.Contains(itm.Key)))
+                {
+                    var existed = await _permissionRepo.GetAsync(permission.Key, clientId: permission.ClientId, isReadonly: false);
+
+                    if (!String.IsNullOrWhiteSpace(permission.ParentId))
+                    {
+                        var parent = await _permissionRepo.GetAsync(permission.ParentId, isReadonly: true);
+                        if (parent == null)
+                        {
+                            throw new IamException(HttpStatusCode.BadRequest, $"权限{permission.Key}父级{permission.ParentId}不存在！");
+                        }
+
+                        if (parent.ClientId != permission.ClientId)
+                        {
+                            throw new IamException(HttpStatusCode.BadRequest, $"权限{permission.Key}父级{permission.ParentId}并不属于客户端({permission.ClientId})！");
+                        }
+                    }
+
+                    existed.Update(permission.Name, permission.Desc, permission.Type,
+                       permission.ParentId, permission.Url, permission.Icon, permission.Order, permission.Level);
+                }
+            }
+            else
+            {
+                await _permissionRepo.RemoveAsync(allowedClientIds: new[] { permissions.ClientId });
+            }
         }
     }
 }

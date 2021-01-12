@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using AutoMapper;
+﻿using AutoMapper;
 using Charlie.OpenIam.Core.Services.Dtos;
 using Charlie.OpenIam.Web.Areas.Admin.ViewModels;
 

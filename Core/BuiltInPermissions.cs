@@ -206,5 +206,17 @@ namespace Charlie.OpenIam.Core
         /// </summary>
         [Display(Name = "删除 Client")]
         public const string CLIENT_DELETE = _prefix + "client.delete";
+
+        /// <summary>
+        /// 获取系统信息
+        /// </summary>
+        [Display(Name = "获取系统信息")]
+        public const string SYS_GET = _prefix + "sys.get";
+
+        /// <summary>
+        /// 更新系统信息
+        /// </summary>
+        [Display(Name = "更新系统信息")]
+        public const string SYS_UPDATE = _prefix + "sys.update";
     }
 }

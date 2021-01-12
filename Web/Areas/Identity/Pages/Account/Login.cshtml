@@ -2,9 +2,10 @@
 @model LoginModel
 
 @{
-    ViewData["Title"] = "Log in";
+    ViewData["Title"] = "登录";
     Layout = "_Layout";
 }
+
 <div class="login-panel-container row flex-fill d-flex flex-column justify-content-center mt-5 mb-5">
     <div class="login-panel d-flex justify-content-center justify-content-lg-end  pr-lg-5">
         <section class="border shadow-sm mr-lg-5">
@@ -51,24 +52,29 @@
                         </div>
                         <ul class="layui-tab-title">
                             <li class="login-title layui-this">密码登录</li>
+                            @if (Model.SysInfo.IsJobNoPwdLoginEnabled)
+                            {
+                                <li class="login-title">工号登录</li>
+                            }
                         </ul>
-                        <div class="layui-tab-content layui-show pt-4">
-                            <form id="account" method="post">
+
+                        <div class="layui-tab-content  pt-4">
+                            <form class="layui-tab-item layui-show" method="post">
                                 <div class="form-group  mb-2">
                                     <div class="input-group">
                                         <div class="input-group-prepend">
                                             <span class="input-group-text"><i class="fa fa-user" aria-hidden="true"></i></span>
                                         </div>
-                                        <input asp-for="Input.Username" class="form-control" />
+                                        <input asp-for="Input.Account" class="form-control" placeholder="@(Model.SysInfo.IsPhonePwdLoginEnabled?"用户名/手机号":"用户名")" />
                                     </div>
                                     <div class="text-danger-container">
-                                        <span asp-validation-for="Input.Username" class="text-danger"></span>
+                                        <span asp-validation-for="Input.Account" class="text-danger"></span>
                                     </div>
                                 </div>
                                 <div class="form-group  mb-2">
                                     <div class="input-group">
                                         <div class="input-group-prepend">
-                                            <span class="input-group-text" id="basic-addon1"><i class="fa fa-lock" aria-hidden="true"></i></span>
+                                            <span class="input-group-text"><i class="fa fa-lock" aria-hidden="true"></i></span>
                                         </div>
                                         <input asp-for="Input.Password" class="form-control" />
                                     </div>
@@ -86,14 +92,65 @@
                                 <div class="form-group mt-5">
                                     <button type="submit" class="btn btn-primary btn-block">登 录</button>
                                 </div>
-                                @*<div class="form-group">
+                                @if (Model.SysInfo.IsRegisterUserEnabled)
+                                {
+                                    <div class="form-group">
                                         <p>
-                                            <a asp-page="./Register" asp-route-returnUrl="@Model.ReturnUrl">Register as a new user</a>
+                                            <a asp-page="./Register" asp-route-returnUrl="@Model.ReturnUrl">注册新用户</a>
                                         </p>
                                         <p>
                                         </p>
-                                    </div>*@
+                                    </div>
+                                }
                             </form>
+                            @if (Model.SysInfo.IsJobNoPwdLoginEnabled)
+                            {
+                                <form class="layui-tab-item" method="post">
+                                    <div class="form-group  mb-2">
+                                        <div class="input-group">
+                                            <div class="input-group-prepend">
+                                                <span class="input-group-text"><i class="fa fa-user" aria-hidden="true"></i></span>
+                                            </div>
+                                            <input asp-for="Input.Account" class="form-control" placeholder="工号" />
+                                        </div>
+                                        <div class="text-danger-container">
+                                            <span asp-validation-for="Input.Account" class="text-danger"></span>
+                                        </div>
+                                    </div>
+                                    <div class="form-group  mb-2">
+                                        <div class="input-group">
+                                            <div class="input-group-prepend">
+                                                <span class="input-group-text"><i class="fa fa-lock" aria-hidden="true"></i></span>
+                                            </div>
+                                            <input asp-for="Input.Password" class="form-control" />
+                                        </div>
+                                        <div class="text-danger-container">
+                                            <span asp-validation-for="Input.Password" class="text-danger"></span>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label asp-for="Input.RememberMe">
+                                            <input asp-for="Input.RememberMe" />
+                                            @Html.DisplayNameFor(m => m.Input.RememberMe)
+                                        </label>
+                                        <a id="forgot-password" asp-page="./ForgotPassword" class="float-right">忘记密码?</a>
+                                    </div>
+                                    <div class="form-group mt-5">
+                                        <input type="hidden" name="type" value="@Model.JobNoLoginType" />
+                                        <button type="submit" class="btn btn-primary btn-block">登 录</button>
+                                    </div>
+                                    @if (Model.SysInfo.IsRegisterUserEnabled)
+                                    {
+                                        <div class="form-group">
+                                            <p>
+                                                <a asp-page="./Register" asp-route-returnUrl="@Model.ReturnUrl">注册新用户</a>
+                                            </p>
+                                            <p>
+                                            </p>
+                                        </div>
+                                    }
+                                </form>
+                            }
                         </div>
                     </div>
                 </div>
@@ -113,7 +170,7 @@
 
             element.on('tab(login)', function (data) {
                 var $tab = $(".layui-tab-content").children().eq(data.index);
-                if ($tab.children("iframe")[0].contentDocument.URL.indexOf("http")<0) {
+                if ($tab.children("iframe")[0].contentDocument.URL.indexOf("http") < 0) {
                     var $btn = $tab.find("button[type=submit]");
                     $btn.click();
                 }
@@ -134,9 +191,9 @@
                     $(".pwdcard").css("z-index", "0");
                     qrLogin = true;
                 }
-            })           
+            })
         });
 
-        
+
     </script>
 }

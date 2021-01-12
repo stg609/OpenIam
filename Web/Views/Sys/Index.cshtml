@@ -1,0 +1,98 @@
+﻿@{
+    Layout = "_AdminLayout";
+}
+
+@section Styles{
+    <style>
+        #sysForm .layui-form-pane .layui-input-block {
+            margin-left: 220px;
+        }
+    </style>
+}
+
+<div id="sysForm" class="layui-card-body">
+    <div class="layui-form layui-form-pane" lay-filter="Details" style="padding: 20px 0 0 0;">
+        <div class="layui-form-item" pane="">
+            <label class="layui-form-label" style="width:220px;text-align:right">手机号是否唯一：</label>
+            <div class="layui-input-block">
+                <input name="isUserPhoneUnique" lay-skin="switch" lay-text="是|否" type="checkbox">
+            </div>
+        </div>
+        <div class="layui-form-item" pane>
+
+            <label class="layui-form-label" style="width:220px;text-align:right">是否允许手机号和密码登录：</label>
+            <div class="layui-input-block">
+                <input name="isPhonePwdLoginEnabled" lay-skin="switch" lay-text="是|否" type="checkbox">
+            </div>
+        </div>
+        <div class="layui-form-item" pane>
+            <label class="layui-form-label" style="width:220px;text-align:right">工号是否唯一：</label>
+            <div class="layui-input-block">
+                <input name="isJobNoUnique" lay-skin="switch" lay-text="是|否" type="checkbox">
+            </div>
+        </div>
+        <div class="layui-form-item" pane>
+            <label class="layui-form-label" style="width:220px;text-align:right">是否允许工号和密码登录：</label>
+            <div class="layui-input-block">
+                <input name="isJobNoPwdLoginEnabled" lay-skin="switch" lay-text="是|否" type="checkbox">
+            </div>
+        </div>
+        <div class="layui-form-item" pane>
+            <label class="layui-form-label" style="width:220px;text-align:right">是否允许注册：</label>
+            <div class="layui-input-block">
+                <input name="isRegisterUserEnabled" lay-skin="switch" lay-text="是|否" type="checkbox">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <div class="layui-input-block">
+                <input type="button" class="layui-btn" lay-submit lay-filter="btn_submit" id="btn_submit" value="确认">
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@section Scripts{
+    <script>
+        layui.use(['form'], function () {
+            var form = layui.form;
+
+            $.ajax({
+                type: 'get',
+                url: '../admin/api/sys/',
+                dataType: "json",
+                async: false,
+                success: function (data) {
+                    form.val("Details", data);
+                }
+            })
+
+            form.render();
+            form.on('submit(btn_submit)', function (data) {
+                var field = data.field;
+                field.isUserPhoneUnique = field.isUserPhoneUnique == "on";
+                field.isPhonePwdLoginEnabled = field.isPhonePwdLoginEnabled == "on";
+                field.isJobNoUnique = field.isJobNoUnique == "on";
+                field.isJobNoPwdLoginEnabled = field.isJobNoPwdLoginEnabled == "on";
+                field.isRegisterUserEnabled = field.isRegisterUserEnabled == "on";
+
+                $.ajax({
+                    url: "../admin/api/sys/",
+                    type: 'PUT',
+                    contentType: "application/json",
+                    data: JSON.stringify(field)
+                }).done(function () {
+                    layer.msg('更新成功！');
+
+                }).fail(function (jqXHR, error) {
+                    if (jqXHR.responseJSON) {
+                        layer.msg('更新失败！ ' + jqXHR.responseJSON.detail);
+                    }
+                    else {
+                        layer.msg('更新失败！ ' + jqXHR.responseText);
+                    }
+                });
+            })
+        })
+    </script>
+}

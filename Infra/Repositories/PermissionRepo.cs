@@ -39,14 +39,34 @@ namespace Charlie.OpenIam.Infra.Repositories
             return await query.AnyAsync();
         }
 
-        public async Task<Permission> GetAsync(string id, bool isReadonly = true)
+        public async Task<Permission> GetAsync(string id = null, string key = null, string clientId = null, bool isReadonly = true)
         {
+            if(String.IsNullOrWhiteSpace(id) && String.IsNullOrWhiteSpace(key))
+            {
+                throw new ArgumentNullException();
+            }
+
             var query = isReadonly ? _context.Permissions.AsNoTracking() :
                 _context.Permissions;
 
+            if(!String.IsNullOrWhiteSpace(id))
+            {
+                query = query.Where(itm => itm.Id == id);
+            }
+
+            if(!String.IsNullOrWhiteSpace(key))
+            {
+                query = query.Where(itm => itm.Key == key);
+            }
+
+            if(!String.IsNullOrWhiteSpace(clientId))
+            {
+                query = query.Where(itm => itm.ClientId == clientId);
+            }
+
             return await query
                 .Include(itm => itm.Parent)
-                .SingleOrDefaultAsync(itm => itm.Id == id);
+                .SingleOrDefaultAsync();
         }
 
         public void Add(Permission permission)
@@ -100,9 +120,19 @@ namespace Charlie.OpenIam.Infra.Repositories
                 .ToListAsync();
         }
 
-        public async Task RemoveAsync(IEnumerable<string> targetIds, IEnumerable<string> allowedClientIds = null)
+        public async Task RemoveAsync(IEnumerable<string> targetIds = null, IEnumerable<string> excludeKeys = null, IEnumerable<string> allowedClientIds = null)
         {
-            var query = _context.Permissions.Where(itm => targetIds.Contains(itm.Id));
+            var query = _context.Permissions.AsQueryable();
+            if (targetIds != null && targetIds.Any())
+            {
+                query = query.Where(itm => targetIds.Contains(itm.Id));
+            }
+
+            if(excludeKeys != null && excludeKeys.Any())
+            {
+                query = query.Where(itm => !excludeKeys.Contains(itm.Key));
+            }
+
             if (allowedClientIds != null && allowedClientIds.Any())
             {
                 query = query.Where(itm => allowedClientIds.Contains(itm.ClientId));

@@ -168,6 +168,18 @@
             <param name="userIds"></param>
             <returns></returns>
         </member>
+        <member name="T:Charlie.OpenIam.Web.Areas.Admin.Controllers.PermissionBatchController">
+            <summary>
+            权限批量管理
+            </summary>
+        </member>
+        <member name="M:Charlie.OpenIam.Web.Areas.Admin.Controllers.PermissionBatchController.SyncPermissions(Charlie.OpenIam.Web.Areas.Admin.ViewModels.SyncPermissionViewModel)">
+            <summary>
+            批量同步权限(仅可用于当前的 Client），会覆盖原先的权限
+            </summary>
+            <param name="permissions">需要同步的权限集合</param>
+            <returns></returns>
+        </member>
         <member name="T:Charlie.OpenIam.Web.Areas.Admin.Controllers.PermissionsController">
             <summary>
             权限管理
@@ -275,6 +287,24 @@
             </summary>
             <param name="id">角色id</param>
             <param name="model">权限id集合</param>
+            <returns></returns>
+        </member>
+        <member name="T:Charlie.OpenIam.Web.Areas.Admin.Controllers.SysController">
+            <summary>
+            系统管理
+            </summary>
+        </member>
+        <member name="M:Charlie.OpenIam.Web.Areas.Admin.Controllers.SysController.Get">
+            <summary>
+            获取系统信息
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Charlie.OpenIam.Web.Areas.Admin.Controllers.SysController.Update(Charlie.OpenIam.Core.Models.Services.Dtos.SysDto)">
+            <summary>
+            更新系统信息
+            </summary>
+            <param name="model"></param>
             <returns></returns>
         </member>
         <member name="T:Charlie.OpenIam.Web.Areas.Admin.Controllers.UsersController">
@@ -397,9 +427,39 @@
             是否启用
             </summary>
         </member>
+        <member name="T:Charlie.OpenIam.Web.Areas.Admin.ViewModels.PermissionNewViewModel">
+            <summary>
+            新增权限 视图模型
+            </summary>
+        </member>
+        <member name="P:Charlie.OpenIam.Web.Areas.Admin.ViewModels.PermissionNewViewModel.Key">
+            <summary>
+            权限的 Key
+            </summary>
+        </member>
+        <member name="P:Charlie.OpenIam.Web.Areas.Admin.ViewModels.PermissionNewViewModel.Name">
+            <summary>
+            名称
+            </summary>
+        </member>
+        <member name="P:Charlie.OpenIam.Web.Areas.Admin.ViewModels.PermissionNewViewModel.Desc">
+            <summary>
+            描述
+            </summary>
+        </member>
+        <member name="P:Charlie.OpenIam.Web.Areas.Admin.ViewModels.PermissionNewViewModel.Type">
+            <summary>
+            权限类型
+            </summary>
+        </member>
         <member name="P:Charlie.OpenIam.Web.Areas.Admin.ViewModels.PermissionNewViewModel.ClientId">
             <summary>
             Client id，除了内置权限，其他添加的权限都需要有归属的 client id
+            </summary>
+        </member>
+        <member name="P:Charlie.OpenIam.Web.Areas.Admin.ViewModels.PermissionNewViewModel.ParentId">
+            <summary>
+            父级权限编号
             </summary>
         </member>
         <member name="P:Charlie.OpenIam.Web.Areas.Admin.ViewModels.PermissionNewViewModel.Url">
@@ -427,14 +487,39 @@
             总数
             </summary>
         </member>
+        <member name="T:Charlie.OpenIam.Web.Areas.Admin.ViewModels.RoleNewViewModel">
+            <summary>
+            新增角色 视图模型
+            </summary>
+        </member>
         <member name="P:Charlie.OpenIam.Web.Areas.Admin.ViewModels.RoleNewViewModel.Name">
             <summary>
             角色名称
             </summary>
         </member>
+        <member name="P:Charlie.OpenIam.Web.Areas.Admin.ViewModels.RoleNewViewModel.ClientId">
+            <summary>
+            所属的 Client Id
+            </summary>
+        </member>
         <member name="P:Charlie.OpenIam.Web.Areas.Admin.ViewModels.RoleNewViewModel.IsAdmin">
             <summary>
             是否是当前客户端的管理员
+            </summary>
+        </member>
+        <member name="T:Charlie.OpenIam.Web.Areas.Admin.ViewModels.SyncPermissionViewModel">
+            <summary>
+            同步权限 模型
+            </summary>
+        </member>
+        <member name="P:Charlie.OpenIam.Web.Areas.Admin.ViewModels.SyncPermissionViewModel.ClientId">
+            <summary>
+            Client id，除了内置权限，其他添加的权限都需要有归属的 client id
+            </summary>
+        </member>
+        <member name="P:Charlie.OpenIam.Web.Areas.Admin.ViewModels.SyncPermissionViewModel.Permissions">
+            <summary>
+            权限集合
             </summary>
         </member>
         <member name="T:Charlie.OpenIam.Web.Areas.Admin.ViewModels.UserNewViewModel">
@@ -505,6 +590,11 @@
         <member name="P:Charlie.OpenIam.Web.Areas.Admin.ViewModels.UserNewViewModel.IsActive">
             <summary>
             是否激活
+            </summary>
+        </member>
+        <member name="P:Charlie.OpenIam.Web.Areas.Identity.Pages.Account.LoginModel.SysInfo">
+            <summary>
+            系统信息
             </summary>
         </member>
         <member name="P:Charlie.OpenIam.Web.Configurations.IamOptions.Host">
@@ -653,6 +743,11 @@
             关联的权限
             </summary>
             <returns></returns>
+        </member>
+        <member name="T:Charlie.OpenIam.Web.Controllers.SysController">
+            <summary>
+            系统 管理界面 Mvc 控制器
+            </summary>
         </member>
         <member name="T:Charlie.OpenIam.Web.Controllers.UserController">
             <summary>
