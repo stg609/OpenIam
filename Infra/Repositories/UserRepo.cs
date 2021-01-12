@@ -42,12 +42,12 @@ namespace Charlie.OpenIam.Infra.Repositories
 
         public async Task<bool> IsJobNoUniqueAsync()
         {
-            return !await _context.Users.GroupBy(itm => itm.JobNo).AnyAsync(itm => itm.Count() > 1);
+            return !await _context.Users.Where(itm => !String.IsNullOrWhiteSpace(itm.JobNo)).GroupBy(itm => itm.JobNo).AnyAsync(itm => itm.Count() > 1);
         }
 
         public async Task<bool> IsPhoneUniqueAsync()
         {
-            return !await _context.Users.GroupBy(itm => itm.PhoneNumber).AnyAsync(itm => itm.Count() > 1);
+            return !await _context.Users.Where(itm => !String.IsNullOrWhiteSpace(itm.PhoneNumber)).GroupBy(itm => itm.PhoneNumber).AnyAsync(itm => itm.Count() > 1);
         }
 
         public async Task<PaginatedDto<ApplicationUser>> GetAllAsync(string firstName = null, string lastName = null, string jobNo = null, string idcard = null, string phone = null, string email = null, string excludeOrgId = null, bool? isActive = null, int pageSize = 10, int pageIndex = 0)
