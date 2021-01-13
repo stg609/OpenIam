@@ -39,5 +39,18 @@ OpenIam 主要用于内部系统间的统一身份认证及权限管理，核心
 授权系统主要由权限、角色、组织机构 几块构成，其中权限为最细粒度的控制，角色用于对权限按照一定规则进行分组，组织机构可以包含一些默认的角色，只要属于该组织的用户则自动拥有某个角色（及其权限）。   
 
 ## 使用说明
+#### 准备工作
+1. 安装 Postgres 数据库
+1. `git pull https://github.com/stg609/OpenIam`
+1. 进入到 src\Web 目录，执行如下命令：
+   `dotnet ef database update -c ApplicationDbContext`
+   `dotnet ef database update -c IamConfigurationbContext`
+   `dotnet ef database update -c PersistedGrantDbContext`
+   
+#### Docker 方式
+1. `docker run -p 5002:443 -e ASPNETCORE_ENVIRONMENT=Development -e  ASPNETCORE_Kestrel__Certificates__Default__Path=/https/openIam.pfx -e ASPNETCORE_Kestrel__Certificates__Default__Password=111111 -e "ASPNETCORE_URLS=https://+:443;http://+:80" -e "IamOptions__Host=https://localhost" stg609/openiam:v1.0.0`    
+    这个命令把容器中的 `443` 映射到了本机的 `5002` 端口，并且设置了 Https 的证书（基于 OpenSSL)。当命令成功执行后，会在控制台打印出当前正在监听的端口。
+1. 访问 https://localhost:5002 即可
+
 
 未完待续
