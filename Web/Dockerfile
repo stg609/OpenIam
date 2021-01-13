@@ -23,4 +23,7 @@ RUN dotnet publish "Web.csproj" -c Release -o /app/publish
 FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
+COPY Web/lics/openIam.pfx /https/openIam.pfx
+COPY Web/lics/openIam.crt /usr/local/share/ca-certificates/openIam.crt
+RUN update-ca-certificates
 ENTRYPOINT ["dotnet", "Charlie.OpenIam.Web.dll"]

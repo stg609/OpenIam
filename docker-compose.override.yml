@@ -1,0 +1,12 @@
+version: '3.4'
+
+services:
+  web:
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_Kestrel__Certificates__Default__Path=/https/openIam.pfx
+      - ASPNETCORE_Kestrel__Certificates__Default__Password=111111
+      - ASPNETCORE_URLS=https://+:443;http://+:80
+    volumes:
+      - ${APPDATA}/Microsoft/UserSecrets:/root/.microsoft/usersecrets:ro
+      - ${APPDATA}/ASP.NET/Https:/root/.aspnet/https:ro

@@ -1,0 +1,16 @@
+version: '3.4'
+
+services:
+  web:
+    image: ${DOCKER_REGISTRY-}web
+    ports:
+      - "5001:80"
+      - "5002:443"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Production
+      - ASPNETCORE_Kestrel__Certificates__Default__Path=/https/openIam.pfx
+      - ASPNETCORE_Kestrel__Certificates__Default__Password=Password
+      - ASPNETCORE_URLS=https://+:443;http://+:80
+    build:
+      context: .
+      dockerfile: Web/Dockerfile
