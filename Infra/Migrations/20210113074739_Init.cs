@@ -82,7 +82,6 @@ namespace Charlie.OpenIam.Infra.Migrations
                     desc = table.Column<string>(nullable: true),
                     enabled = table.Column<bool>(nullable: false),
                     mobile = table.Column<string>(nullable: true),
-                    city = table.Column<string>(nullable: true),
                     address = table.Column<string>(nullable: true),
                     parentid = table.Column<string>(nullable: true),
                     createdby = table.Column<string>(nullable: true),
@@ -133,6 +132,26 @@ namespace Charlie.OpenIam.Infra.Migrations
                         principalTable: "permissions",
                         principalColumn: "id",
                         onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "sysinfo",
+                columns: table => new
+                {
+                    id = table.Column<string>(nullable: false),
+                    isjobnounique = table.Column<bool>(nullable: false),
+                    isuserphoneunique = table.Column<bool>(nullable: false),
+                    isphonepwdloginenabled = table.Column<bool>(nullable: false),
+                    isjobnopwdloginenabled = table.Column<bool>(nullable: false),
+                    isregisteruserenabled = table.Column<bool>(nullable: false),
+                    createdby = table.Column<string>(nullable: true),
+                    createdat = table.Column<DateTime>(nullable: false),
+                    lastupdatedby = table.Column<string>(nullable: true),
+                    lastupdatedat = table.Column<DateTime>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("pk_sysinfo", x => x.id);
                 });
 
             migrationBuilder.CreateTable(
@@ -435,6 +454,9 @@ namespace Charlie.OpenIam.Infra.Migrations
 
             migrationBuilder.DropTable(
                 name: "rolepermission");
+
+            migrationBuilder.DropTable(
+                name: "sysinfo");
 
             migrationBuilder.DropTable(
                 name: "userorganization");

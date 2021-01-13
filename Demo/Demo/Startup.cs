@@ -69,11 +69,18 @@ namespace WebApplication2
                     pattern: "{controller=Home}/{action=Index}/{id?}");
             });
 
-            //同步权限
-            var idSettings = Configuration.GetSection("IdentityServerSettings").Get<IdentityServerSettings>();
+            try
+            {
+                //同步权限
+                var idSettings = Configuration.GetSection("IdentityServerSettings").Get<IdentityServerSettings>();
 
-            var permSrv = app.ApplicationServices.GetRequiredService<IGeneralPermissionService>();
-            permSrv.SyncPermissionsAsync(idSettings.Authority, idSettings.ClientId, idSettings.ClientSecret).Wait();
+                var permSrv = app.ApplicationServices.GetRequiredService<IGeneralPermissionService>();
+                permSrv.SyncPermissionsAsync(idSettings.Authority, idSettings.ClientId, idSettings.ClientSecret).Wait();
+            }
+            catch (System.Exception)
+            {
+                // 如果 OpenIam 没有启动，则会报错
+            }
         }
     }
 }

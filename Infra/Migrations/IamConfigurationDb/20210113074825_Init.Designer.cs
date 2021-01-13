@@ -10,7 +10,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Charlie.OpenIam.Infra.Migrations.IamConfigurationDb
 {
     [DbContext(typeof(IamConfigurationDbContext))]
-    [Migration("20210107080853_Init")]
+    [Migration("20210113074825_Init")]
     partial class Init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

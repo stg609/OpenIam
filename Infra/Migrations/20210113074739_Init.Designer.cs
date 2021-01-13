@@ -10,8 +10,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Charlie.OpenIam.Infra.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20210108052621_Update")]
-    partial class Update
+    [Migration("20210113074739_Init")]
+    partial class Init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -404,6 +404,54 @@ namespace Charlie.OpenIam.Infra.Migrations
                         .HasName("ix_rolepermission_permissionid");
 
                     b.ToTable("rolepermission");
+                });
+
+            modelBuilder.Entity("Charlie.OpenIam.Core.Models.SystemInfo", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasColumnName("id")
+                        .HasColumnType("text");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnName("createdat")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<string>("CreatedBy")
+                        .HasColumnName("createdby")
+                        .HasColumnType("text");
+
+                    b.Property<bool>("IsJobNoPwdLoginEnabled")
+                        .HasColumnName("isjobnopwdloginenabled")
+                        .HasColumnType("boolean");
+
+                    b.Property<bool>("IsJobNoUnique")
+                        .HasColumnName("isjobnounique")
+                        .HasColumnType("boolean");
+
+                    b.Property<bool>("IsPhonePwdLoginEnabled")
+                        .HasColumnName("isphonepwdloginenabled")
+                        .HasColumnType("boolean");
+
+                    b.Property<bool>("IsRegisterUserEnabled")
+                        .HasColumnName("isregisteruserenabled")
+                        .HasColumnType("boolean");
+
+                    b.Property<bool>("IsUserPhoneUnique")
+                        .HasColumnName("isuserphoneunique")
+                        .HasColumnType("boolean");
+
+                    b.Property<DateTime>("LastUpdatedAt")
+                        .HasColumnName("lastupdatedat")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<string>("LastUpdatedBy")
+                        .HasColumnName("lastupdatedby")
+                        .HasColumnType("text");
+
+                    b.HasKey("Id")
+                        .HasName("pk_sysinfo");
+
+                    b.ToTable("sysinfo");
                 });
 
             modelBuilder.Entity("Charlie.OpenIam.Core.Models.UserOrganization", b =>
