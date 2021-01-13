@@ -40,16 +40,21 @@ OpenIam 主要用于内部系统间的统一身份认证及权限管理，核心
 
 ## 使用说明
 #### 准备工作
-1. 安装 Postgres 数据库
 1. `git pull https://github.com/stg609/OpenIam`
-1. 进入到 src\Web 目录，执行如下命令：
-   `dotnet ef database update -c ApplicationDbContext`
-   `dotnet ef database update -c IamConfigurationbContext`
-   `dotnet ef database update -c PersistedGrantDbContext`
+1. 安装 Postgres 数据库
+1. 在 Postgres 中创建数据库，并执行 **Web\Infra\Scrips** 中的 `01_init.sql` 脚本
    
 #### Docker 方式
-1. `docker run -p 5002:443 -e ASPNETCORE_ENVIRONMENT=Development -e  ASPNETCORE_Kestrel__Certificates__Default__Path=/https/openIam.pfx -e ASPNETCORE_Kestrel__Certificates__Default__Password=111111 -e "ASPNETCORE_URLS=https://+:443;http://+:80" -e "IamOptions__Host=https://localhost" stg609/openiam:v1.0.0`    
-    这个命令把容器中的 `443` 映射到了本机的 `5002` 端口，并且设置了 Https 的证书（基于 OpenSSL)。当命令成功执行后，会在控制台打印出当前正在监听的端口。
+1. ```
+   docker run -p 5002:443 
+     -e ASPNETCORE_ENVIRONMENT=Development 
+     -e ASPNETCORE_Kestrel__Certificates__Default__Path=/https/openIam.pfx 
+     -e ASPNETCORE_Kestrel__Certificates__Default__Password=111111 
+     -e "ASPNETCORE_URLS=https://+:443;http://+:80" 
+     -e "IamOptions__Host=https://localhost" 
+     -e "ConnectionStrings__DefaultConnection=替换成你的数据库连接字符串"
+     stg609/openiam:v1.0.0`    
+    这个命令把容器中的 `443` 映射到了本机的 `5002` 端口，并且设置了 Https 的证书（基于 OpenSSL)。当命令成功执行后，会在控制台打印出当前正在监听的端口。这个命令并没有配置**钉钉**、**企业微信**相关的配置，所以无法正常使用，如果需要正常使用，则需要加上额外的环境变量，具体请参考 `appsettings.json`。
 1. 访问 https://localhost:5002 即可
 
 
