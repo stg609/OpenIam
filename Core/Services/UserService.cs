@@ -39,9 +39,26 @@ namespace Charlie.OpenIam.Core.Models.Services
             return _userRepo.IsJobNoUniqueAsync();
         }
 
-        public Task<bool> IsPhoneUnique()
+        public Task<bool> IsPhoneUniqueAsync()
         {
             return _userRepo.IsPhoneUniqueAsync();
+        }
+
+        public async Task<(bool IsSuperAdmin,bool IsAdmin)> IsAdminAsync(string id)
+        {
+            var roles = await GetRolesAsync(id);
+            bool isAdmin = false;
+            var isSuperAdmin = roles.Any(itm => itm.IsSuperAdmin);
+            if (isSuperAdmin)
+            {
+                isAdmin = true;
+            }
+            else
+            {
+                isAdmin = roles.Any(itm => itm.IsAdmin);
+            }
+
+            return (isSuperAdmin, isAdmin);
         }
 
         public async Task<PaginatedDto<AdminUserDto>> GetAllAsync(string firstName = null, string lastName = null, string jobNo = null, string idcard = null, string phone = null, string email = null, string excludeOrgId = null, bool? isActive = null, int pageSize = 10, int pageIndex = 0)

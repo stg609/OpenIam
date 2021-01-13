@@ -1,4 +1,5 @@
-﻿@{
+﻿@model Charlie.OpenIam.Web.ViewModels.HomeIndexViewModel
+@{
     Layout = null;
 }
 
@@ -31,34 +32,40 @@
             <div class="layui-side layui-bg-black sidebar">
                 <div class="layui-side-scroll">
                     <ul class="layui-nav layui-nav-tree" lay-filter="test">
-                        <li class="layui-nav-item layui-nav-itemed">
-                            <a class="" href="javascript:;">后台管理</a>
-                            <dl class="layui-nav-child">
-                                <dd>
-                                    <a href='javascript:;' lay-href="/Client/Index" lay-id="client">客户端管理</a>
-                                </dd>
-                                <dd>
-                                    <a href='javascript:;' lay-href="/Permission/Index" lay-id="permission">权限管理</a>
-                                </dd>
-                                <dd>
-                                    <a href='javascript:;' lay-href="/Role/Index" lay-id="role">角色管理</a>
-                                </dd>
-                                <dd>
-                                    <a href='javascript:;' lay-href="/Organization/Index" lay-id="org">组织机构管理</a>
-                                </dd>
-                                <dd>
-                                    <a href='javascript:;' lay-href="/User/Index" lay-id="user">用户管理</a>
-                                </dd>
-                            </dl>
-                        </li>
-                        <li class="layui-nav-item layui-nav-itemed">
-                            <a class="" href="javascript:;">系统管理</a>
-                            <dl class="layui-nav-child">                              
-                                <dd>
-                                    <a href='javascript:;' lay-href="/Sys/Index" lay-id="sys">系统管理</a>
-                                </dd>
-                            </dl>
-                        </li>
+                        @if (Model.IsAdmin)
+                        {
+                            <li class="layui-nav-item layui-nav-itemed">
+                                <a class="" href="javascript:;">后台管理</a>
+                                <dl class="layui-nav-child">
+                                    <dd>
+                                        <a href='javascript:;' lay-href="/Client/Index" lay-id="client">客户端管理</a>
+                                    </dd>
+                                    <dd>
+                                        <a href='javascript:;' lay-href="/Permission/Index" lay-id="permission">权限管理</a>
+                                    </dd>
+                                    <dd>
+                                        <a href='javascript:;' lay-href="/Role/Index" lay-id="role">角色管理</a>
+                                    </dd>
+                                    <dd>
+                                        <a href='javascript:;' lay-href="/Organization/Index" lay-id="org">组织机构管理</a>
+                                    </dd>
+                                    <dd>
+                                        <a href='javascript:;' lay-href="/User/Index" lay-id="user">用户管理</a>
+                                    </dd>
+                                </dl>
+                            </li>
+                        }
+                        @if (Model.IsSuperAdmin)
+                        {
+                            <li class="layui-nav-item layui-nav-itemed">
+                                <a class="" href="javascript:;">系统管理</a>
+                                <dl class="layui-nav-child">
+                                    <dd>
+                                        <a href='javascript:;' lay-href="/Sys/Index" lay-id="sys">系统管理</a>
+                                    </dd>
+                                </dl>
+                            </li>
+                        }
                     </ul>
                 </div>
             </div>
@@ -85,7 +92,7 @@
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/lib/layui-v2.5.7/layui.js"></script>
     <script>
-       
+
         layui.use('element', function () {
             var element = layui.element;
             $("[lay-href]").click(function (e) {

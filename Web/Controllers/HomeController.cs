@@ -1,4 +1,8 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using System.Threading.Tasks;
+using Charlie.OpenIam.Core.Services.Abstractions;
+using Charlie.OpenIam.Web.ViewModels;
+using IdentityModel;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 
@@ -11,15 +15,22 @@ namespace Charlie.OpenIam.Web.Controllers
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
+        private readonly IUserService _userService;
 
-        public HomeController(ILogger<HomeController> logger)
+        public HomeController(ILogger<HomeController> logger, IUserService userService)
         {
             _logger = logger;
+            _userService = userService;
         }
 
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            return View();
+            var result = await _userService.IsAdminAsync(User.FindFirst(JwtClaimTypes.Subject)?.Value);
+            return View(new HomeIndexViewModel
+            {
+                IsSuperAdmin = result.IsSuperAdmin,
+                IsAdmin = result.IsAdmin
+            });
         }
     }
 }

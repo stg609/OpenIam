@@ -50,7 +50,7 @@ namespace Charlie.OpenIam.Core.Models.Services
                 throw new IamException(HttpStatusCode.BadRequest, "当前系统中多个用户工号相同，无法设置成工号唯一");
             }
 
-            if (model.IsUserPhoneUnique && !await _userService.IsPhoneUnique())
+            if (model.IsUserPhoneUnique && !await _userService.IsPhoneUniqueAsync())
             {
                 throw new IamException(HttpStatusCode.BadRequest, "当前系统中多个用户手机号相同，无法设置成手机号唯一");
             }

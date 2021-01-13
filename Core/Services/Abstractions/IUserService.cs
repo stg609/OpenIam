@@ -21,7 +21,14 @@ namespace Charlie.OpenIam.Core.Services.Abstractions
         /// 手机号是否唯一
         /// </summary>
         /// <returns></returns>
-        Task<bool> IsPhoneUnique();
+        Task<bool> IsPhoneUniqueAsync();
+
+        /// <summary>
+        /// 用户是否为管理员
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        Task<(bool IsSuperAdmin, bool IsAdmin)> IsAdminAsync(string id);
 
         /// <summary>
         /// 获取用户的角色及权限
