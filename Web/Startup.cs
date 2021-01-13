@@ -11,6 +11,7 @@ using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.IdentityModel.Logging;
 using Newtonsoft.Json;
 
 namespace Charlie.OpenIam.Web
@@ -60,8 +61,10 @@ namespace Charlie.OpenIam.Web
             })
                 .AddNewtonsoftJson(options =>
                   {
+                      // .Net Core 3 目前还无法简单的来避免循环解析，所以使用 Newtonsoft
                       options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
                   }); 
+
             services.AddRazorPages()
                 .AddRazorRuntimeCompilation();
         }
@@ -69,6 +72,7 @@ namespace Charlie.OpenIam.Web
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
+            IdentityModelEventSource.ShowPII = true;
             app.UseForwardedHeaders();
             if (env.IsDevelopment())
             {
@@ -87,7 +91,7 @@ namespace Charlie.OpenIam.Web
             app.UseSwagger();
             app.UseSwaggerUI(c =>
             {
-                c.SwaggerEndpoint("/swagger/v1/swagger.json", "认证服务API v1");
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "OpenIam Api v1");
             });
 
             //app.UseHttpsRedirection();

@@ -148,7 +148,7 @@ namespace Charlie.OpenIam.Core.Models.Services
 
         public async Task SyncPermissionsAsync(SyncPermissionDto permissions, IEnumerable<string> allowedClientIds = null)
         {
-            if (allowedClientIds!= null && !allowedClientIds.Contains(permissions.ClientId))
+            if (allowedClientIds != null && !allowedClientIds.Contains(permissions.ClientId))
             {
                 throw new IamException(HttpStatusCode.BadRequest, "无权操作！");
             }
@@ -198,7 +198,7 @@ namespace Charlie.OpenIam.Core.Models.Services
                 // 更新已有的
                 foreach (var permission in permissions.Permissions.Where(itm => !toAdd.Contains(itm.Key)))
                 {
-                    var existed = await _permissionRepo.GetAsync(permission.Key, clientId: permission.ClientId, isReadonly: false);
+                    var existed = await _permissionRepo.GetAsync(key: permission.Key, clientId: permission.ClientId, isReadonly: false);
 
                     if (!String.IsNullOrWhiteSpace(permission.ParentId))
                     {

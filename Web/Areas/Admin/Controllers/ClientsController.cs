@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
@@ -60,7 +61,12 @@ namespace Charlie.OpenIam.Web.Areas.Admin.Controllers
                 allowedClientIds = User.FindAll(JwtClaimTypes.ClientId).Select(itm => itm.Value);
             }
 
-            return await _clientService.GetAllAsync(name, new[] { clientId }, allowedClientIds, pageSize, pageIndex);
+            IEnumerable<string> clientIds = null;
+            if(!String.IsNullOrWhiteSpace(clientId))
+            {
+                clientIds = new[] { clientId };
+            }
+            return await _clientService.GetAllAsync(name, clientIds, allowedClientIds, pageSize, pageIndex);
         }
 
         /// <summary>

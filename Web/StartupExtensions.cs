@@ -149,15 +149,16 @@ namespace Charlie.OpenIam.Web
                  .AddCookie()
                  .AddJwtBearer("Bearer", options =>
                  {
+                     // OpenIam 本身也做为 Api Resource 提供服务，当第三方访问 OpenIam 的 Api 的时候需要对 Token 进行验证
+                     
                      options.Authority = iamOpt.Host;
                      options.RequireHttpsMetadata = false;
 
-                     //identityServer 本身也做为 Api Resource 提供服务
                      options.Audience = Constants.IAM_API_SCOPE;
 
                      if (iamOpt.ValidIssuers != null)
                      {
-                         // identity server 可能从外网访问，也可能从内网访问，issuer 不同
+                         // OpenIam 可能从外网访问，也可能从内网访问，issuer 不同
                          options.TokenValidationParameters.ValidIssuers = iamOpt.ValidIssuers;
                      }
                  })
@@ -239,8 +240,8 @@ namespace Charlie.OpenIam.Web
             services.AddCors();
 
             services.AddSingleton<IAuthorizationPolicyProvider, AuthorizationPolicyProvider>();
-            services.AddSingleton<IAuthorizationHandler, IdentityServerPermissionHandler>();
-            services.AddSingleton<IGeneralPermissionService, IdentityServerPermissionService>();
+            services.AddSingleton<IAuthorizationHandler, OpenIamPermissionHandler>();
+            services.AddSingleton<IGeneralPermissionService, OpenIamPermissionService>();
 
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<IClientService, ClientService>();
@@ -268,18 +269,16 @@ namespace Charlie.OpenIam.Web
             {
                 c.SwaggerDoc("v1", new OpenApiInfo
                 {
-                    Title = "认证服务API",
+                    Title = "OpenIam Api",
                     Version = "v1",
-                    Description = "配置Identityserver4资源，配置用户相关信息",
                     License = new OpenApiLicense
                     {
                         Name = "MIT 许可证"
                     }
-
                 });
 
                 //接口注释
-                var basePath = Microsoft.Extensions.PlatformAbstractions.PlatformServices.Default.Application.ApplicationBasePath;
+                var basePath = PlatformServices.Default.Application.ApplicationBasePath;
                 c.IncludeXmlComments(xmlFilePath);
             });
 
@@ -361,7 +360,6 @@ namespace Charlie.OpenIam.Web
         {
             using (var scope = app.ApplicationServices.GetService<IServiceScopeFactory>().CreateScope())
             {
-
                 var applicationDbContext = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
                 var userservices = scope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
                 var userMgr = scope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();

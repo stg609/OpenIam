@@ -2,7 +2,7 @@
   "Serilog": {
     "Using": [ "Serilog.Sinks.Console", "Serilog.Sinks.File" ],
     "MinimumLevel": {
-      "Default": "Warning",
+      "Default": "Information",
       "Override": {
         "System": "Warning",
         "Microsoft": "Warning",

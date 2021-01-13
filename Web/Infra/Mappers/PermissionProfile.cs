@@ -9,6 +9,7 @@ namespace Charlie.OpenIam.Web.Infra.Mappers
         public PermissionProfile()
         {
             CreateMap<PermissionNewViewModel, PermissionNewDto>();
+            CreateMap<SyncPermissionViewModel, SyncPermissionDto>();
         }
     }
 }

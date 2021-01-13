@@ -9,12 +9,6 @@
                 <input type="text" name="name" id="name" placeholder="请输入 组织名称" autocomplete="off" class="layui-input search-input">
             </div>
             <div class="layui-input-inline">
-                <input type="text" name="city" id="city" placeholder="请输入 所在城市" autocomplete="off" class="layui-input search-input">
-            </div>
-            <div class="layui-input-inline">
-                <input type="text" name="creditCode" id="creditCode" placeholder="请输入 信用代码" autocomplete="off" class="layui-input search-input">
-            </div>
-            <div class="layui-input-inline">
                 <select name="isActive">
                     <option>是否启用</option>
                     <option value="1">启用</option>
@@ -65,7 +59,6 @@
                         { key: 'name', title: '组织名称', width: 120, sort: false }
                         , { key: 'desc', title: '描述', width: 200, sort: false }
                         , { key: 'mobile', title: '联系电话', width: 160, sort: false }
-                        , { key: 'city', title: '所在城市', width: 160, sort: false }
                         , { key: 'address', title: '联系地址', width: 160, sort: false }
                         , { key: 'isEnabled', title: '启用', width: 80, align: 'center', template: function (item) { return $.renderEnabled(item.isEnabled) } }
                         , {

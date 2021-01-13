@@ -13,16 +13,5 @@ namespace Charlie.OpenIam.Web.Controllers
         {
             return View();
         }
-
-        ///// <summary>
-        ///// 获取详情页
-        ///// </summary>
-        ///// <param name="id"></param>
-        ///// <returns></returns>
-        //[HttpGet]
-        //public IActionResult Details(string id)
-        //{
-        //    return View();
-        //}
     }
 }

@@ -10,11 +10,11 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace Charlie.OpenIam.Core.Models.Services
 {
-    public class IdentityServerPermissionService : AbstractPermissionService
+    public class OpenIamPermissionService : AbstractPermissionService
     {
         private readonly IServiceProvider _sp;
 
-        public IdentityServerPermissionService(IServiceProvider sp)
+        public OpenIamPermissionService(IServiceProvider sp)
         {
             _sp = sp;
         }

@@ -6,9 +6,14 @@
     <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
     <AssemblyName>Charlie.OpenIam.Web</AssemblyName>
     <RootNamespace>Charlie.OpenIam.Web</RootNamespace>
+    <DockerComposeProjectPath>..\docker-compose.dcproj</DockerComposeProjectPath>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <DocumentationFile>.\Charlie.OpenIam.Web.xml</DocumentationFile>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
     <DocumentationFile>.\Charlie.OpenIam.Web.xml</DocumentationFile>
   </PropertyGroup>
 
@@ -20,31 +25,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Content Remove="Views\Sys\Create.cshtml" />
-    <Content Remove="Views\Sys\Details.cshtml" />
-    <Content Remove="Views\Sys\Index.cshtml" />
-    <Content Remove="Views\Sys\Permissions.cshtml" />
-    <Content Remove="Views\Sys\Roles.cshtml" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <None Include="Views\Organization\Create.cshtml" />
-    <None Include="Views\Organization\Details.cshtml" />
-    <None Include="Views\Organization\Index.cshtml" />
-    <None Include="Views\Organization\Roles.cshtml" />
-    <None Include="Views\Organization\Users.cshtml" />
-    <None Include="Views\Permission\Create.cshtml" />
-    <None Include="Views\Permission\Details.cshtml" />
-    <None Include="Views\Permission\Index.cshtml" />
-    <None Include="Views\Role\Create.cshtml" />
-    <None Include="Views\Role\Details.cshtml" />
-    <None Include="Views\Role\Index.cshtml" />
-    <None Include="Views\Role\Permissions.cshtml" />
-    <None Include="Views\Sys\Create.cshtml" />
-    <None Include="Views\Sys\Details.cshtml" />
-    <None Include="Views\Sys\Index.cshtml" />
-    <None Include="Views\Sys\Permissions.cshtml" />
-    <None Include="Views\Sys\Roles.cshtml" />
     <None Include="Views\User\Create.cshtml" />
     <None Include="Views\User\Details.cshtml" />
     <None Include="Views\User\Index.cshtml" />
@@ -92,6 +72,27 @@
     <ProjectReference Include="..\Core\Core.csproj" />
     <ProjectReference Include="..\Common\Common.csproj" />
     <ProjectReference Include="..\Infra\Infra.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="lics\idsrv4.cer">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="lics\idsrv4.key">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="lics\idsrv4.pfx">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="lics\openIam.crt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="lics\openIam.key">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="lics\openIam.pfx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 
 </Project>
