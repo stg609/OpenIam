@@ -76,7 +76,6 @@
                 <div class="tab-toolbar pl-3"><button type="button" class="btn btn-outline-default btn-refresh-tab"><i class="fa fa-refresh" aria-hidden="true"></i></button></div>
                 <ul class="layui-tab-title pl-3">
                 </ul>
-
                 <div class="layui-tab-content flex-fill d-flex flex-column">
                 </div>
             </div>
@@ -116,6 +115,7 @@
 
             var currentTabIndex;
             element.on('tab(pages)', function (data) {
+                $(".layui-tab .layui-tab-title").show();
                 currentTabIndex = data.index;
             });
 
@@ -127,6 +127,8 @@
             $(".tab-toolbar .btn-refresh-tab").click(function () {
                 $($(".layui-tab-content").children()[currentTabIndex]).children("iframe")[0].contentDocument.location.reload(true);
             });
+
+            $(".layui-tab .layui-tab-title").hide();
 
         });
     </script>
