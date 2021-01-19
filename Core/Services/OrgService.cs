@@ -80,7 +80,7 @@ namespace Charlie.OpenIam.Core.Models.Services
                 });
             }
 
-            var roles = await _roleRepo.GetAllAsync(allowedClientIds: allowedClientIds, pageSize:0);
+            var roles = await _roleRepo.GetAllAsync(allowedClientIds: allowedClientIds, pageSize: 0);
             var orgRoles = org.OrganizationRoles.Select(itm => itm.RoleId);
 
             return roles.Data?.Select(itm => new OrganizationRoleDto
@@ -116,15 +116,14 @@ namespace Charlie.OpenIam.Core.Models.Services
             org.Update(organization.Name, organization.Desc, organization.Address, organization.Mobile, organization.ParentId, organization.IsEnabled);
         }
 
-        public async Task<IEnumerable<string>> RemoveAsync(string userId, string ids)
+        public async Task<IEnumerable<string>> RemoveAsync(string userId, IEnumerable<string> ids)
         {
-            var targetIds = ids.Split(",", StringSplitOptions.RemoveEmptyEntries)?.Select(itm => itm.Trim());
-            if (targetIds == null)
+            if (ids == null || !ids.Any())
             {
                 return Enumerable.Empty<string>();
             }
 
-            return await _orgRepo.RemoveAsync(userId, targetIds);
+            return await _orgRepo.RemoveAsync(userId, ids);
         }
 
         public async Task AddDefaultRolesAsync(string id, AssignRoleToOrgDto model, IEnumerable<string> allowedClientIds = null)

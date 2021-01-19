@@ -8,6 +8,7 @@ using Charlie.OpenIam.Common.Helpers;
 using Charlie.OpenIam.Core;
 using Charlie.OpenIam.Core.Services.Abstractions;
 using Charlie.OpenIam.Core.Services.Dtos;
+using Charlie.OpenIam.Web.Areas.Admin.ViewModels;
 using Charlie.OpenIam.Web.Helpers;
 using Charlie.OpenIam.Web.Infra;
 using IdentityModel;
@@ -130,19 +131,24 @@ namespace Charlie.OpenIam.Web.Areas.Admin.Controllers
         /// <summary>
         /// 删除组织机构
         /// </summary>
-        /// <param name="ids">机构编号，多个编号用,分隔</param>
+        /// <param name="model">机构编号</param>
         /// <returns></returns>
         [HasPermission(BuiltInPermissions.ORGS_DELETE, true)]
-        [HttpDelete("{ids}")]
-        public async Task<ActionResult> DeleteOrganization(string ids)
+        [HttpDelete]
+        public async Task<ActionResult> DeleteOrganization(OrgRemoveViewModel model)
         {
+            if (model == null)
+            {
+                return Ok();
+            }
+
             string userId = User.FindFirst(JwtClaimTypes.Subject)?.Value;
             if (String.IsNullOrWhiteSpace(userId))
             {
                 throw new IamException(HttpStatusCode.BadRequest, "用户没有登陆！");
             }
 
-            await _orgService.RemoveAsync(userId, ids);
+            await _orgService.RemoveAsync(userId, model.Ids);
             return Ok();
         }
 
@@ -160,7 +166,7 @@ namespace Charlie.OpenIam.Web.Areas.Admin.Controllers
             {
                 return Ok();
             }
-            
+
             // 除了平台的超级管理员，其他管理员只能管理所属 Client 的资源
             bool isSuper = User.IsSuperAdmin();
             IEnumerable<string> allowedClientIds = null;
@@ -243,7 +249,7 @@ namespace Charlie.OpenIam.Web.Areas.Admin.Controllers
         [HasPermission(BuiltInPermissions.ORGS_USER_UPDATE, true)]
         [HttpPut("{id}/users")]
         public async Task<ActionResult> UpdateOrgUsers(string id, AssignUserToOrgDto model)
-        {            
+        {
             await _orgService.UpdateUsersAsync(id, model);
             return Ok();
         }

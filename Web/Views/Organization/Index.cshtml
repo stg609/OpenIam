@@ -130,11 +130,13 @@
                     layer.confirm('确定删除吗？', function (index) {
                         var ids = checkData.map(function (idx, item) {
                             return idx;
-                        }).join(",");
+                        });
 
                         $.ajax({
-                            url: "/admin/api/organizations/" + ids,
-                            type: "DELETE"
+                            url: "/admin/api/organizations/",
+                            type: "DELETE",
+                            contentType: "application/json",
+                            data: JSON.stringify({ "ids": ids })
                         }).done(function (response) {
                             treeTable.reload('LAY-org-manage');
                             layer.msg('删除成功！' + response);

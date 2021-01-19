@@ -48,7 +48,7 @@ namespace Charlie.OpenIam.Web.Areas.Admin.Controllers
         /// <returns></returns>
         [HttpGet]
         [HasPermission(BuiltInPermissions.CLIENT_GET, true)]
-        public async Task<ActionResult<PaginatedDto<ClientDto>>> GetClients(string name = null, string clientId = null, int pageSize = 10, int pageIndex = 1)
+        public async Task<ActionResult<PaginatedDto<ClientDto>>> GetClients(string clientName = null, string clientId = null, int pageSize = 10, int pageIndex = 1)
         {
             pageSize = pageSize < 0 ? 0 : pageSize;
             pageIndex = pageIndex < 1 ? 1 : pageIndex;
@@ -66,7 +66,7 @@ namespace Charlie.OpenIam.Web.Areas.Admin.Controllers
             {
                 clientIds = new[] { clientId };
             }
-            return await _clientService.GetAllAsync(name, clientIds, allowedClientIds, pageSize, pageIndex);
+            return await _clientService.GetAllAsync(clientName, clientIds, allowedClientIds, pageSize, pageIndex);
         }
 
         /// <summary>

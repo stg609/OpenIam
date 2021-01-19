@@ -54,7 +54,7 @@ namespace Charlie.OpenIam.Core.Services.Abstractions
         /// <param name="userId">当前用户</param>
         /// <param name="ids">要删除的组织编号</param>
         /// <returns>删除的组织编号</returns>
-        Task<IEnumerable<string>> RemoveAsync(string userId, string ids);
+        Task<IEnumerable<string>> RemoveAsync(string userId, IEnumerable<string> ids);
 
         /// <summary>
         /// 新增默认角色

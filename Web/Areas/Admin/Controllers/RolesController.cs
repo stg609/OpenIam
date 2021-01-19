@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using AutoMapper;
 using Charlie.OpenIam.Abstraction;
 using Charlie.OpenIam.Abstraction.Dtos;
+using Charlie.OpenIam.Common;
 using Charlie.OpenIam.Common.Helpers;
 using Charlie.OpenIam.Core;
 using Charlie.OpenIam.Core.Services.Abstractions;
@@ -63,14 +64,13 @@ namespace Charlie.OpenIam.Web.Areas.Admin.Controllers
         /// <summary>
         /// 删除角色
         /// </summary>
-        /// <param name="ids">角色的编号，多个编号用,分隔</param>
+        /// <param name="model">角色的编号</param>
         /// <returns></returns>
         [HasPermission(BuiltInPermissions.ROLE_DELETE, true)]
-        [HttpDelete("{ids}")]
-        public async Task<ActionResult> DeleteRole(string ids)
+        [HttpDelete]
+        public async Task<ActionResult> DeleteRole(RoleRemoveViewModel model)
         {
-            var targetIds = ids.Split(",")?.Select(itm => itm.Trim());
-            if (targetIds == null)
+            if (model == null || model.Ids == null)
             {
                 return Ok();
             }
@@ -83,7 +83,7 @@ namespace Charlie.OpenIam.Web.Areas.Admin.Controllers
                 allowedClientIds = User.FindAll(JwtClaimTypes.ClientId).Select(itm => itm.Value);
             }
 
-            await _roleService.RemoveAsync(targetIds, allowedClientIds);
+            await _roleService.RemoveAsync(model.Ids, allowedClientIds);
             return Ok();
         }
 
@@ -120,7 +120,7 @@ namespace Charlie.OpenIam.Web.Areas.Admin.Controllers
         /// <returns></returns>
         [HasPermission(BuiltInPermissions.ROLE_GET, true)]
         [HttpGet]
-        public async Task<ActionResult<RoleListViewModel>> GetRoles(string name = null, string clientId = null, bool withPerms = false, int pageSize = 10, int pageIndex = 1)
+        public async Task<ActionResult<PaginatedDto<RoleDto>>> GetRoles(string name = null, string clientId = null, bool withPerms = false, int pageSize = 10, int pageIndex = 1)
         {
             // 除了平台的超级管理员，其他管理员只能管理所属 Client 的资源
             bool isSuper = User.IsSuperAdmin();
@@ -132,9 +132,9 @@ namespace Charlie.OpenIam.Web.Areas.Admin.Controllers
 
             var results = await _roleService.GetAllAsync(name, clientId, withPerms: withPerms, allowedClientIds: allowedClientIds, pageSize: pageSize, pageIndex: pageIndex);
 
-            return Ok(new RoleListViewModel
+            return Ok(new PaginatedDto<RoleDto>
             {
-                Roles = results.Data,
+                Data = results.Data,
                 Total = results.Total,
                 PageIndex = results.PageIndex,
                 PageSize = results.PageSize

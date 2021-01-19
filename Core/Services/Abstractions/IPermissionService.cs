@@ -52,7 +52,7 @@ namespace Charlie.OpenIam.Core.Services.Abstractions
         /// </summary>
         /// <param name="ids"></param>
         /// <returns></returns>
-        Task RemoveAsync(string ids);
+        Task RemoveAsync(IEnumerable<string> targetIds);
 
         /// <summary>
         /// 同步权限（覆盖），可用于子系统启动的时候同步

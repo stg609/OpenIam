@@ -64,7 +64,7 @@ namespace Charlie.OpenIam.Core.Models.Services
             }
 
             model.ClientName = model.ClientName.Trim();
-            var allowedScopes = model.AllowedScopes.Split(",", StringSplitOptions.RemoveEmptyEntries).Select(sp => sp.Trim()).ToList();
+            var allowedScopes = model.AllowedScopes?.Split(",", StringSplitOptions.RemoveEmptyEntries).Select(sp => sp.Trim()).ToList() ?? new List<string>();
 
             // 排除 id scopes 以及 已经存在的 api scopes
             var newScopes = allowedScopes.Except(await _clientRepo.GetIdentityResourceNamesAsync(allowedScopes))
@@ -244,7 +244,7 @@ namespace Charlie.OpenIam.Core.Models.Services
             }
             else
             {
-                redirectUris = model.RedirectUris.Split(",", StringSplitOptions.RemoveEmptyEntries);
+                redirectUris = model.RedirectUris?.Split(",", StringSplitOptions.RemoveEmptyEntries);
             }
 
             if (model.PostLogoutRedirectUris != null && String.IsNullOrWhiteSpace(model.PostLogoutRedirectUris))
@@ -253,7 +253,7 @@ namespace Charlie.OpenIam.Core.Models.Services
             }
             else
             {
-                postLogoutRedirectUris = model.PostLogoutRedirectUris.Split(",", StringSplitOptions.RemoveEmptyEntries);
+                postLogoutRedirectUris = model.PostLogoutRedirectUris?.Split(",", StringSplitOptions.RemoveEmptyEntries);
             }
 
             var clientModel = client.ToModel();
