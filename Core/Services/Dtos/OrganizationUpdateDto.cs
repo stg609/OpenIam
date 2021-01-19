@@ -26,11 +26,6 @@
         public string Mobile { get; set; }
 
         /// <summary>
-        /// 所在城市
-        /// </summary>
-        public string City { get; set; }
-
-        /// <summary>
         /// 联系地址
         /// </summary>
         public string Address { get; set; }       

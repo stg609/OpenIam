@@ -2,8 +2,8 @@
 
 namespace Charlie.OpenIam.Web.Areas.Admin.ViewModels
 {
-    public class PermissionRemoveViewModel
+    public class ClientRemoveViewModel
     {
-        public IEnumerable<string> Ids { get; set; }
+        public IEnumerable<string> ClientIds { get; set; }
     }
 }

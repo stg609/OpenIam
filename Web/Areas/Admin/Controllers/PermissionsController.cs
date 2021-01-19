@@ -154,11 +154,11 @@ namespace Charlie.OpenIam.Web.Areas.Admin.Controllers
         /// <summary>
         /// 删除权限
         /// </summary>
-        /// <param name="ids"></param>
+        /// <param name="model"></param>
         /// <returns></returns>
         [HasPermission(BuiltInPermissions.PERM_DELETE, true)]
-        [HttpDelete("{ids}")]
-        public async Task<ActionResult> DeletePermissions(string ids)
+        [HttpDelete]
+        public async Task<ActionResult> DeletePermissions(PermissionRemoveViewModel model)
         {
             // 除了平台的超级管理员，其他管理员只能管理所属 Client 的资源
             bool isSuper = User.IsSuperAdmin();
@@ -168,7 +168,7 @@ namespace Charlie.OpenIam.Web.Areas.Admin.Controllers
                 allowedClientIds = User.FindAll(JwtClaimTypes.ClientId).Select(itm => itm.Value);
             }
                         
-            await _permissionService.RemoveAsync(ids);
+            await _permissionService.RemoveAsync(model.Ids);
 
             return Ok();
         }

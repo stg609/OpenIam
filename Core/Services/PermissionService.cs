@@ -106,6 +106,11 @@ namespace Charlie.OpenIam.Core.Models.Services
         {
             var perm = await _permissionRepo.GetAsync(id, isReadonly: false);
 
+            if (perm == null)
+            {
+                throw new IamException(HttpStatusCode.NotFound, "权限不存在");
+            }
+
             if (allowedClientIds != null && allowedClientIds.Contains(perm.ClientId))
             {
                 throw new IamException(HttpStatusCode.BadRequest, "无权操作");
@@ -127,7 +132,7 @@ namespace Charlie.OpenIam.Core.Models.Services
                     throw new IamException(HttpStatusCode.BadRequest, "父级不存在！");
                 }
 
-                if (parent.ClientId != perm.ClientId)
+                if (!String.IsNullOrWhiteSpace(parent.ClientId) && parent.ClientId != perm.ClientId)
                 {
                     throw new IamException(HttpStatusCode.BadRequest, $"父级并不属于客户端({perm.ClientId})！");
                 }
@@ -135,9 +140,8 @@ namespace Charlie.OpenIam.Core.Models.Services
             perm.Update(model.Name, model.Desc, model.Type, model.ParentId, model.Url, model.Icon, model.Order, model.Level);
         }
 
-        public async Task RemoveAsync(string ids)
+        public async Task RemoveAsync(IEnumerable<string> targetIds)
         {
-            var targetIds = ids.Split(",")?.Select(itm => itm.Trim());
             if (targetIds == null)
             {
                 return;

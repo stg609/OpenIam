@@ -69,7 +69,7 @@ namespace Charlie.OpenIam.Core.Models.Services
 
         public async Task UpdateAsync(string id, RoleUpdateDto role, IEnumerable<string> allowedClientIds = null)
         {
-            var existed = await _roleRepo.GetAsync(id, false);
+            var existed = await _roleRepo.GetAsync(id, isReadonly: false);
 
             if (existed == null)
             {
@@ -90,8 +90,6 @@ namespace Charlie.OpenIam.Core.Models.Services
             }
 
             existed.Update(role.Name, role.Desc, role.IsAdmin);
-
-            await _roleMgr.UpdateAsync(existed);
         }
 
         public async Task<PaginatedDto<RoleDto>> GetAllAsync(string name = null, string clientId = null, IEnumerable<string> roleIds = null, bool withPerms = false, IEnumerable<string> allowedClientIds = null, int pageSize = 10, int pageIndex = 1)

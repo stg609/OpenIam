@@ -117,11 +117,13 @@
                     layer.confirm('确定删除吗？', function (index) {
                         var ids = checkData.map(function (idx, item) {
                             return idx;
-                        }).join(",");
+                        });
 
                         $.ajax({
-                            url: "/admin/api/permissions/" + ids,
-                            type: "DELETE"
+                            url: "/admin/api/permissions/",
+                            type: "DELETE",
+                            contentType: "application/json",
+                            data: JSON.stringify({ "ids": ids })
                         }).done(function (response) {
                             treeTable.reload('LAY-perm-manage');
                             layer.msg('删除成功！' + response);
