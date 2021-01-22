@@ -13,3 +13,4 @@
 **/*.user
 **/*.Development.json
 **/launchSettings.json
+/Web/Properties/PublishProfiles
