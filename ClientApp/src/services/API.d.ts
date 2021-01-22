@@ -51,8 +51,8 @@ declare namespace API {
     avatar?: string;
     name?: string;
     userid?: string;
-    isSuperAdmin: boolean = false;
-    isAdmin: boolean = false;
+    isSuperAdmin: boolean;
+    isAdmin: boolean;
     permissions?: string[],
     accessToken?: string;
     idToken?: string;
@@ -76,6 +76,4 @@ declare namespace API {
     extra: any;
     status: string;
   };
-
-
 }
