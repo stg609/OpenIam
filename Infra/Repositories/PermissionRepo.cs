@@ -41,7 +41,7 @@ namespace Charlie.OpenIam.Infra.Repositories
 
         public async Task<Permission> GetAsync(string id = null, string key = null, string clientId = null, bool isReadonly = true)
         {
-            if(String.IsNullOrWhiteSpace(id) && String.IsNullOrWhiteSpace(key))
+            if (String.IsNullOrWhiteSpace(id) && String.IsNullOrWhiteSpace(key))
             {
                 throw new ArgumentNullException();
             }
@@ -49,17 +49,17 @@ namespace Charlie.OpenIam.Infra.Repositories
             var query = isReadonly ? _context.Permissions.AsNoTracking() :
                 _context.Permissions;
 
-            if(!String.IsNullOrWhiteSpace(id))
+            if (!String.IsNullOrWhiteSpace(id))
             {
                 query = query.Where(itm => itm.Id == id);
             }
 
-            if(!String.IsNullOrWhiteSpace(key))
+            if (!String.IsNullOrWhiteSpace(key))
             {
                 query = query.Where(itm => itm.Key == key);
             }
 
-            if(!String.IsNullOrWhiteSpace(clientId))
+            if (!String.IsNullOrWhiteSpace(clientId))
             {
                 query = query.Where(itm => itm.ClientId == clientId);
             }
@@ -74,7 +74,7 @@ namespace Charlie.OpenIam.Infra.Repositories
             _context.Permissions.Add(permission);
         }
 
-        public async Task<IEnumerable<Permission>> GetAllAsync(string name = null, string key = null, string url = null, string targetClientId = null, PermissionType? type = null, IEnumerable<string> allowedClientIds = null)
+        public async Task<IEnumerable<Permission>> GetAllAsync(string name = null, string key = null, string url = null, string targetClientId = null, PermissionType? type = null, IEnumerable<string> allowedClientIds = null, string excludeRoleId = null, IEnumerable<string> excludePermIds = null)
         {
             var query = _context.Permissions.AsNoTracking();
             if (allowedClientIds != null && allowedClientIds.Any())
@@ -112,6 +112,16 @@ namespace Charlie.OpenIam.Infra.Repositories
                 query = query.Where(itm => itm.Type == type.Value);
             }
 
+            if (!String.IsNullOrEmpty(excludeRoleId))
+            {
+                query = query.Where(itm => !itm.RolePermissions.Any(itm => itm.RoleId == excludeRoleId));
+            }
+
+            if (excludePermIds != null && excludePermIds.Any())
+            {
+                query = query.Where(itm => !excludePermIds.Contains(itm.Id));
+            }
+
             query = query.Include(itm => itm.Parent)
                 .AsNoTracking();
 
@@ -128,7 +138,7 @@ namespace Charlie.OpenIam.Infra.Repositories
                 query = query.Where(itm => targetIds.Contains(itm.Id));
             }
 
-            if(excludeKeys != null && excludeKeys.Any())
+            if (excludeKeys != null && excludeKeys.Any())
             {
                 query = query.Where(itm => !excludeKeys.Contains(itm.Key));
             }

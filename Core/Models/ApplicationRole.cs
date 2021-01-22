@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using Microsoft.AspNetCore.Identity;
 
 namespace Charlie.OpenIam.Core.Models
@@ -83,12 +84,24 @@ namespace Charlie.OpenIam.Core.Models
 
         public void AddPermissions(string permId)
         {
+            if(_permissions.Any(itm=>itm.PermissionId == permId))
+            {
+                return;
+            }
+
             _permissions.Add(new RolePermission(Id, permId));
         }
 
-        public void RemovePermissions()
+        public void RemovePermissions(IEnumerable<string> permIds = null)
         {
-            _permissions.Clear();
+            if (permIds == null)
+            {
+                _permissions.Clear();
+            }
+            else
+            {
+                _permissions.RemoveAll(itm => permIds.Contains(itm.PermissionId));
+            }
         }
     }
 }

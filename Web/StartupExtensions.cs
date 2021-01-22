@@ -145,6 +145,10 @@ namespace Charlie.OpenIam.Web
 
         public static IServiceCollection AddCustomAuthentication(this IServiceCollection services, IamOptions iamOpt, DingTalkOptions dingOpt, WwOptions wwOpt)
         {
+            // 如果想部署到 nginx 的 子目录中，比如 foo 这个目录，那此时 url 为 /foo/api/user，但是 .net core 处理时需要去掉 foo
+            string pathBase = iamOpt.PathBase?.Trim();
+            pathBase = String.IsNullOrWhiteSpace(iamOpt.PathBase) ? "" : "/" + pathBase;
+
             services.AddAuthentication()
                  .AddCookie()
                  .AddJwtBearer("Bearer", options =>
@@ -172,7 +176,8 @@ namespace Charlie.OpenIam.Web
 
                      opts.SignInScheme = IdentityConstants.ExternalScheme;
 
-                     opts.AuthorizationEndpoint = "/Identity/Account/DingTalkLogin";
+                     // 需要手动加上
+                     opts.AuthorizationEndpoint = $"{pathBase}/Identity/Account/DingTalkLogin";
 
                      opts.Events.OnCreatingTicket = async ctx =>
                      {
@@ -190,7 +195,7 @@ namespace Charlie.OpenIam.Web
                          {
                              { "ErrorMessage",ctx.Failure.Message }
                          });
-                         ctx.Response.Redirect("/Identity/Account/Login");
+                         ctx.Response.Redirect($"{pathBase}/Identity/Account/Login");
                          ctx.HandleResponse();
 
                          await Task.CompletedTask;
@@ -204,7 +209,7 @@ namespace Charlie.OpenIam.Web
 
                      opts.SignInScheme = IdentityConstants.ExternalScheme;
 
-                     opts.AuthorizationEndpoint = "/Identity/Account/WwLogin";
+                     opts.AuthorizationEndpoint = $"{pathBase}/Identity/Account/WwLogin";
 
                      opts.Events.OnCreatingTicket = async ctx =>
                      {
@@ -222,7 +227,7 @@ namespace Charlie.OpenIam.Web
                          {
                              { "ErrorMessage",ctx.Failure.Message }
                          });
-                         ctx.Response.Redirect("/Identity/Account/Login");
+                         ctx.Response.Redirect($"{pathBase}/Identity/Account/Login");
                          ctx.HandleResponse();
 
                          await Task.CompletedTask;

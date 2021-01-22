@@ -19,7 +19,6 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
-
 namespace Charlie.OpenIam.Web.Controllers.Api
 {
     /// <summary>
@@ -31,7 +30,6 @@ namespace Charlie.OpenIam.Web.Controllers.Api
     public class UserController : ControllerBase
     {
         private UserManager<ApplicationUser> _userManager;
-
         private readonly IUserService _userService;
         private readonly IamConfigurationDbContext _clientDbContext;
         private readonly IGeneralPermissionService _permissionService;
@@ -237,7 +235,7 @@ namespace Charlie.OpenIam.Web.Controllers.Api
                 Position = user.Position,
                 JobNo = user.JobNo,
                 Gender = user.Gender,
-                Organizations = user.Organizations                
+                Organizations = user.Organizations
             };
         }
 
@@ -278,6 +276,6 @@ namespace Charlie.OpenIam.Web.Controllers.Api
                 Url = itm.Url,
                 Children = itm.Children?.Select(child => Map(child)).ToList()
             };
-        }     
+        }
     }
 }

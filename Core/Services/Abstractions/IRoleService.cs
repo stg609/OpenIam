@@ -47,7 +47,7 @@ namespace Charlie.OpenIam.Core.Services.Abstractions
         /// <param name="pageSize"></param>
         /// <param name="pageIndex"></param>
         /// <returns></returns>
-        Task<PaginatedDto<RoleDto>> GetAllAsync(string name = null, string clientId = null, IEnumerable<string> roleIds = null, bool withPerms = false, IEnumerable<string> allowedClientIds = null, int pageSize = 10, int pageIndex = 1);
+        Task<PaginatedDto<RoleDto>> GetAllAsync(string name = null, string clientId = null, IEnumerable<string> roleIds = null, bool withPerms = false, IEnumerable<string> allowedClientIds = null, string excludeOrgId = null, IEnumerable<string> excludeRoleIds = null, int pageSize = 10, int pageIndex = 1);
 
         /// <summary>
         /// 获取详情
@@ -75,5 +75,23 @@ namespace Charlie.OpenIam.Core.Services.Abstractions
         /// <param name="allowedClientIds"></param>
         /// <returns></returns>
         Task UpdatePermissionsAsync(string id, AssignPermissionDto model, IEnumerable<string> allowedClientIds = null);
+
+        /// <summary>
+        /// 增加权限
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="model"></param>
+        /// <param name="allowedClientIds"></param>
+        /// <returns></returns>
+        Task AddPermissionsAsync(string id, AssignPermissionDto model, IEnumerable<string> allowedClientIds = null);
+
+        /// <summary>
+        /// 移除权限
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="model"></param>
+        /// <param name="allowedClientIds"></param>
+        /// <returns></returns>
+        Task RemovePermissionsAsync(string id, AssignPermissionDto model, IEnumerable<string> allowedClientIds = null);
     }
 }

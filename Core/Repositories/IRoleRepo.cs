@@ -20,7 +20,7 @@ namespace Charlie.OpenIam.Core.Models.Repositories
         /// <param name="pageSize"></param>
         /// <param name="pageIndex"></param>
         /// <returns></returns>
-        Task<PaginatedDto<ApplicationRole>> GetAllAsync(string name = null, string clientId = null, IEnumerable<string> roleIds = null, bool withPerms = false, IEnumerable<string> allowedClientIds = null, int pageSize = 10, int pageIndex = 1);
+        Task<PaginatedDto<ApplicationRole>> GetAllAsync(string name = null, string clientId = null, IEnumerable<string> roleIds = null, bool withPerms = false, IEnumerable<string> allowedClientIds = null, string excludeOrgId = null, int pageSize = 10, int pageIndex = 1);
 
         /// <summary>
         /// 基于角色的名称获取所有角色

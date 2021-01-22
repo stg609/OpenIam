@@ -92,9 +92,14 @@ namespace Charlie.OpenIam.Core.Models.Services
             existed.Update(role.Name, role.Desc, role.IsAdmin);
         }
 
-        public async Task<PaginatedDto<RoleDto>> GetAllAsync(string name = null, string clientId = null, IEnumerable<string> roleIds = null, bool withPerms = false, IEnumerable<string> allowedClientIds = null, int pageSize = 10, int pageIndex = 1)
+        public async Task<PaginatedDto<RoleDto>> GetAllAsync(string name = null, string clientId = null, IEnumerable<string> roleIds = null, bool withPerms = false, IEnumerable<string> allowedClientIds = null, string excludeOrgId = null, IEnumerable<string> excludeRoleIds = null, int pageSize = 10, int pageIndex = 1)
         {
-            var roles = await _roleRepo.GetAllAsync(name, clientId, roleIds, withPerms, allowedClientIds, pageSize, pageIndex);
+            var roles = await _roleRepo.GetAllAsync(name, clientId, roleIds, withPerms, allowedClientIds, excludeOrgId, pageSize, pageIndex);
+
+            if (excludeRoleIds != null && excludeRoleIds.Any())
+            {
+                roles.Data = roles.Data.Where(itm => !excludeRoleIds.Contains(itm.Id));
+            }
 
             PaginatedDto<RoleDto> result = new PaginatedDto<RoleDto>
             {
@@ -213,6 +218,54 @@ namespace Charlie.OpenIam.Core.Models.Services
                     role.AddPermissions(permId);
                 }
             }
+        }
+
+        public async Task AddPermissionsAsync(string id, AssignPermissionDto model, IEnumerable<string> allowedClientIds = null)
+        {
+            if (model == null || model.PermissionIds == null || !model.PermissionIds.Any())
+            {
+                return;
+            }
+            var role = await _roleRepo.GetAsync(id, true, false);
+
+            if (role == null)
+            {
+                throw new IamException(HttpStatusCode.BadRequest, "角色不存在");
+            }
+
+            if (allowedClientIds != null && allowedClientIds.Any() && !allowedClientIds.Contains(role.ClientId))
+            {
+                throw new IamException(HttpStatusCode.BadRequest, "无权操作");
+            }
+
+            foreach (var permId in model.PermissionIds)
+            {
+
+                role.AddPermissions(permId);
+            }
+        }
+
+        public async Task RemovePermissionsAsync(string id, AssignPermissionDto model, IEnumerable<string> allowedClientIds = null)
+        {
+            if (model == null || model.PermissionIds == null || !model.PermissionIds.Any())
+            {
+                return;
+            }
+
+            var role = await _roleRepo.GetAsync(id, true, false);
+
+            if (role == null)
+            {
+                throw new IamException(HttpStatusCode.BadRequest, "角色不存在");
+            }
+
+            if (allowedClientIds != null && allowedClientIds.Any() && !allowedClientIds.Contains(role.ClientId))
+            {
+                throw new IamException(HttpStatusCode.BadRequest, "无权操作");
+            }
+
+
+            role.RemovePermissions(model.PermissionIds);
         }
 
         private IEnumerable<PermissionDto> Map(IEnumerable<Models.RolePermission> permissions, string clientId)

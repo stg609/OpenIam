@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
-using System.Text;
 using System.Threading.Tasks;
 using Charlie.OpenIam.Common;
 using Charlie.OpenIam.Core;
@@ -21,7 +20,7 @@ namespace Charlie.OpenIam.Infra.Repositories
             _context = context;
         }
 
-        public async Task<PaginatedDto<ApplicationRole>> GetAllAsync(string name = null, string clientId = null, IEnumerable<string> roleIds = null, bool withPerms = false, IEnumerable<string> allowedClientIds = null, int pageSize = 10, int pageIndex = 1)
+        public async Task<PaginatedDto<ApplicationRole>> GetAllAsync(string name = null, string clientId = null, IEnumerable<string> roleIds = null, bool withPerms = false, IEnumerable<string> allowedClientIds = null, string excludeOrgId = null, int pageSize = 10, int pageIndex = 1)
         {
             var query = _context.Roles.AsNoTracking();
 
@@ -43,6 +42,11 @@ namespace Charlie.OpenIam.Infra.Repositories
             if (!String.IsNullOrWhiteSpace(name))
             {
                 query = query.Where(itm => EF.Functions.ILike(itm.Name, $"%{name}%"));
+            }
+
+            if(!String.IsNullOrWhiteSpace(excludeOrgId))
+            {
+                query = query.Where(itm => !itm.OrganizationRoles.Any(itm => itm.OrganizationId == excludeOrgId));
             }
 
             if (roleIds != null)
@@ -105,8 +109,7 @@ namespace Charlie.OpenIam.Infra.Repositories
 
         public async Task<IEnumerable<ApplicationRole>> GetAllByIdsAsync(IEnumerable<string> ids, IEnumerable<string> allowedClientIds = null)
         {
-            var query = _context.Roles.AsNoTracking()
-                .Where(itm => String.IsNullOrWhiteSpace(itm.ClientId));
+            var query = _context.Roles.AsNoTracking();
 
             if (allowedClientIds != null)
             {
