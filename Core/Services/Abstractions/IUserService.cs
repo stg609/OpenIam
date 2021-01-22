@@ -127,13 +127,32 @@ namespace Charlie.OpenIam.Core.Services.Abstractions
         Task RemovePermissionsAsync(string id, IEnumerable<string> permissionIds, IEnumerable<string> allowedClientIds = null);
 
         /// <summary>
-        /// 赋予角色给用户
+        /// 赋予角色给用户（覆盖）
         /// </summary>
         /// <param name="id"></param>
         /// <param name="model"></param>
         /// <param name="allowedClientIds"></param>
         /// <returns></returns>
         Task AssignRolesAsync(string id, AssignRoleToUserDto model, IEnumerable<string> allowedClientIds = null);
+
+        /// <summary>
+        /// 添加角色
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="model"></param>
+        /// <param name="allowedClientIds"></param>
+        /// <returns></returns>
+        Task AddRolesAsync(string id, AssignRoleToUserDto model, IEnumerable<string> allowedClientIds = null);
+
+        /// <summary>
+        /// 删除角色
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="model"></param>
+        /// <param name="allowedClientIds"></param>
+        /// <returns></returns>
+        Task RemoveRolesAsync(string id, AssignRoleToUserDto model, IEnumerable<string> allowedClientIds = null);
+
         Task<IEnumerable<OrganizationDto>> GetOrgsAsync(string userId);
     }
 }

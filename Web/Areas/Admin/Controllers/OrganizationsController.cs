@@ -183,13 +183,13 @@ namespace Charlie.OpenIam.Web.Areas.Admin.Controllers
         /// 移除默认角色
         /// </summary>
         /// <param name="id"></param>
-        /// <param name="roleIds"></param>
+        /// <param name="model"></param>
         /// <returns></returns>
         [HasPermission(BuiltInPermissions.ORGS_ROLE_DELETE, true)]
         [HttpDelete("{id}/roles")]
-        public async Task<ActionResult> DeleteDefaultRole(string id, IEnumerable<string> roleIds)
+        public async Task<ActionResult> DeleteDefaultRole(string id, AssignRoleToOrgDto model)
         {
-            if (roleIds == null || !roleIds.Any())
+            if (model == null || model.RoleIds == null || !model.RoleIds.Any())
             {
                 return Ok();
             }
@@ -202,7 +202,7 @@ namespace Charlie.OpenIam.Web.Areas.Admin.Controllers
                 allowedClientIds = User.FindAll(JwtClaimTypes.ClientId).Select(itm => itm.Value);
             }
 
-            await _orgService.DeleteDefaultRolesAsync(id, roleIds, allowedClientIds);
+            await _orgService.DeleteDefaultRolesAsync(id, model.RoleIds, allowedClientIds);
             return Ok();
         }
 
@@ -254,11 +254,12 @@ namespace Charlie.OpenIam.Web.Areas.Admin.Controllers
             return Ok();
         }
 
+
         /// <summary>
         /// 增加机构的用户
         /// </summary>
         /// <param name="id"></param>
-        /// <param name="userIds"></param>
+        /// <param name="model"></param>
         /// <returns></returns>
         [HasPermission(BuiltInPermissions.ORGS_USER_ADD, true)]
         [HttpPost("{id}/users")]
@@ -277,18 +278,18 @@ namespace Charlie.OpenIam.Web.Areas.Admin.Controllers
         /// 从机构中移除用户
         /// </summary>
         /// <param name="id"></param>
-        /// <param name="userIds"></param>
+        /// <param name="model"></param>
         /// <returns></returns>
         [HasPermission(BuiltInPermissions.ORGS_USER_REMOVE, true)]
         [HttpDelete("{id}/users")]
-        public async Task<ActionResult> RemoveOrgUsers(string id, IEnumerable<string> userIds)
+        public async Task<ActionResult> RemoveOrgUsers(string id, AssignUserToOrgDto model)
         {
-            if (userIds == null || !userIds.Any())
+            if (model == null || model.UserIds == null || !model.UserIds.Any())
             {
                 return Ok();
             }
 
-            await _orgService.RemoveUsersAsync(id, userIds);
+            await _orgService.RemoveUsersAsync(id, model.UserIds);
             return Ok();
         }
     }

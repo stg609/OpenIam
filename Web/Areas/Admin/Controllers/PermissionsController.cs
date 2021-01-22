@@ -34,11 +34,13 @@ namespace Charlie.OpenIam.Web.Areas.Admin.Controllers
     public class PermissionsController : ControllerBase
     {
         private readonly IPermissionService _permissionService;
+        private readonly IUserService _userService;
         private readonly IMapper _mapper;
 
-        public PermissionsController(IPermissionService permissionService,IMapper mapper)
+        public PermissionsController(IPermissionService permissionService, IUserService userService, IMapper mapper)
         {
             _permissionService = permissionService;
+            _userService = userService;
             _mapper = mapper;
         }
 
@@ -82,10 +84,12 @@ namespace Charlie.OpenIam.Web.Areas.Admin.Controllers
         /// <param name="targetClientId">权限所属的 clientId</param>
         /// <param name="type">权限类型</param>
         /// <param name="treeView">是否以树形结构显示</param>
+        /// <param name="excludeRoleId">要排除的角色中的权限</param>
+        /// <param name="excludeUserId">要排除的用户中的权限</param>
         /// <returns></returns>
         [HasPermission(BuiltInPermissions.PERM_GETALL, true)]
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<PermissionDto>>> GetPermissions(string name = null, string key = null, string url = null, string targetClientId = null, PermissionType? type = null, bool treeView = false)
+        public async Task<ActionResult<IEnumerable<PermissionDto>>> GetPermissions(string name = null, string key = null, string url = null, string targetClientId = null, PermissionType? type = null, bool treeView = false, string excludeRoleId = null, string excludeUserId = null)
         {
             // 除了平台的超级管理员，其他管理员只能管理所属 Client 的资源
             bool isSuper = User.IsSuperAdmin();
@@ -94,8 +98,15 @@ namespace Charlie.OpenIam.Web.Areas.Admin.Controllers
             {
                 allowedClientIds = User.FindAll(JwtClaimTypes.ClientId).Select(itm => itm.Value);
             }
-                      
-            var results = await _permissionService.GetAllsync(name, key, url, targetClientId, type, allowedClientIds);
+
+            IEnumerable<string> excludePermIds = null;
+            if (!String.IsNullOrWhiteSpace(excludeUserId))
+            {
+                var perms = await _userService.GetRolesAndPermissionsAsync(excludeUserId, allowedClientIds);
+                excludePermIds = perms.Permissions?.Select(itm => itm.Id);
+            }
+
+            var results = await _permissionService.GetAllsync(name, key, url, targetClientId, type, allowedClientIds, excludeRoleId, excludePermIds);
 
             if (treeView)
             {
@@ -167,7 +178,7 @@ namespace Charlie.OpenIam.Web.Areas.Admin.Controllers
             {
                 allowedClientIds = User.FindAll(JwtClaimTypes.ClientId).Select(itm => itm.Value);
             }
-                        
+
             await _permissionService.RemoveAsync(model.Ids);
 
             return Ok();

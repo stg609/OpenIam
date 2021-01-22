@@ -58,9 +58,9 @@ namespace Charlie.OpenIam.Core.Models.Services
             return id;
         }
 
-        public async Task<IEnumerable<PermissionDto>> GetAllsync(string name = null, string key = null, string url = null, string targetClientId = null, PermissionType? type = null, IEnumerable<string> allowedClientIds = null)
+        public async Task<IEnumerable<PermissionDto>> GetAllsync(string name = null, string key = null, string url = null, string targetClientId = null, PermissionType? type = null, IEnumerable<string> allowedClientIds = null, string excludeRoleId = null, IEnumerable<string> excludePermIds = null)
         {
-            var permissions = await _permissionRepo.GetAllAsync(name, key, url, targetClientId, type, allowedClientIds);
+            var permissions = await _permissionRepo.GetAllAsync(name, key, url, targetClientId, type, allowedClientIds, excludeRoleId, excludePermIds);
             return permissions?.Select(itm => new PermissionDto
             {
                 Id = itm.Id,

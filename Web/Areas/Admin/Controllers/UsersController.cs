@@ -306,5 +306,49 @@ namespace Charlie.OpenIam.Web.Areas.Admin.Controllers
             await _userService.AssignRolesAsync(id, model, allowedClientIds);
             return Ok();
         }
+
+        /// <summary>
+        /// 添加某个用户角色
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="model">角色名称集合</param>7
+        /// <returns></returns>
+        [HasPermission(BuiltInPermissions.USER_ASSIGN_ROLE, true)]
+        [HttpPost("{id}/roles")]
+        public async Task<ActionResult> AddRoles(string id, AssignRoleToUserDto model)
+        {
+            // 除了平台的超级管理员，其他管理员只能管理所属 Client 的资源
+            bool isSuper = User.IsSuperAdmin();
+            IEnumerable<string> allowedClientIds = null;
+            if (!isSuper)
+            {
+                allowedClientIds = User.FindAll(JwtClaimTypes.ClientId).Select(itm => itm.Value);
+            }
+
+            await _userService.AddRolesAsync(id, model, allowedClientIds);
+            return Ok();
+        }
+
+        /// <summary>
+        /// 移除某个用户角色
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="model">角色名称集合</param>7
+        /// <returns></returns>
+        [HasPermission(BuiltInPermissions.USER_ASSIGN_ROLE, true)]
+        [HttpDelete("{id}/roles")]
+        public async Task<ActionResult> RemoveRoles(string id, AssignRoleToUserDto model)
+        {
+            // 除了平台的超级管理员，其他管理员只能管理所属 Client 的资源
+            bool isSuper = User.IsSuperAdmin();
+            IEnumerable<string> allowedClientIds = null;
+            if (!isSuper)
+            {
+                allowedClientIds = User.FindAll(JwtClaimTypes.ClientId).Select(itm => itm.Value);
+            }
+
+            await _userService.RemoveRolesAsync(id, model, allowedClientIds);
+            return Ok();
+        }
     }
 }

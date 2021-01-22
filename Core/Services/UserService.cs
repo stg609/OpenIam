@@ -44,7 +44,7 @@ namespace Charlie.OpenIam.Core.Models.Services
             return _userRepo.IsPhoneUniqueAsync();
         }
 
-        public async Task<(bool IsSuperAdmin,bool IsAdmin)> IsAdminAsync(string id)
+        public async Task<(bool IsSuperAdmin, bool IsAdmin)> IsAdminAsync(string id)
         {
             var roles = await GetRolesAsync(id);
             bool isAdmin = false;
@@ -516,6 +516,72 @@ namespace Charlie.OpenIam.Core.Models.Services
             var allowedRoles = await _roleRepo.GetAllByIdsAsync(model.RoleIds, allowedClientIds);
 
             result = await _userMgr.AddToRolesAsync(user, allowedRoles.Select(itm => itm.Name));
+            if (!result.Succeeded)
+            {
+                throw new IamException(HttpStatusCode.BadRequest, String.Join(";", result.Errors.Select(err => err.Description)));
+            }
+        }
+
+        public async Task AddRolesAsync(string id, AssignRoleToUserDto model, IEnumerable<string> allowedClientIds = null)
+        {
+            if (model == null || model.RoleIds == null || !model.RoleIds.Any())
+            {
+                return;
+            }
+
+            var user = await _userRepo.GetAsync(id, isReadonly: false);
+            if (user == null)
+            {
+                throw new IamException(HttpStatusCode.BadRequest, "用户不存在");
+            }
+            var exsitedRoles = await _userMgr.GetRolesAsync(user);
+
+            if (allowedClientIds != null)
+            {
+                var ownedRoles = await _roleRepo.GetAllByNamesAsync(exsitedRoles, allowedClientIds);
+                exsitedRoles = exsitedRoles.Except(ownedRoles.Select(itm => itm.Name)).ToList();
+            }
+
+            var allowedRoles = await _roleRepo.GetAllByIdsAsync(model.RoleIds, allowedClientIds);
+            if (!allowedRoles.Any())
+            {
+                return;
+            }
+
+            var result = await _userMgr.AddToRolesAsync(user, allowedRoles.Select(itm => itm.Name).Except(exsitedRoles));
+            if (!result.Succeeded)
+            {
+                throw new IamException(HttpStatusCode.BadRequest, String.Join(";", result.Errors.Select(err => err.Description)));
+            }
+        }
+
+        public async Task RemoveRolesAsync(string id, AssignRoleToUserDto model, IEnumerable<string> allowedClientIds = null)
+        {
+            if (model == null || model.RoleIds == null || !model.RoleIds.Any())
+            {
+                return;
+            }
+
+            var user = await _userRepo.GetAsync(id, isReadonly: false);
+            if (user == null)
+            {
+                throw new IamException(HttpStatusCode.BadRequest, "用户不存在");
+            }
+            var exsitedRoles = await _userMgr.GetRolesAsync(user);
+
+            if (allowedClientIds != null)
+            {
+                var ownedRoles = await _roleRepo.GetAllByNamesAsync(exsitedRoles, allowedClientIds);
+                exsitedRoles = exsitedRoles.Except(ownedRoles.Select(itm => itm.Name)).ToList();
+            }
+
+            var toRemoveRoles = await _roleRepo.GetAllByIdsAsync(model.RoleIds, allowedClientIds);
+            if (!toRemoveRoles.Any())
+            {
+                return;
+            }
+
+            IdentityResult result = await _userMgr.RemoveFromRolesAsync(user, toRemoveRoles.Select(itm => itm.Name));
             if (!result.Succeeded)
             {
                 throw new IamException(HttpStatusCode.BadRequest, String.Join(";", result.Errors.Select(err => err.Description)));

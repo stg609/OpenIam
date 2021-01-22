@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
@@ -31,11 +32,13 @@ namespace Charlie.OpenIam.Web.Areas.Admin.Controllers
     public class RolesController : ControllerBase
     {
         private readonly IRoleService _roleService;
+        private readonly IUserService _userService;
         private readonly IMapper _mapper;
 
-        public RolesController(IRoleService roleService, IMapper mapper)
+        public RolesController(IRoleService roleService, IUserService userService, IMapper mapper)
         {
             _roleService = roleService;
+            _userService = userService;
             _mapper = mapper;
         }
 
@@ -120,7 +123,7 @@ namespace Charlie.OpenIam.Web.Areas.Admin.Controllers
         /// <returns></returns>
         [HasPermission(BuiltInPermissions.ROLE_GET, true)]
         [HttpGet]
-        public async Task<ActionResult<PaginatedDto<RoleDto>>> GetRoles(string name = null, string clientId = null, bool withPerms = false, int pageSize = 10, int pageIndex = 1)
+        public async Task<ActionResult<PaginatedDto<RoleDto>>> GetRoles(string name = null, string clientId = null, bool withPerms = false, string excludeOrgId = null, string excludeUserId = null, int pageSize = 10, int pageIndex = 1)
         {
             // 除了平台的超级管理员，其他管理员只能管理所属 Client 的资源
             bool isSuper = User.IsSuperAdmin();
@@ -130,7 +133,15 @@ namespace Charlie.OpenIam.Web.Areas.Admin.Controllers
                 allowedClientIds = User.FindAll(JwtClaimTypes.ClientId).Select(itm => itm.Value);
             }
 
-            var results = await _roleService.GetAllAsync(name, clientId, withPerms: withPerms, allowedClientIds: allowedClientIds, pageSize: pageSize, pageIndex: pageIndex);
+            // 获取要排除的用户所拥有的角色
+            IEnumerable<string> excludeRoleIds = null;
+            if (!String.IsNullOrWhiteSpace(excludeUserId))
+            {
+                // 通过 service 去获取用户角色，因为用户角色可能来自于所属的机构
+                var excludedRoles = await _userService.GetRolesAsync(excludeUserId);
+                excludeRoleIds = excludedRoles.Select(itm => itm.Id);
+            }
+            var results = await _roleService.GetAllAsync(name, clientId, withPerms: withPerms, allowedClientIds: allowedClientIds, excludeOrgId: excludeOrgId, excludeRoleIds: excludeRoleIds, pageSize: pageSize, pageIndex: pageIndex);
 
             return Ok(new PaginatedDto<RoleDto>
             {
@@ -183,6 +194,50 @@ namespace Charlie.OpenIam.Web.Areas.Admin.Controllers
 
             var results = await _roleService.GetPermissionsAsync(id, getAll, allowedClientIds);
             return Ok(treeView ? results.GetTreeLayout() : results);
+        }
+
+        /// <summary>
+        /// 添加权限
+        /// </summary>
+        /// <param name="id">角色id</param>
+        /// <param name="model">权限id集合</param>
+        /// <returns></returns>
+        [HasPermission(BuiltInPermissions.ROLE_PERM_UPDATE, true)]
+        [HttpPost("{id}/permissions")]
+        public async Task<ActionResult> AddPermissions(string id, AssignPermissionDto model)
+        {
+            // 除了平台的超级管理员，其他管理员只能管理所属 Client 的资源
+            bool isSuper = User.IsSuperAdmin();
+            IEnumerable<string> allowedClientIds = null;
+            if (!isSuper)
+            {
+                allowedClientIds = User.FindAll(JwtClaimTypes.ClientId).Select(itm => itm.Value);
+            }
+
+            await _roleService.AddPermissionsAsync(id, model, allowedClientIds);
+            return Ok();
+        }
+
+        /// <summary>
+        /// 移除权限
+        /// </summary>
+        /// <param name="id">角色id</param>
+        /// <param name="model">权限id集合</param>
+        /// <returns></returns>
+        [HasPermission(BuiltInPermissions.ROLE_PERM_UPDATE, true)]
+        [HttpDelete("{id}/permissions")]
+        public async Task<ActionResult> RemovePermissions(string id, AssignPermissionDto model)
+        {
+            // 除了平台的超级管理员，其他管理员只能管理所属 Client 的资源
+            bool isSuper = User.IsSuperAdmin();
+            IEnumerable<string> allowedClientIds = null;
+            if (!isSuper)
+            {
+                allowedClientIds = User.FindAll(JwtClaimTypes.ClientId).Select(itm => itm.Value);
+            }
+
+            await _roleService.RemovePermissionsAsync(id, model, allowedClientIds);
+            return Ok();
         }
 
         /// <summary>

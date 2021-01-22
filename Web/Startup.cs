@@ -63,7 +63,7 @@ namespace Charlie.OpenIam.Web
                   {
                       // .Net Core 3 目前还无法简单的来避免循环解析，所以使用 Newtonsoft
                       options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
-                  }); 
+                  });
 
             services.AddRazorPages()
                 .AddRazorRuntimeCompilation();
@@ -72,10 +72,10 @@ namespace Charlie.OpenIam.Web
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-            IdentityModelEventSource.ShowPII = true;
             app.UseForwardedHeaders();
             if (env.IsDevelopment())
             {
+                IdentityModelEventSource.ShowPII = true;
                 app.UseDeveloperExceptionPage();
                 app.UseDatabaseErrorPage();
             }
@@ -93,6 +93,13 @@ namespace Charlie.OpenIam.Web
             {
                 c.SwaggerEndpoint("/swagger/v1/swagger.json", "OpenIam Api v1");
             });
+
+            // 如果想部署到 nginx 的 子目录中，比如 foo 这个目录，那此时 url 为 /foo/api/user，但是 .net core 处理时需要去掉 foo
+            var iamOptions = _configuration.GetSection(nameof(IamOptions)).Get<IamOptions>();
+            if (!String.IsNullOrWhiteSpace(iamOptions.PathBase))
+            {
+                app.UsePathBase("/" + iamOptions.PathBase.Trim());
+            }
 
             //app.UseHttpsRedirection();
             app.UseStaticFiles();

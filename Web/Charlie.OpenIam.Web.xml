@@ -106,11 +106,11 @@
             <param name="organization"></param>
             <returns></returns>
         </member>
-        <member name="M:Charlie.OpenIam.Web.Areas.Admin.Controllers.OrganizationsController.DeleteOrganization(System.String)">
+        <member name="M:Charlie.OpenIam.Web.Areas.Admin.Controllers.OrganizationsController.DeleteOrganization(Charlie.OpenIam.Web.Areas.Admin.ViewModels.OrgRemoveViewModel)">
             <summary>
             删除组织机构
             </summary>
-            <param name="ids">机构编号，多个编号用,分隔</param>
+            <param name="model">机构编号</param>
             <returns></returns>
         </member>
         <member name="M:Charlie.OpenIam.Web.Areas.Admin.Controllers.OrganizationsController.AddDefaultRole(System.String,Charlie.OpenIam.Core.Services.Dtos.AssignRoleToOrgDto)">
@@ -121,12 +121,12 @@
             <param name="model"></param>
             <returns></returns>
         </member>
-        <member name="M:Charlie.OpenIam.Web.Areas.Admin.Controllers.OrganizationsController.DeleteDefaultRole(System.String,System.Collections.Generic.IEnumerable{System.String})">
+        <member name="M:Charlie.OpenIam.Web.Areas.Admin.Controllers.OrganizationsController.DeleteDefaultRole(System.String,Charlie.OpenIam.Core.Services.Dtos.AssignRoleToOrgDto)">
             <summary>
             移除默认角色
             </summary>
             <param name="id"></param>
-            <param name="roleIds"></param>
+            <param name="model"></param>
             <returns></returns>
         </member>
         <member name="M:Charlie.OpenIam.Web.Areas.Admin.Controllers.OrganizationsController.UpdateDefaultRole(System.String,Charlie.OpenIam.Core.Services.Dtos.AssignRoleToOrgDto)">
@@ -157,15 +157,15 @@
             增加机构的用户
             </summary>
             <param name="id"></param>
-            <param name="userIds"></param>
+            <param name="model"></param>
             <returns></returns>
         </member>
-        <member name="M:Charlie.OpenIam.Web.Areas.Admin.Controllers.OrganizationsController.RemoveOrgUsers(System.String,System.Collections.Generic.IEnumerable{System.String})">
+        <member name="M:Charlie.OpenIam.Web.Areas.Admin.Controllers.OrganizationsController.RemoveOrgUsers(System.String,Charlie.OpenIam.Core.Services.Dtos.AssignUserToOrgDto)">
             <summary>
             从机构中移除用户
             </summary>
             <param name="id"></param>
-            <param name="userIds"></param>
+            <param name="model"></param>
             <returns></returns>
         </member>
         <member name="T:Charlie.OpenIam.Web.Areas.Admin.Controllers.PermissionBatchController">
@@ -192,7 +192,7 @@
             <param name="permission"></param>
             <returns></returns>
         </member>
-        <member name="M:Charlie.OpenIam.Web.Areas.Admin.Controllers.PermissionsController.GetPermissions(System.String,System.String,System.String,System.String,System.Nullable{Charlie.OpenIam.Abstraction.Dtos.PermissionType},System.Boolean)">
+        <member name="M:Charlie.OpenIam.Web.Areas.Admin.Controllers.PermissionsController.GetPermissions(System.String,System.String,System.String,System.String,System.Nullable{Charlie.OpenIam.Abstraction.Dtos.PermissionType},System.Boolean,System.String,System.String)">
             <summary>
             获取拥有的所有权限
             </summary>
@@ -202,6 +202,8 @@
             <param name="targetClientId">权限所属的 clientId</param>
             <param name="type">权限类型</param>
             <param name="treeView">是否以树形结构显示</param>
+            <param name="excludeRoleId">要排除的角色中的权限</param>
+            <param name="excludeUserId">要排除的用户中的权限</param>
             <returns></returns>
         </member>
         <member name="M:Charlie.OpenIam.Web.Areas.Admin.Controllers.PermissionsController.GetPermissionDetails(System.String)">
@@ -219,11 +221,11 @@
             <param name="model"></param>
             <returns></returns>
         </member>
-        <member name="M:Charlie.OpenIam.Web.Areas.Admin.Controllers.PermissionsController.DeletePermissions(System.String)">
+        <member name="M:Charlie.OpenIam.Web.Areas.Admin.Controllers.PermissionsController.DeletePermissions(Charlie.OpenIam.Web.Areas.Admin.ViewModels.PermissionRemoveViewModel)">
             <summary>
             删除权限
             </summary>
-            <param name="ids"></param>
+            <param name="model"></param>
             <returns></returns>
         </member>
         <member name="T:Charlie.OpenIam.Web.Areas.Admin.Controllers.RolesController">
@@ -238,11 +240,11 @@
             <param name="role"></param>
             <returns></returns>
         </member>
-        <member name="M:Charlie.OpenIam.Web.Areas.Admin.Controllers.RolesController.DeleteRole(System.String)">
+        <member name="M:Charlie.OpenIam.Web.Areas.Admin.Controllers.RolesController.DeleteRole(Charlie.OpenIam.Web.Areas.Admin.ViewModels.RoleRemoveViewModel)">
             <summary>
             删除角色
             </summary>
-            <param name="ids">角色的编号，多个编号用,分隔</param>
+            <param name="model">角色的编号</param>
             <returns></returns>
         </member>
         <member name="M:Charlie.OpenIam.Web.Areas.Admin.Controllers.RolesController.UpdateRole(System.String,Charlie.OpenIam.Core.Services.Dtos.RoleUpdateDto)">
@@ -253,7 +255,7 @@
             <param name="role"></param>
             <returns></returns>
         </member>
-        <member name="M:Charlie.OpenIam.Web.Areas.Admin.Controllers.RolesController.GetRoles(System.String,System.String,System.Boolean,System.Int32,System.Int32)">
+        <member name="M:Charlie.OpenIam.Web.Areas.Admin.Controllers.RolesController.GetRoles(System.String,System.String,System.Boolean,System.String,System.String,System.Int32,System.Int32)">
             <summary>
             获取角色集合
             </summary>
@@ -279,6 +281,22 @@
             <param name="id">角色编号</param>
             <param name="getAll">是否包含所有角色，（i.e. 包含当前用户没有的角色）</param>
             <param name="treeView">是否以树形视图显示</param>
+            <returns></returns>
+        </member>
+        <member name="M:Charlie.OpenIam.Web.Areas.Admin.Controllers.RolesController.AddPermissions(System.String,Charlie.OpenIam.Core.Services.Dtos.AssignPermissionDto)">
+            <summary>
+            添加权限
+            </summary>
+            <param name="id">角色id</param>
+            <param name="model">权限id集合</param>
+            <returns></returns>
+        </member>
+        <member name="M:Charlie.OpenIam.Web.Areas.Admin.Controllers.RolesController.RemovePermissions(System.String,Charlie.OpenIam.Core.Services.Dtos.AssignPermissionDto)">
+            <summary>
+            移除权限
+            </summary>
+            <param name="id">角色id</param>
+            <param name="model">权限id集合</param>
             <returns></returns>
         </member>
         <member name="M:Charlie.OpenIam.Web.Areas.Admin.Controllers.RolesController.AssignPermissions(System.String,Charlie.OpenIam.Core.Services.Dtos.AssignPermissionDto)">
@@ -391,6 +409,22 @@
             <param name="model">角色名称集合</param>7
             <returns></returns>
         </member>
+        <member name="M:Charlie.OpenIam.Web.Areas.Admin.Controllers.UsersController.AddRoles(System.String,Charlie.OpenIam.Core.Services.Dtos.AssignRoleToUserDto)">
+            <summary>
+            添加某个用户角色
+            </summary>
+            <param name="id"></param>
+            <param name="model">角色名称集合</param>7
+            <returns></returns>
+        </member>
+        <member name="M:Charlie.OpenIam.Web.Areas.Admin.Controllers.UsersController.RemoveRoles(System.String,Charlie.OpenIam.Core.Services.Dtos.AssignRoleToUserDto)">
+            <summary>
+            移除某个用户角色
+            </summary>
+            <param name="id"></param>
+            <param name="model">角色名称集合</param>7
+            <returns></returns>
+        </member>
         <member name="P:Charlie.OpenIam.Web.Areas.Admin.ViewModels.ClientNewViewModel.AllowedScopes">
             <summary>
             允许的 Scope，多个 Scope 用英文逗号分隔
@@ -480,11 +514,6 @@
         <member name="P:Charlie.OpenIam.Web.Areas.Admin.ViewModels.PermissionNewViewModel.Level">
             <summary>
             层级
-            </summary>
-        </member>
-        <member name="P:Charlie.OpenIam.Web.Areas.Admin.ViewModels.RoleListViewModel.Total">
-            <summary>
-            总数
             </summary>
         </member>
         <member name="T:Charlie.OpenIam.Web.Areas.Admin.ViewModels.RoleNewViewModel">
@@ -597,10 +626,24 @@
             系统信息
             </summary>
         </member>
+        <member name="T:Charlie.OpenIam.Web.Configurations.IamOptions">
+            <summary>
+            Iam Web 的基础配置
+            </summary>
+        </member>
         <member name="P:Charlie.OpenIam.Web.Configurations.IamOptions.Host">
             <summary>
-            部署的地址
+            部署的地址，当自己作为一个 Api Resource 时，所指向的 Iam Server 地址
             </summary>
+        </member>
+        <member name="P:Charlie.OpenIam.Web.Configurations.IamOptions.PathBase">
+            <summary>
+            基地址
+            </summary>
+            <remarks>
+            如果想部署到 nginx 的 子目录中，比如 foo 这个目录，那此时 url 为 /foo/api/user。
+            但是 .net core 处理时需要去掉 foo，此时可以使用 PathBase，结合 app.UsePathBase 方法
+            </remarks>
         </member>
         <member name="T:Charlie.OpenIam.Web.Controllers.Api.UserController">
             <summary>

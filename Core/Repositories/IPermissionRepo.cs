@@ -28,7 +28,7 @@ namespace Charlie.OpenIam.Core.Models.Repositories
         /// <param name="type">权限类型</param>
         /// <param name="allowedClientIds">允许当前用户查看的 ClientIds</param>
         /// <returns></returns>
-        Task<IEnumerable<Permission>> GetAllAsync(string name = null, string key = null, string url = null, string clientId = null, PermissionType? type = null, IEnumerable<string> allowedClientIds = null);
+        Task<IEnumerable<Permission>> GetAllAsync(string name = null, string key = null, string url = null, string clientId = null, PermissionType? type = null, IEnumerable<string> allowedClientIds = null, string excludeRoleId = null, IEnumerable<string> excludePermIds = null);
 
         /// <summary>
         /// 获取某个权限的详情

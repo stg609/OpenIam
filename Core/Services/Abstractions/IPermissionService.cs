@@ -28,7 +28,7 @@ namespace Charlie.OpenIam.Core.Services.Abstractions
         /// <param name="type"></param>
         /// <param name="allowedClientIds"></param>
         /// <returns></returns>
-        Task<IEnumerable<PermissionDto>> GetAllsync(string name = null, string key = null, string url = null, string targetClientId = null, PermissionType? type = null, IEnumerable<string> allowedClientIds = null);
+        Task<IEnumerable<PermissionDto>> GetAllsync(string name = null, string key = null, string url = null, string targetClientId = null, PermissionType? type = null, IEnumerable<string> allowedClientIds = null, string excludeRoleId = null, IEnumerable<string> excludePermIds = null);
 
         /// <summary>
         /// 获取详情
