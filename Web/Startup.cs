@@ -31,6 +31,7 @@ namespace Charlie.OpenIam.Web
         public void ConfigureServices(IServiceCollection services)
         {
             JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();
+            
             services.Configure<ForwardedHeadersOptions>(options =>
             {
                 options.ForwardedHeaders =
@@ -98,7 +99,7 @@ namespace Charlie.OpenIam.Web
             var iamOptions = _configuration.GetSection(nameof(IamOptions)).Get<IamOptions>();
             if (!String.IsNullOrWhiteSpace(iamOptions.PathBase))
             {
-                app.UsePathBase("/" + iamOptions.PathBase.Trim());
+                app.UsePathBase("/" + iamOptions.PathBase.TrimStart('/'));
             }
 
             //app.UseHttpsRedirection();

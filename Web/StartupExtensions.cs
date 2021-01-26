@@ -147,7 +147,7 @@ namespace Charlie.OpenIam.Web
         {
             // 如果想部署到 nginx 的 子目录中，比如 foo 这个目录，那此时 url 为 /foo/api/user，但是 .net core 处理时需要去掉 foo
             string pathBase = iamOpt.PathBase?.Trim();
-            pathBase = String.IsNullOrWhiteSpace(iamOpt.PathBase) ? "" : "/" + pathBase;
+            pathBase = String.IsNullOrWhiteSpace(iamOpt.PathBase) ? "" : "/" + pathBase.TrimStart('/');
 
             services.AddAuthentication()
                  .AddCookie()
