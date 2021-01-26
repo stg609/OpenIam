@@ -23,7 +23,12 @@ RUN dotnet publish "Web.csproj" -c Release -o /app/publish
 FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
+
+# 正式环境中，请替换成正式的 https 证书
 COPY Web/lics/openIam.pfx /https/openIam.pfx
 COPY Web/lics/openIam.crt /usr/local/share/ca-certificates/openIam.crt
 RUN update-ca-certificates
+ENV ASPNETCORE_Kestrel__Certificates__Default__Path=/https/openIam.pfx
+ENV ASPNETCORE_Kestrel__Certificates__Default__Password=111111
+
 ENTRYPOINT ["dotnet", "Charlie.OpenIam.Web.dll"]
