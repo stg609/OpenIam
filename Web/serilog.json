@@ -2,14 +2,15 @@
   "Serilog": {
     "Using": [ "Serilog.Sinks.Console", "Serilog.Sinks.File" ],
     "MinimumLevel": {
-      "Default": "Information",
+      "Default": "Warning",
       "Override": {
         "System": "Warning",
         "Microsoft": "Warning",
+        "Microsoft.Hosting.Lifetime": "Information",
         "Microsoft.EntityFrameworkCore": "Warning",
         "Microsoft.AspNetCore.DataProtection": "Error",
         "Microsoft.AspNetCore.Authentication": "Warning",
-        "IdentityServer4": "Information"
+        "IdentityServer4": "Warning"
       }
     },
     "WriteTo": [
