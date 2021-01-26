@@ -4,6 +4,7 @@
     name: 'welcome',
     icon: 'smile',
     component: './Welcome',
+    access: 'isAdmin',
     hideInMenu: false
   },
   {
@@ -69,6 +70,10 @@
   {
     path:'/signout-callback-oidc',
     component: './SignoutRedirectCallback'
+  },
+  {
+    path: '/error',
+    component: './error',
   },
   {
     path: '/',

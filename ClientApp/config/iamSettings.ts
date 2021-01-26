@@ -1,15 +1,17 @@
 import { UserManagerSettings } from 'oidc-client';
 
-export const PathBasePrefix: string = "https://localhost:5002";
-export const SiginPathSegment: string = "signin";
+// 从配置中加载
+const AppSettings = window['REACT_APP_IAM_SETTINGS'];
+
+export const PathBasePrefix: string = AppSettings.PathBasePrefix ?? "";
+export const SiginPathSegment: string = AppSettings.SiginPathSegment ?? "signin";
 
 export default <UserManagerSettings>{
-    authority: `https://localhost:5002/`,
-    client_id: "d1e4f462-67ac-4fdf-b978-a1193a36d28d",
-    client_secret: "U0KJ4S21YIN9FW6GRHWS3HRRUEK2G8",
-    redirect_uri: `http://localhost:8000/${SiginPathSegment}`,
+    authority: AppSettings.Authority ?? "",
+    client_id: AppSettings.ClientId ?? "",
+    redirect_uri: `${AppSettings.FrontEndHost}/${SiginPathSegment}`,
     response_type: "code",
     scope: "openid profile iamApi",
-    post_logout_redirect_uri: "http://localhost:8000/signout-callback-oidc",
-    silent_redirect_uri: "http://localhost:8000/silent-renew"
+    post_logout_redirect_uri: `${AppSettings.FrontEndHost}/signout-callback-oidc`,
+    silent_redirect_uri: `${AppSettings.FrontEndHost}/silent-renew`
 };

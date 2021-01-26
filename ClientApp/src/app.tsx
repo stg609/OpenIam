@@ -46,19 +46,28 @@ export async function getInitialState(): Promise<{
 
   // 如果是登录页面，不执行
   if (history.location.pathname !== '/identity/account/login' && history.location.pathname !== `/${IamSettings.SiginPathSegment}`) {
-    const user = await fetchUserInfo();
+    try {
+      const user = await fetchUserInfo();
 
-    if (!user) {
-      await userManager.signinRedirect();
-      await sleep(10000);
-      return {};
+      if (!user) {
+        await userManager.signinRedirect();
+        await sleep(20000);
+        return {};
+      }
+
+      return {
+        fetchUserInfo,
+        currentUser: user,
+        settings: defaultSettings,
+      };
     }
-
-    return {
-      fetchUserInfo,
-      currentUser: user,
-      settings: defaultSettings,
-    };
+    catch (ex) {
+      history.push({
+        pathname: "/error",
+        state: { ex }
+      });
+      throw ex;
+    }
   }
 
   return {

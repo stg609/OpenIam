@@ -39,7 +39,6 @@ export default (): React.ReactNode => {
             {isLoading ?
                 <PageLoading /> :
                 <ProCard>
-                    <p>phone:{initialValue.isUserPhoneUnique}</p>
                     <ProForm
                         initialValues={initialValue}
                         onFinish={async (values) => {

@@ -2,7 +2,7 @@
 export default function access(initialState: { currentUser?: API.CurrentUser | undefined }) {
   const { currentUser } = initialState || {};
   return {
-    isAdmin: currentUser && currentUser.isAdmin,
-    isSuperAdmin: currentUser && currentUser.isSuperAdmin
+    isAdmin: currentUser != null && currentUser.isAdmin,
+    isSuperAdmin: currentUser!= null && currentUser.isSuperAdmin
   };
 }
