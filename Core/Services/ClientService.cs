@@ -104,7 +104,8 @@ namespace Charlie.OpenIam.Core.Models.Services
             string[] postLogoutRedirectUris = null;
             if (String.IsNullOrWhiteSpace(model.RedirectUris))
             {
-                redirectUris = new[] { $"{model.ClientUri.TrimEnd('/')}/signin-oidc" };
+                // signin-oidc 与 静默更新都是要作为回调的一部分
+                redirectUris = new[] { $"{model.ClientUri.TrimEnd('/')}/signin-oidc", $"{model.ClientUri.TrimEnd('/')}/silent-renew" };
             }
             else
             {
