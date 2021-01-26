@@ -78,7 +78,7 @@ OpenIam 目前只支持 `Code(Pkce)` 、`Credential`模式。
      -v C:\Projects\Github\OpenIam\Web\appsettings.json:/app/appsettings.json 
      -e ASPNETCORE_ENVIRONMENT=Production 
      -e "ASPNETCORE_URLS=https://+:443;" 
-     stg609/openiam:v1.1.0
+     stg609/openiam:v1.2.0
    ```
     这个命令使用的是产品环境，并把容器中的 **443** 映射到了本机的 **5002** 端口。当命令成功执行后，会在控制台打印出当前正在监听的端口。。
    
