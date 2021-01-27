@@ -59,7 +59,7 @@
 OpenIam 主要用于内部系统间的统一身份认证及权限管理，核心功能包括：客户端管理、用户管理、组织机构管理、授权管理。
 
 #### 客户端管理
-每个子系统如果需要接入 OpenIam，则必须先要在 OpenIam 中注册一个客户端，获取对应的 `Client Id`, `Client Secret`。如果客户端需要访问需要授权的 Api 服务，则可以把 Api 服务作为 Scope 天不假到客户端中，从而可以利用 OpenIam 进行统一鉴权。
+每个子系统如果需要接入 OpenIam，则必须先要在 OpenIam 中注册一个客户端，获取对应的 `Client Id`, `Client Secret`。如果客户端需要访问需要授权的 Api 服务，则可以把 Api 服务作为 Scope 添加到客户端中，从而可以利用 OpenIam 进行统一鉴权。
 
 OpenIam 目前只支持 `Code(Pkce)` 、`Credential`模式。
 
