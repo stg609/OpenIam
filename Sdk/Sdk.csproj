@@ -4,6 +4,13 @@
     <TargetFramework>netcoreapp3.1</TargetFramework>
     <AssemblyName>Charlie.OpenIam.Sdk</AssemblyName>
     <RootNamespace>Charlie.OpenIam.Sdk</RootNamespace>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageProjectUrl>https://github.com/stg609/OpenIam</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/stg609/OpenIam.git</RepositoryUrl>
+    <PackageTags>OpenIam</PackageTags>
+    <Description>用于集成 OpenIam 统一身份认证系统</Description>
+    <TargetsForTfmSpecificBuildOutput>$(TargetsForTfmSpecificBuildOutput);CopyProjectReferencesToPackage</TargetsForTfmSpecificBuildOutput>
+    <Version>1.0.1</Version>
   </PropertyGroup>
 
   <ItemGroup>
@@ -22,12 +29,24 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Abstraction\Abstraction.csproj" />
-    <ProjectReference Include="..\Common\Common.csproj" />
+    <ProjectReference Include="..\Abstraction\Abstraction.csproj">
+      <ReferenceOutputAssembly>true</ReferenceOutputAssembly>
+      <IncludeAssets>Charlie.OpenIam.Abstraction.dll</IncludeAssets>
+    </ProjectReference>
+    <ProjectReference Include="..\Common\Common.csproj">
+      <ReferenceOutputAssembly>true</ReferenceOutputAssembly>
+      <IncludeAssets>Charlie.OpenIam.Common.dll</IncludeAssets>
+    </ProjectReference>
   </ItemGroup>
 
   <ItemGroup>
     <Folder Include="wwwroot\" />
   </ItemGroup>
+
+  <Target DependsOnTargets="ResolveReferences" Name="CopyProjectReferencesToPackage">
+    <ItemGroup>
+      <BuildOutputInPackage Include="@(ReferenceCopyLocalPaths-&gt;WithMetadataValue('ReferenceSourceTarget', 'ProjectReference'))" />
+    </ItemGroup>
+  </Target>
 
 </Project>

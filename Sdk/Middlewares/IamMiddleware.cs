@@ -243,6 +243,8 @@ namespace Charlie.OpenIam.Sdk.Middlewares
                         AllowAutoRedirect = false
                     };
                 });
+            
+            services.AddSingleton<IAuthorizationPolicyProvider, AuthorizationPolicyProvider>();
 
             return services;
         }
