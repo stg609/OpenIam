@@ -29,6 +29,7 @@
   <ItemGroup>
     <None Include="Views\User\Create.cshtml" />
     <None Include="Views\User\Details.cshtml" />
+    <None Include="Views\User\Pwd.cshtml" />
     <None Include="Views\User\Index.cshtml" />
     <None Include="Views\User\Permissions.cshtml" />
     <None Include="Views\User\Roles.cshtml" />

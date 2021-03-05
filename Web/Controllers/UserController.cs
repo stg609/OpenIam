@@ -54,5 +54,15 @@ namespace Charlie.OpenIam.Web.Controllers
         {
             return View();
         }
+
+        /// <summary>
+        /// 修改密码
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet]
+        public IActionResult Pwd()
+        {
+            return View();
+        }
     }
 }

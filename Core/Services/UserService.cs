@@ -374,22 +374,40 @@ namespace Charlie.OpenIam.Core.Models.Services
 
         public async Task<string> ResetPwdAsync(string id)
         {
+            var pwd = Helper.GetRandomString(8);
+            return await UpdatePwdAsync(id, pwd);
+        }
+
+        public async Task<string> UpdatePwdAsync(string id, string newPwd)
+        {
             // 暂时不考虑邮件方式，只是简单的把密码返回
             var user = await _userRepo.GetAsync(id, isReadonly: false);
             if (user == null)
             {
                 throw new IamException(HttpStatusCode.BadRequest, "用户不存在");
             }
-            var token = await _userMgr.GeneratePasswordResetTokenAsync(user);
-            var pwd = Helper.GetRandomString(8);
 
-            var result = await _userMgr.ResetPasswordAsync(user, token, pwd);
+            var token = await _userMgr.GeneratePasswordResetTokenAsync(user);
+            var result = await _userMgr.ResetPasswordAsync(user, token, newPwd);
             if (result.Succeeded)
             {
-                return pwd;
+                return newPwd;
             }
 
             throw new IamException(HttpStatusCode.BadRequest, String.Join(";", result.Errors.Select(err => err.Description)));
+        }
+
+        public async Task<bool> IsPwdValidAsync(string id, string pwd)
+        {
+            // 暂时不考虑邮件方式，只是简单的把密码返回
+            var user = await _userRepo.GetAsync(id, isReadonly: false);
+            if (user == null)
+            {
+                throw new IamException(HttpStatusCode.BadRequest, "用户不存在");
+            }
+
+            var isValid = await _userMgr.CheckPasswordAsync(user, pwd);
+            return isValid;
         }
 
         public async Task AssignPermissionsAsync(string id, AssignPermissionToUserDto permissions, IEnumerable<string> allowedClientIds = null)

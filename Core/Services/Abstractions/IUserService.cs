@@ -109,6 +109,22 @@ namespace Charlie.OpenIam.Core.Services.Abstractions
         Task<string> ResetPwdAsync(string id);
 
         /// <summary>
+        /// 更新密码
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="newPwd"></param>
+        /// <returns></returns>
+        Task<string> UpdatePwdAsync(string id, string newPwd);
+
+        /// <summary>
+        /// 密码是否正确
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="pwd"></param>
+        /// <returns></returns>
+        Task<bool> IsPwdValidAsync(string id, string pwd);
+
+        /// <summary>
         /// 给用户赋予权限
         /// </summary>
         /// <param name="id"></param>

@@ -13,5 +13,15 @@
 }
 
 .layui-form-item .layui-input-inline {
-    width: 350px;
+    width: 380px;
+}
+
+.layui-form-item .layui-input-inline {
+    width: 380px;
+}
+
+.layui-form-item .layui-input-inline.small {
+    width: 180px;
+    margin-left: 0px;
+    float:left;
 }

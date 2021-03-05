@@ -768,6 +768,13 @@
             <param name="isAdmin">是否要求是管理员</param>
             <returns></returns>
         </member>
+        <member name="M:Charlie.OpenIam.Web.Controllers.Api.UserController.UpdatePwdAsync(Charlie.OpenIam.Web.ViewModels.UpdatePwdViewModel)">
+            <summary>
+            更新密码
+            </summary>
+            <param name="model"></param>
+            <returns></returns>
+        </member>
         <member name="T:Charlie.OpenIam.Web.Controllers.ClientController">
             <summary>
             客户端 管理界面 Mvc 控制器
@@ -898,6 +905,12 @@
             </summary>
             <returns></returns>
         </member>
+        <member name="M:Charlie.OpenIam.Web.Controllers.UserController.Pwd">
+            <summary>
+            修改密码
+            </summary>
+            <returns></returns>
+        </member>
         <member name="T:Charlie.OpenIam.Web.Helpers.Helper">
             <summary>
             帮助类
@@ -913,6 +926,21 @@
         <member name="T:Charlie.OpenIam.Web.Infra.EmptyUnitOfWork">
             <summary>
             空的 UnitOfWork，只用于不需要 UnitOfWork 的场景
+            </summary>
+        </member>
+        <member name="P:Charlie.OpenIam.Web.ViewModels.UpdatePwdViewModel.OldPwd">
+            <summary>
+            原始密码
+            </summary>
+        </member>
+        <member name="P:Charlie.OpenIam.Web.ViewModels.UpdatePwdViewModel.NewPwd">
+            <summary>
+            新密码
+            </summary>
+        </member>
+        <member name="P:Charlie.OpenIam.Web.ViewModels.UpdatePwdViewModel.ConfirmNewPwd">
+            <summary>
+            确认密码
             </summary>
         </member>
     </members>

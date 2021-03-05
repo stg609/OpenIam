@@ -13,7 +13,9 @@ using Charlie.OpenIam.Core.Services.Abstractions;
 using Charlie.OpenIam.Core.Services.Dtos;
 using Charlie.OpenIam.Infra;
 using Charlie.OpenIam.Web.Helpers;
+using Charlie.OpenIam.Web.ViewModels;
 using IdentityModel;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -25,7 +27,8 @@ namespace Charlie.OpenIam.Web.Controllers.Api
     /// 当前用户的控制器
     /// </summary>
     [Route("api/[controller]")]
-    [Authorize(AuthenticationSchemes = "Bearer")]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+    [Authorize(AuthenticationSchemes = "Identity.Application")]
     [ApiController]
     public class UserController : ControllerBase
     {
@@ -295,6 +298,30 @@ namespace Charlie.OpenIam.Web.Controllers.Api
             }
 
             return await _permissionService.HasPermissionAsync(User, permKey, isAdmin, allowedClientIds);
+        }
+
+        /// <summary>
+        /// 更新密码
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
+        [HttpPut("pwd")]
+        public async Task UpdatePwdAsync(UpdatePwdViewModel model)
+        {
+            string userId = User.FindFirst(JwtClaimTypes.Subject)?.Value;
+
+            if (String.IsNullOrWhiteSpace(userId))
+            {
+                throw new IamException(HttpStatusCode.BadRequest, "用户未登录");
+            }
+
+            if (await _userService.IsPwdValidAsync(userId, model.OldPwd))
+            {
+                await _userService.UpdatePwdAsync(userId, model.NewPwd);
+                return;
+            }
+
+            throw new IamException(HttpStatusCode.BadRequest, "当前密码不正确，请重新输入！");
         }
 
         private PermissionDto Map(PermissionDto itm)

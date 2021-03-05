@@ -14,7 +14,7 @@
             </a>
             <dl class="layui-nav-child">
                 <dd><a href="javascript:void(0);" class="uinfo" data-uid="@User.FindFirst(JwtClaimTypes.Subject)?.Value">基本资料</a></dd>
-                @*<dd><a href="">安全设置</a></dd>*@
+                <dd><a href="javascript:void(0);" class="pwd" data-uid="@User.FindFirst(JwtClaimTypes.Subject)?.Value">修改密码</a></dd>
             </dl>
         </li>
 

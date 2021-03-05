@@ -1,0 +1,63 @@
+﻿
+@{
+    Layout = "_AdminLayout";
+}
+
+<div style="padding-top: 20px; margin-right: 20px;">
+    <div class="layui-form" lay-filter="Details" id="Details" style="padding: 20px 0 0 0;">
+        <div class="layui-form-item">
+            <label class="layui-form-label">当前密码：</label>
+            <div class="layui-input-inline small">
+                <input type="password" name="oldPwd" lay-verify="required" placeholder="请输入当前密码" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">新的密码：</label>
+            <div class="layui-input-inline small">
+                <input type="password" name="newPwd" lay-verify="required"  placeholder="请输入新密码" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">确认密码：</label>
+            <div class="layui-input-inline small">
+                <input type="password" name="confirmNewPwd" lay-verify="required"  placeholder="请再输入一次新密码" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item layui-hide">
+            <input type="button" lay-submit lay-filter="btn_submit" id="btn_submit" value="确认">
+        </div>
+    </div>
+</div>
+@section Scripts{
+    <script>
+        layui.use(['form'], function () {
+            var form = layui.form;
+
+            form.render();
+            form.on('submit(btn_submit)', function (data) {
+                var field = data.field;
+
+                $.ajax({
+                    url: "../api/user/pwd",
+                    type: 'PUT',
+                    contentType: "application/json",
+                    data: JSON.stringify(field)
+                }).done(function () {
+                    $.modalClose();
+                    window.parent.$.reload('LAY-user-manage');//表格刷新
+                }).fail(function (jqXHR, error) {
+                    if (jqXHR.responseJSON) {
+                        layer.msg('更新失败！ ' + jqXHR.responseJSON.detail);
+                    }
+                    else {
+                        layer.msg('更新失败！ ' + jqXHR.responseText);
+                    }
+                });
+            })
+        })
+
+        function submitForm() {
+            $("#btn_submit").trigger('click');//模擬表單提交
+        }
+    </script>
+}

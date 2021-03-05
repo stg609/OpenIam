@@ -146,6 +146,21 @@
                 });
             });
 
+            $(".pwd").click(function () {
+                $.modalOpen({
+                    id: "Pwd",
+                    type: 2,
+                    title: "修改密码",
+                    url: "../user/pwd?id=" + $(".uinfo").data("uid"),
+                    width: "360px",
+                    height: "330px",
+                    btn: ['确定', '取消'],
+                    callBack: function (index, layero, iframeId) {
+                        window['layui-layer-iframe' + index].submitForm();
+                    }
+                });
+            });
+
         });
     </script>
 </body>
