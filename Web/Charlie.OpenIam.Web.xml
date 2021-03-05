@@ -448,7 +448,7 @@
         </member>
         <member name="P:Charlie.OpenIam.Web.Areas.Admin.ViewModels.ClientNewViewModel.RedirectUris">
             <summary>
-            回调地址，多个地址用英文逗号分隔
+            回调地址，多个地址用英文逗号分隔。这些地址主要包括用于完成 OAuth 流程的 signin-oidc 以及 用于 SPA 静默更新的 silent-renew
             </summary>
         </member>
         <member name="P:Charlie.OpenIam.Web.Areas.Admin.ViewModels.ClientNewViewModel.PostLogoutRedirectUris">
@@ -558,7 +558,7 @@
         </member>
         <member name="P:Charlie.OpenIam.Web.Areas.Admin.ViewModels.UserNewViewModel.JobNo">
             <summary>
-            工号
+            内部系统的人员编号，可以是工号，必须能唯一关联用户
             </summary>
         </member>
         <member name="P:Charlie.OpenIam.Web.Areas.Admin.ViewModels.UserNewViewModel.Username">
@@ -626,6 +626,76 @@
             系统信息
             </summary>
         </member>
+        <member name="P:Charlie.OpenIam.Web.Areas.Identity.Pages.Account.RegisterModel.InputModel.Avatar">
+            <summary>
+            头像
+            </summary>
+        </member>
+        <member name="P:Charlie.OpenIam.Web.Areas.Identity.Pages.Account.RegisterModel.InputModel.Cover">
+            <summary>
+            个人封面
+            </summary>
+        </member>
+        <member name="P:Charlie.OpenIam.Web.Areas.Identity.Pages.Account.RegisterModel.InputModel.Motto">
+            <summary>
+            座右铭
+            </summary>
+        </member>
+        <member name="P:Charlie.OpenIam.Web.Areas.Identity.Pages.Account.RegisterModel.InputModel.Github">
+            <summary>
+            Github 地址
+            </summary>
+        </member>
+        <member name="P:Charlie.OpenIam.Web.Areas.Identity.Pages.Account.RegisterModel.InputModel.Twitter">
+            <summary>
+            推特账号
+            </summary>
+        </member>
+        <member name="P:Charlie.OpenIam.Web.Areas.Identity.Pages.Account.RegisterModel.InputModel.SinaWeibo">
+            <summary>
+            新浪微博
+            </summary>
+        </member>
+        <member name="P:Charlie.OpenIam.Web.Areas.Identity.Pages.Account.RegisterModel.InputModel.Note">
+            <summary>
+            个人备注
+            </summary>
+        </member>
+        <member name="P:Charlie.OpenIam.Web.Areas.Identity.Pages.Account.UserInfoModel.InputModel.Avatar">
+            <summary>
+            头像
+            </summary>
+        </member>
+        <member name="P:Charlie.OpenIam.Web.Areas.Identity.Pages.Account.UserInfoModel.InputModel.Cover">
+            <summary>
+            个人封面
+            </summary>
+        </member>
+        <member name="P:Charlie.OpenIam.Web.Areas.Identity.Pages.Account.UserInfoModel.InputModel.Motto">
+            <summary>
+            座右铭
+            </summary>
+        </member>
+        <member name="P:Charlie.OpenIam.Web.Areas.Identity.Pages.Account.UserInfoModel.InputModel.Github">
+            <summary>
+            Github 地址
+            </summary>
+        </member>
+        <member name="P:Charlie.OpenIam.Web.Areas.Identity.Pages.Account.UserInfoModel.InputModel.Twitter">
+            <summary>
+            推特账号
+            </summary>
+        </member>
+        <member name="P:Charlie.OpenIam.Web.Areas.Identity.Pages.Account.UserInfoModel.InputModel.SinaWeibo">
+            <summary>
+            新浪微博
+            </summary>
+        </member>
+        <member name="P:Charlie.OpenIam.Web.Areas.Identity.Pages.Account.UserInfoModel.InputModel.Note">
+            <summary>
+            个人备注
+            </summary>
+        </member>
         <member name="T:Charlie.OpenIam.Web.Configurations.IamOptions">
             <summary>
             Iam Web 的基础配置
@@ -678,9 +748,15 @@
             </summary>
             <returns></returns>
         </member>
-        <member name="M:Charlie.OpenIam.Web.Controllers.Api.UserController.GetUserInfo">
+        <member name="M:Charlie.OpenIam.Web.Controllers.Api.UserController.GetUserInfo(System.String,System.Boolean)">
             <summary>
-            获取当前登陆用户信息
+            获取用户基本信息
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Charlie.OpenIam.Web.Controllers.Api.UserController.UpdateUserInfo(Charlie.OpenIam.Core.Services.Dtos.UserUpdateDto)">
+            <summary>
+            修改当前登陆用户信息
             </summary>
             <returns></returns>
         </member>

@@ -154,7 +154,7 @@ namespace Charlie.OpenIam.Web
                  .AddJwtBearer("Bearer", options =>
                  {
                      // OpenIam 本身也做为 Api Resource 提供服务，当第三方访问 OpenIam 的 Api 的时候需要对 Token 进行验证
-                     
+
                      options.Authority = iamOpt.Host;
                      options.RequireHttpsMetadata = false;
 
