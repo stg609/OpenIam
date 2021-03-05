@@ -120,9 +120,25 @@ namespace Charlie.OpenIam.Infra.Repositories
                 return;
             }
 
-            var apiResources = resources.Where(itm => !String.IsNullOrWhiteSpace(itm))
-                .Select(itm => (new ApiResource(itm)).ToEntity());
+            List<IdentityServer4.EntityFramework.Entities.ApiResource> apiResources = new List<IdentityServer4.EntityFramework.Entities.ApiResource>();
+            List<IdentityServer4.EntityFramework.Entities.ApiScope> apiScopes = new List<IdentityServer4.EntityFramework.Entities.ApiScope>();
+
+            foreach (var res in resources)
+            {
+                if (String.IsNullOrWhiteSpace(res))
+                {
+                    continue;
+                }
+
+                apiResources.Add((new ApiResource(res)
+                {
+                    Scopes = new[] { res }
+                }).ToEntity());
+                apiScopes.Add((new ApiScope(res)).ToEntity());
+            }
+
             _clientDbContext.ApiResources.AddRange(apiResources);
+            _clientDbContext.ApiScopes.AddRange(apiScopes);
         }
 
         public void Add(Client client)
