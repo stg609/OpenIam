@@ -13,7 +13,7 @@ using Microsoft.Extensions.Logging;
 namespace Charlie.OpenIam.Web.Areas.Identity.Pages.Account
 {
     [AllowAnonymous]
-    public class RegisterModel : PageModel
+    public class UserInfoModel : PageModel
     {
         private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly ISysService _sysService;
@@ -21,7 +21,7 @@ namespace Charlie.OpenIam.Web.Areas.Identity.Pages.Account
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly ILogger<RegisterModel> _logger;
 
-        public RegisterModel(
+        public UserInfoModel(
             UserManager<ApplicationUser> userManager,
             SignInManager<ApplicationUser> signInManager, ISysService sysService, IUserService userService,
             ILogger<RegisterModel> logger)

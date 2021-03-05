@@ -11,7 +11,7 @@ namespace Charlie.OpenIam.Core.Models
     public class ApplicationUser : IdentityUser, IAuditable, ISoftDeletable
     {
         /// <summary>
-        /// 工号
+        /// 内部系统的人员编号，可以是工号，必须能唯一关联用户
         /// </summary>
         public string JobNo { get; private set; }
 
@@ -54,6 +54,41 @@ namespace Charlie.OpenIam.Core.Models
         /// 家庭住址
         /// </summary>
         public string HomeAddress { get; private set; }
+
+        /// <summary>
+        /// 头像
+        /// </summary>
+        public string Avatar { get; set; }
+
+        /// <summary>
+        /// 个人封面
+        /// </summary>
+        public string Cover { get; set; }
+
+        /// <summary>
+        /// 座右铭
+        /// </summary>
+        public string Motto { get; set; }
+
+        /// <summary>
+        /// Github 地址
+        /// </summary>
+        public string Github { get; set; }
+
+        /// <summary>
+        /// 推特账号
+        /// </summary>
+        public string Twitter { get; set; }
+
+        /// <summary>
+        /// 新浪微博
+        /// </summary>
+        public string SinaWeibo { get; set; }
+
+        /// <summary>
+        /// 个人备注，支持 HTML
+        /// </summary>
+        public string Note { get; set; }
 
         /// <summary>
         /// 用户组织
@@ -107,7 +142,7 @@ namespace Charlie.OpenIam.Core.Models
 
         }
 
-        public ApplicationUser(string userName, string jobNo = null, string email = null, string homeAddress = null, string idCard = null, string phone = null, string firstName = null, string lastName = null, string position = null, Gender gender = Gender.Unknown, bool isActive = false) : base(userName)
+        public ApplicationUser(string userName, string jobNo = null, string email = null, string homeAddress = null, string idCard = null, string phone = null, string firstName = null, string lastName = null, string position = null, Gender gender = Gender.Unknown, bool isActive = false, string motto = null, string avatar = null, string cover = null, string github = null, string twitter = null, string sinaWeibo = null, string note = null) : base(userName)
         {
             JobNo = jobNo;
             Email = email;
@@ -119,6 +154,13 @@ namespace Charlie.OpenIam.Core.Models
             Position = position;
             Gender = gender;
             IsActive = isActive;
+            Avatar = avatar;
+            Cover = cover;
+            Motto = motto;
+            Github = github;
+            Twitter = twitter;
+            SinaWeibo = sinaWeibo;
+            Note = note;
         }
 
         public void AddOrganizations(string orgId, bool isCharger = false)
@@ -126,7 +168,7 @@ namespace Charlie.OpenIam.Core.Models
             _userOrganizations.Add(new UserOrganization(orgId, Id, isCharger));
         }
 
-        public void Update(string jobNo, string email, string homeAddress, string idCard, string phone, string firstName, string lastName, string position, Gender? gender, bool? isActive)
+        public void Update(string jobNo, string email, string homeAddress, string idCard, string phone, string firstName, string lastName, string position, Gender? gender, bool? isActive, string motto, string avatar, string cover, string github, string twitter, string sinaWeibo, string note)
         {
             JobNo = jobNo ?? JobNo;
             Email = email ?? Email;
@@ -138,6 +180,13 @@ namespace Charlie.OpenIam.Core.Models
             Position = position ?? Position;
             Gender = gender ?? Gender;
             IsActive = isActive ?? IsActive;
+            Avatar = avatar ?? Avatar;
+            Cover = cover ?? Cover;
+            Motto = motto ?? Motto;
+            Github = github ?? Github;
+            Twitter = twitter ?? Twitter;
+            SinaWeibo = sinaWeibo ?? SinaWeibo;
+            Note = note ?? Note;
         }
 
         public void RemoveOrganizations()

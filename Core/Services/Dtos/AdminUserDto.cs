@@ -14,7 +14,7 @@ namespace Charlie.OpenIam.Core.Services.Dtos
         public string Id { get; set; }
 
         /// <summary>
-        /// 工号
+        /// 内部系统的人员编号，可以是工号，必须能唯一关联用户
         /// </summary>
         public string JobNo { get; set; }
 

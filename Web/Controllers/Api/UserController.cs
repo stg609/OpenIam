@@ -205,11 +205,59 @@ namespace Charlie.OpenIam.Web.Controllers.Api
         }
 
         /// <summary>
-        /// 获取当前登陆用户信息
+        /// 获取用户基本信息
         /// </summary>
         /// <returns></returns>
+        [AllowAnonymous]
+        [Authorize]
         [HttpGet]
-        public async Task<UserDto> GetUserInfo()
+        public async Task<UserDto> GetUserInfo(string userId = null, bool hideSensitvie = true)
+        {
+            if (String.IsNullOrWhiteSpace(userId))
+            {
+                userId = User.FindFirst(JwtClaimTypes.Subject)?.Value;
+                if (String.IsNullOrWhiteSpace(userId))
+                {
+                    throw new IamException(HttpStatusCode.BadRequest, "用户未登录");
+                }
+            }
+
+            var user = await _userService.GetAsync(userId);
+            if (user == null)
+            {
+                throw new IamException(System.Net.HttpStatusCode.BadRequest, "用户不存在");
+            }
+
+            return new UserDto
+            {
+                Id = user.Id,
+                IdCard = hideSensitvie ? "" : user.IdCard,
+                HomeAddress = hideSensitvie ? "" : user.HomeAddress,
+                Phone = hideSensitvie ? "" : user.Phone,
+                Username = user.Username,
+                FirstName = user.FirstName,
+                LastName = user.LastName,
+                Position = user.Position,
+                JobNo = user.JobNo,
+                Gender = user.Gender,
+                Organizations = user.Organizations,
+                Avatar = user.Avatar,
+                Cover = user.Cover,
+                Email = user.Email,
+                Github = user.Github,
+                Motto = user.Motto,
+                Note = user.Note,
+                SinaWeibo = user.SinaWeibo,
+                Twitter = user.Twitter
+            };
+        }
+
+        /// <summary>
+        /// 修改当前登陆用户信息
+        /// </summary>
+        /// <returns></returns>
+        [HttpPut]
+        public async Task<ActionResult> UpdateUserInfo(UserUpdateDto model)
         {
             string userId = User.FindFirst(JwtClaimTypes.Subject)?.Value;
 
@@ -224,20 +272,10 @@ namespace Charlie.OpenIam.Web.Controllers.Api
                 throw new IamException(System.Net.HttpStatusCode.BadRequest, "用户不存在");
             }
 
-            return new UserDto
-            {
-                Id = user.Id,
-                IdCard = user.IdCard,
-                HomeAddress = user.HomeAddress,
-                Phone = user.Phone,
-                Username = user.Username,
-                FirstName = user.FirstName,
-                Position = user.Position,
-                JobNo = user.JobNo,
-                Gender = user.Gender,
-                Organizations = user.Organizations
-            };
+            await _userService.UpdateAsync(userId, model);
+            return Ok();
         }
+
 
         /// <summary>
         /// 是否拥有权限

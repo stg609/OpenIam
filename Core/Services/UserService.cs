@@ -258,7 +258,7 @@ namespace Charlie.OpenIam.Core.Models.Services
 
             await ValidateUserAsync(model.JobNo, model.Phone);
 
-            var user = new ApplicationUser(model.Username, model.JobNo, model.Email, model.HomeAddress, model.IdCard, model.Phone, model.FirstName, model.LastName, model.Position, model.Gender, model.IsActive);
+            var user = new ApplicationUser(model.Username, model.JobNo, model.Email, model.HomeAddress, model.IdCard, model.Phone, model.FirstName, model.LastName, model.Position, model.Gender, model.IsActive, model.Motto, model.Avatar, model.Cover, model.Github, model.Twitter, model.SinaWeibo, model.Note);
 
             IdentityResult result = await _userMgr.CreateAsync(user, model.Password ?? "111111");
             if (result.Succeeded)
@@ -309,8 +309,8 @@ namespace Charlie.OpenIam.Core.Models.Services
 
             await ValidateUserAsync(toValidateJobNo, toValidatePhone);
 
-            user.Update(model.JobNo, model.Email, model.HomeAddress, model.IdCard, model.Phone, model.FirstName, model.LastName, model.Position, model.Gender, model.IsActive);
-
+            user.Update(model.JobNo, model.Email, model.HomeAddress, model.IdCard, model.Phone, model.FirstName, model.LastName, model.Position, model.Gender, model.IsActive,
+                model.Motto, model.Avatar, model.Cover, model.Github, model.Twitter, model.SinaWeibo, model.Note);
 
             if (!String.IsNullOrWhiteSpace(model.OrgIds))
             {

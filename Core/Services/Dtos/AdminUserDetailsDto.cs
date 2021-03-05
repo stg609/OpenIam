@@ -15,7 +15,7 @@ namespace Charlie.OpenIam.Core.Services.Dtos
         public string Id { get; set; }
 
         /// <summary>
-        /// 工号
+        /// 内部系统的人员编号，可以是工号，必须能唯一关联用户
         /// </summary>
         public string JobNo { get; set; }
 
@@ -58,6 +58,46 @@ namespace Charlie.OpenIam.Core.Services.Dtos
         /// 家庭住址
         /// </summary>
         public string HomeAddress { get; set; }
+
+        /// <summary>
+        /// 邮箱
+        /// </summary>
+        public string Email { get; set; }
+
+        /// <summary>
+        /// 头像
+        /// </summary>
+        public string Avatar { get; set; }
+
+        /// <summary>
+        /// 个人封面
+        /// </summary>
+        public string Cover { get; set; }
+
+        /// <summary>
+        /// 座右铭
+        /// </summary>
+        public string Motto { get; set; }
+
+        /// <summary>
+        /// Github 地址
+        /// </summary>
+        public string Github { get; set; }
+
+        /// <summary>
+        /// 推特账号
+        /// </summary>
+        public string Twitter { get; set; }
+
+        /// <summary>
+        /// 新浪微博
+        /// </summary>
+        public string SinaWeibo { get; set; }
+
+        /// <summary>
+        /// 个人备注
+        /// </summary>
+        public string Note { get; set; }
 
         /// <summary>
         /// 拥有的角色

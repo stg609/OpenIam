@@ -87,12 +87,13 @@
             </div>
         </footer>
     </div>
-    <script src="/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/lib/layui-v2.5.7/layui.js"></script>
+    <script src="./js/site.js" asp-append-version="true"></script>
     <script>
 
-        layui.use('element', function () {
+        layui.use(['element','layer'], function () {
             var element = layui.element;
             $("[lay-href]").click(function (e) {
                 let $el = $(e.currentTarget);
@@ -130,9 +131,23 @@
 
             $(".layui-tab .layui-tab-title").hide();
 
+            $(".uinfo").click(function () {
+                $.modalOpen({
+                    id: "Details",
+                    type: 2,
+                    title: "编辑用户",
+                    url: "../user/details?id=" + $(".uinfo").data("uid"),
+                    width: "560px",
+                    height: "480px",
+                    btn: ['确定', '取消'],
+                    callBack: function (index, layero, iframeId) {
+                        window['layui-layer-iframe' + index].submitForm();
+                    }
+                });
+            });
+
         });
     </script>
-    <script src="./js/site.js" asp-append-version="true"></script>
 </body>
 </html>
 
