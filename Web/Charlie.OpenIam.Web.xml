@@ -576,6 +576,11 @@
             名
             </summary>
         </member>
+        <member name="P:Charlie.OpenIam.Web.Areas.Admin.ViewModels.UserNewViewModel.Nickname">
+            <summary>
+            昵称
+            </summary>
+        </member>
         <member name="P:Charlie.OpenIam.Web.Areas.Admin.ViewModels.UserNewViewModel.LastName">
             <summary>
             姓

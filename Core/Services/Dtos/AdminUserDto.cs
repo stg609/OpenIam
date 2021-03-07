@@ -34,6 +34,11 @@ namespace Charlie.OpenIam.Core.Services.Dtos
         public string LastName { get; set; }
 
         /// <summary>
+        /// 昵称
+        /// </summary>
+        public string Nickname { get; set; }
+
+        /// <summary>
         /// 性别
         /// </summary>
         public Gender Gender { get; set; }

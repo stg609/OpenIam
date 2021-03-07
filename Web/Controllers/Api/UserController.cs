@@ -221,7 +221,7 @@ namespace Charlie.OpenIam.Web.Controllers.Api
                 userId = User.FindFirst(JwtClaimTypes.Subject)?.Value;
                 if (String.IsNullOrWhiteSpace(userId))
                 {
-                    throw new IamException(HttpStatusCode.BadRequest, "用户未登录");
+                    throw new IamException(HttpStatusCode.BadRequest, "用户编号为空！");
                 }
             }
 
@@ -240,6 +240,7 @@ namespace Charlie.OpenIam.Web.Controllers.Api
                 Username = user.Username,
                 FirstName = user.FirstName,
                 LastName = user.LastName,
+                Nickname = user.Nickname,
                 Position = user.Position,
                 JobNo = user.JobNo,
                 Gender = user.Gender,

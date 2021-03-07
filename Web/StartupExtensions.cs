@@ -379,7 +379,7 @@ namespace Charlie.OpenIam.Web
                 // 添加用户
                 if (!applicationDbContext.Users.Any())
                 {
-                    var user = new ApplicationUser("Admin", null, null, null, null, null, null, null, null, Gender.Unknown, true);
+                    var user = new ApplicationUser("Admin", isActive: true);
                     var identityResult = userMgr.CreateAsync(user, "111111").Result;
                     if (identityResult.Succeeded)
                     {

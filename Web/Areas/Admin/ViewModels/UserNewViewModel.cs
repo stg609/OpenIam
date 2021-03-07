@@ -30,6 +30,11 @@ namespace Charlie.OpenIam.Web.Areas.Admin.ViewModels
         public string FirstName { get; set; }
 
         /// <summary>
+        /// 昵称
+        /// </summary>
+        public string Nickname { get; set; }
+
+        /// <summary>
         /// 姓
         /// </summary>
         public string LastName { get; set; }

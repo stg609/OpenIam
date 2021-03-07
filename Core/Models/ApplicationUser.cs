@@ -26,6 +26,11 @@ namespace Charlie.OpenIam.Core.Models
         public string LastName { get; private set; }
 
         /// <summary>
+        /// 昵称
+        /// </summary>
+        public string Nickname { get; private set; }
+
+        /// <summary>
         /// 性别
         /// </summary>
         public Gender Gender { get; private set; }
@@ -142,7 +147,7 @@ namespace Charlie.OpenIam.Core.Models
 
         }
 
-        public ApplicationUser(string userName, string jobNo = null, string email = null, string homeAddress = null, string idCard = null, string phone = null, string firstName = null, string lastName = null, string position = null, Gender gender = Gender.Unknown, bool isActive = false, string motto = null, string avatar = null, string cover = null, string github = null, string twitter = null, string sinaWeibo = null, string note = null) : base(userName)
+        public ApplicationUser(string userName, string jobNo = null, string email = null, string homeAddress = null, string idCard = null, string phone = null, string firstName = null, string lastName = null, string nickname = null, string position = null, Gender gender = Gender.Unknown, bool isActive = false, string motto = null, string avatar = null, string cover = null, string github = null, string twitter = null, string sinaWeibo = null, string note = null) : base(userName)
         {
             JobNo = jobNo;
             Email = email;
@@ -151,6 +156,7 @@ namespace Charlie.OpenIam.Core.Models
             PhoneNumber = phone;
             FirstName = firstName;
             LastName = lastName;
+            Nickname = nickname;
             Position = position;
             Gender = gender;
             IsActive = isActive;
@@ -168,7 +174,7 @@ namespace Charlie.OpenIam.Core.Models
             _userOrganizations.Add(new UserOrganization(orgId, Id, isCharger));
         }
 
-        public void Update(string jobNo, string email, string homeAddress, string idCard, string phone, string firstName, string lastName, string position, Gender? gender, bool? isActive, string motto, string avatar, string cover, string github, string twitter, string sinaWeibo, string note)
+        public void Update(string jobNo, string email, string homeAddress, string idCard, string phone, string firstName, string lastName, string nickname, string position, Gender? gender, bool? isActive, string motto, string avatar, string cover, string github, string twitter, string sinaWeibo, string note)
         {
             JobNo = jobNo ?? JobNo;
             Email = email ?? Email;
@@ -177,6 +183,7 @@ namespace Charlie.OpenIam.Core.Models
             PhoneNumber = phone ?? PhoneNumber;
             FirstName = firstName ?? FirstName;
             LastName = lastName ?? LastName;
+            Nickname = nickname ?? Nickname;
             Position = position ?? Position;
             Gender = gender ?? Gender;
             IsActive = isActive ?? IsActive;

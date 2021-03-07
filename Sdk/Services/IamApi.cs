@@ -149,6 +149,31 @@ namespace Charlie.OpenIam.Sdk.Services
         }
 
         /// <summary>
+        /// 获取用户的基本信息
+        /// </summary>
+        /// <returns></returns>
+        public async Task<ApiResult<UserBasicInfoDto>> GetUserBasicInfoAsync(string userId)
+        {
+            var resp = await _httpClient.GetAsync($"{_options.Authority.TrimEnd('/')}/api/user?userid={userId}");
+            if (resp == null)
+            {
+                return new ApiResult<UserBasicInfoDto>
+                {
+                    IsSucceed = false,
+                    StatusCode = 404,
+                    Data = null,
+                };
+            }
+
+            var info = await resp.WhenResponseSuccess(resp => JsonConvert.DeserializeObject<UserBasicInfoDto>(resp));
+            return new ApiResult<UserBasicInfoDto>
+            {
+                IsSucceed = true,
+                Data = info
+            };
+        }
+
+        /// <summary>
         /// 获取视图（菜单）权限
         /// </summary>
         /// <param name="treeView">是否以树状结构返回</param>

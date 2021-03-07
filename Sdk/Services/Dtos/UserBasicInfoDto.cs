@@ -11,9 +11,19 @@
         public string Id { get; set; }
 
         /// <summary>
-        /// 用户名称
+        /// 名
         /// </summary>
-        public string Name { get; set; }
+        public string FirstName { get; set; }
+
+        /// <summary>
+        /// 姓
+        /// </summary>
+        public string LastName { get; set; }
+
+        /// <summary>
+        /// 用户昵称
+        /// </summary>
+        public string Nickname { get; set; }
 
         /// <summary>
         /// 手机号
@@ -24,5 +34,15 @@
         /// 工号
         /// </summary>
         public string Saler { get; set; }
+
+        /// <summary>
+        /// 头像
+        /// </summary>
+        public string Avatar { get; set; }
+
+        /// <summary>
+        /// 座右铭
+        /// </summary>
+        public string Motto { get; set; }
     }
 }
