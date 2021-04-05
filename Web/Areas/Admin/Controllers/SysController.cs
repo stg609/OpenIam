@@ -1,11 +1,14 @@
-﻿using System.Threading.Tasks;
+﻿using System.Linq;
+using System.Threading.Tasks;
 using Charlie.OpenIam.Abstraction;
 using Charlie.OpenIam.Core;
+using Charlie.OpenIam.Core.Models;
 using Charlie.OpenIam.Core.Models.Services.Dtos;
 using Charlie.OpenIam.Core.Services.Abstractions;
 using Charlie.OpenIam.Web.Infra;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Charlie.OpenIam.Web.Areas.Admin.Controllers
@@ -22,10 +25,12 @@ namespace Charlie.OpenIam.Web.Areas.Admin.Controllers
     public class SysController : ControllerBase
     {
         private readonly ISysService _sysService;
+        private readonly SignInManager<ApplicationUser> _signInManager;
 
-        public SysController(ISysService sysService)
+        public SysController(ISysService sysService, SignInManager<ApplicationUser> signInManager)
         {
             _sysService = sysService;
+            _signInManager = signInManager;
         }
 
         /// <summary>
@@ -36,7 +41,12 @@ namespace Charlie.OpenIam.Web.Areas.Admin.Controllers
         [HasPermission(BuiltInPermissions.SYS_GET, true)]
         public async Task<ActionResult<SysDto>> Get()
         {
-            return await _sysService.GetAsync();
+            var sys = await _sysService.GetAsync(); 
+            var logins = (await _signInManager.GetExternalAuthenticationSchemesAsync());
+
+            sys.AllQrExternalLogins = logins;
+
+            return sys;
         }
 
         /// <summary>

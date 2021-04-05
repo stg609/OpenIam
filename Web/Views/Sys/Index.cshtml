@@ -1,4 +1,5 @@
-﻿@{
+﻿@model Charlie.OpenIam.Core.Models.Services.Dtos.SysDto
+@{
     Layout = "_AdminLayout";
 }
 
@@ -43,6 +44,11 @@
                 <input name="isRegisterUserEnabled" lay-skin="switch" lay-text="是|否" type="checkbox">
             </div>
         </div>
+        <div class="layui-form-item" pane>
+            <label class="layui-form-label" style="width:220px;text-align:right">允许的扫码登录方式：</label>
+            <div class="layui-input-block qrLogin">
+            </div>
+        </div>
         <div class="layui-form-item">
             <div class="layui-input-block">
                 <input type="button" class="layui-btn" lay-submit lay-filter="btn_submit" id="btn_submit" value="确认">
@@ -64,6 +70,18 @@
                 async: false,
                 success: function (data) {
                     form.val("Details", data);
+
+                    $(".qrLogin").empty();
+                    var html = "";
+                    $(data.allQrExternalLogins).each(function (v, k) {
+                        var checked = "";
+                        if (data.enabledQrExternalLogins != null && data.enabledQrExternalLogins.indexOf(k.name) > -1) {
+                            checked = "checked";
+                        }
+                        html += "<input type='checkbox' name='enabledQrExternalLogins' value='" + k.name + "' title='" + k.displayName + "' " + checked + " >";
+                    })
+                    $(".qrLogin").append(html);
+                    form.render('checkbox');
                 }
             })
 
@@ -75,6 +93,13 @@
                 field.isJobNoUnique = field.isJobNoUnique == "on";
                 field.isJobNoPwdLoginEnabled = field.isJobNoPwdLoginEnabled == "on";
                 field.isRegisterUserEnabled = field.isRegisterUserEnabled == "on";
+
+                //获取checkbox数据,组装成数组!!!!!!
+                var qrLogins = [];
+                $('input[name="enabledQrExternalLogins"]:checked').each(function (index, domEle) {
+                    qrLogins.push($(this).val());
+                });
+                field.enabledQrExternalLogins = qrLogins;
 
                 $.ajax({
                     url: "../admin/api/sys/",

@@ -10,46 +10,61 @@
     <div class="login-panel d-flex justify-content-center justify-content-lg-end  pr-lg-5">
         <section class="border shadow-sm mr-lg-5">
             <div class="card-group">
-                <div class="card border-light qrcard">
-                    <div style="position: absolute; top: 0px; right: 0px; cursor: pointer;">
-                        <img class="toggleLogin" style="" src="~/imgs/pwdlogin.png">
-                    </div>
-                    <div class="card-body layui-tab layui-tab-brief qrform" lay-filter="login">
-                        <ul class="layui-tab-title">
-                            @{
-                                int index = 0;
-                                foreach (var login in Model.ExternalLogins)
-                                {
-                                    <li class="login-title" lay-id="@index">
-                                        @login.DisplayName
-                                    </li>
-                                    index++;
+                @if (Model.SysInfo.EnabledQrExternalLogins?.Any() == true)
+                {
+                    <div class="card border-light qrcard">
+                        <div style="position: absolute; top: 0px; right: 0px; cursor: pointer;">
+                            <img class="toggleLogin" style="" src="~/imgs/pwdlogin.png">
+                        </div>
+                        <div class="card-body layui-tab layui-tab-brief qrform" lay-filter="login">
+                            <ul class="layui-tab-title">
+                                @{
+                                    int index = 0;
+                                    foreach (var login in Model.ExternalLogins)
+                                    {
+                                        if (Model.SysInfo.EnabledQrExternalLogins?.Contains(login.Name) != true)
+                                        {
+                                            continue;
+                                        }
+                                        <li class="login-title" lay-id="@index">
+                                            @login.DisplayName
+                                        </li>
+                                        index++;
+                                    }
                                 }
-                            }
-                        </ul>
-                        <div class="layui-tab-content login-form-body">
-                            @foreach (var login in Model.ExternalLogins)
-                            {
-                                <div class="layui-tab-item pt-3">
-                                    <form asp-page="./ExternalLogin" asp-route-returnUrl="@Model.ReturnUrl" method="post" class="form-horizontal" target="ifm@(login.Name)" style="display:none">
-                                        <div>
-                                            <p>
-                                                <button type="submit" class="btn btn-primary" name="provider" value="@login.Name"></button>
-                                            </p>
-                                        </div>
-                                    </form>
-                                    <iframe name="ifm@(login.Name)" scrolling="no" class="login-from-iframe">
-                                    </iframe>
-                                </div>
-                            }
+                            </ul>
+                            <div class="layui-tab-content login-form-body">
+                                @foreach (var login in Model.ExternalLogins)
+                                {
+                                    if (Model.SysInfo.EnabledQrExternalLogins?.Contains(login.Name) != true)
+                                    {
+                                        continue;
+                                    }
+
+                                    <div class="layui-tab-item pt-3">
+                                        <form asp-page="./ExternalLogin" asp-route-returnUrl="@Model.ReturnUrl" method="post" class="form-horizontal" target="ifm@(login.Name)" style="display:none">
+                                            <div>
+                                                <p>
+                                                    <button type="submit" class="btn btn-primary" name="provider" value="@login.Name"></button>
+                                                </p>
+                                            </div>
+                                        </form>
+                                        <iframe name="ifm@(login.Name)" scrolling="no" class="login-from-iframe">
+                                        </iframe>
+                                    </div>
+                                }
+                            </div>
                         </div>
                     </div>
-                </div>
+                }
                 <div class="card border-light pwdcard">
                     <div class="card-body layui-tab layui-tab-brief pwdform">
-                        <div style="position: absolute; top: 0px; right: 0px; cursor: pointer;">
-                            <img class="toggleLogin" style="" src="~/imgs/qr_code.png">
-                        </div>
+                        @if (Model.SysInfo.EnabledQrExternalLogins?.Any() == true)
+                        {
+                            <div style="position: absolute; top: 0px; right: 0px; cursor: pointer;">
+                                <img class="toggleLogin" style="" src="~/imgs/qr_code.png">
+                            </div>
+                        }
                         <ul class="layui-tab-title">
                             <li class="login-title layui-this">密码登录</li>
                             @if (Model.SysInfo.IsJobNoPwdLoginEnabled)

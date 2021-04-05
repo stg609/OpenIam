@@ -72,6 +72,7 @@
 
 @media(max-width:767px) {
     .qrcard {
+        position: absolute;
         z-index: 9999;
     }
 
@@ -80,7 +81,7 @@
     }
 
     .pwdcard {
-        position: absolute;
+        position: relative;
         left: 0;
         top: 0;
     }

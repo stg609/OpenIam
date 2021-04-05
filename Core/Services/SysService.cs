@@ -13,7 +13,7 @@ namespace Charlie.OpenIam.Core.Models.Services
         private readonly IUserService _userService;
         private readonly IMapper _mapper;
 
-        public SysService(ISysRepo sysRepo,IUserService userService, IMapper mapper)
+        public SysService(ISysRepo sysRepo, IUserService userService, IMapper mapper)
         {
             _userService = userService;
             _sysRepo = sysRepo;
@@ -58,11 +58,11 @@ namespace Charlie.OpenIam.Core.Models.Services
             var existed = await _sysRepo.GetAsync(false);
             if (existed != null)
             {
-                existed.Update(model.IsJobNoUnique, model.IsUserPhoneUnique, model.IsPhonePwdLoginEnabled, model.IsJobNoPwdLoginEnabled, model.IsRegisterUserEnabled);
+                existed.Update(model.IsJobNoUnique, model.IsUserPhoneUnique, model.IsPhonePwdLoginEnabled, model.IsJobNoPwdLoginEnabled, model.IsRegisterUserEnabled, model.EnabledQrExternalLogins);
             }
             else
             {
-                _sysRepo.Add(new SystemInfo(model.IsJobNoUnique, model.IsUserPhoneUnique, model.IsPhonePwdLoginEnabled, model.IsJobNoPwdLoginEnabled, model.IsRegisterUserEnabled));
+                _sysRepo.Add(new SystemInfo(model.IsJobNoUnique, model.IsUserPhoneUnique, model.IsPhonePwdLoginEnabled, model.IsJobNoPwdLoginEnabled, model.IsRegisterUserEnabled, model.EnabledQrExternalLogins));
             }
         }
     }

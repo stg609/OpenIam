@@ -34,6 +34,11 @@ namespace Charlie.OpenIam.Core.Models
         /// </summary>
         public bool IsRegisterUserEnabled { get; private set; }
 
+        /// <summary>
+        /// 启用的外部扫码登录（如需启用，须要配置外部登录先）
+        /// </summary>
+        public string[] EnabledQrExternalLogins { get; set; }
+
         public string CreatedBy
         {
             get; private set;
@@ -59,7 +64,7 @@ namespace Charlie.OpenIam.Core.Models
 
         }
 
-        public SystemInfo(bool isJobNoUnique = false, bool isPhoneUnique = false, bool isPhonePwdLoginEnabled = false, bool isJobNoPwdLoginEnabled = false, bool isRegisterUserEnabled = false)
+        public SystemInfo(bool isJobNoUnique = false, bool isPhoneUnique = false, bool isPhonePwdLoginEnabled = false, bool isJobNoPwdLoginEnabled = false, bool isRegisterUserEnabled = false, string[] enabledQrLogins = null)
         {
             Id = Guid.NewGuid().ToString();
             IsJobNoUnique = isJobNoUnique;
@@ -67,6 +72,9 @@ namespace Charlie.OpenIam.Core.Models
             IsJobNoPwdLoginEnabled = isJobNoPwdLoginEnabled;
             IsPhonePwdLoginEnabled = isPhonePwdLoginEnabled;
             IsRegisterUserEnabled = isRegisterUserEnabled;
+
+            // 默认提供钉钉和企业微信扫码登录
+            EnabledQrExternalLogins = enabledQrLogins ?? new[] { "DingTalk", "Ww" };
         }
 
         /// <summary>
@@ -77,13 +85,14 @@ namespace Charlie.OpenIam.Core.Models
         /// <param name="isPhonePwdLoginEnabled"></param>
         /// <param name="isJobNoPwdLoginEnabled"></param>
         /// <param name="isRegisterUserEnabled"></param>
-        public void Update(bool? isJobNoUnique = null, bool? isPhoneUnique = null, bool? isPhonePwdLoginEnabled = null, bool? isJobNoPwdLoginEnabled = null, bool? isRegisterUserEnabled = null)
+        public void Update(bool? isJobNoUnique = null, bool? isPhoneUnique = null, bool? isPhonePwdLoginEnabled = null, bool? isJobNoPwdLoginEnabled = null, bool? isRegisterUserEnabled = null, string[] enabledQrLogins = null)
         {
             IsJobNoUnique = isJobNoUnique ?? IsJobNoUnique;
             IsUserPhoneUnique = isPhoneUnique ?? IsUserPhoneUnique;
             IsJobNoPwdLoginEnabled = isJobNoPwdLoginEnabled ?? IsJobNoPwdLoginEnabled;
             IsPhonePwdLoginEnabled = isPhonePwdLoginEnabled ?? IsPhonePwdLoginEnabled;
             IsRegisterUserEnabled = isRegisterUserEnabled ?? IsRegisterUserEnabled;
+            EnabledQrExternalLogins = enabledQrLogins ?? EnabledQrExternalLogins;
         }
     }
 }
