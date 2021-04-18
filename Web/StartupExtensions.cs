@@ -371,9 +371,14 @@ namespace Charlie.OpenIam.Web
                 var roleMgr = scope.ServiceProvider.GetRequiredService<RoleManager<ApplicationRole>>();
 
                 // 添加角色
-                if (!applicationDbContext.Roles.Any())
+                if (!applicationDbContext.Roles.Any(itm=>itm.IsAdmin))
                 {
-                    roleMgr.CreateAsync(new ApplicationRole("Admin", null, true, true)).Wait();
+                    roleMgr.CreateAsync(new ApplicationRole(Constants.ROLES_ADMIN, null, true, true)).Wait();
+                }
+
+                if (!applicationDbContext.Roles.Any(itm=>itm.Name == Constants.ROLES_GUEST))
+                {
+                    roleMgr.CreateAsync(new ApplicationRole(Constants.ROLES_GUEST, null, false, false)).Wait();
                 }
 
                 // 添加用户
@@ -383,7 +388,7 @@ namespace Charlie.OpenIam.Web
                     var identityResult = userMgr.CreateAsync(user, "111111").Result;
                     if (identityResult.Succeeded)
                     {
-                        userMgr.AddToRolesAsync(user, new[] { "Admin" }).Wait();
+                        userMgr.AddToRolesAsync(user, new[] { Constants.ROLES_ADMIN }).Wait();
                     }
                 }
 

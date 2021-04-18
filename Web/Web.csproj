@@ -27,7 +27,12 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Content Remove="Views\User\CurrentDetails.cshtml" />
+  </ItemGroup>
+
+  <ItemGroup>
     <None Include="Views\User\Create.cshtml" />
+    <None Include="Views\User\CurrentDetails.cshtml" />
     <None Include="Views\User\Details.cshtml" />
     <None Include="Views\User\Pwd.cshtml" />
     <None Include="Views\User\Index.cshtml" />

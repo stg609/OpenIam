@@ -26,6 +26,16 @@ namespace Charlie.OpenIam.Web.Controllers
         }
 
         /// <summary>
+        /// 获取当前用户的详情页
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet]
+        public IActionResult CurrentDetails()
+        {
+            return View();
+        }
+
+        /// <summary>
         /// 新增
         /// </summary>
         /// <returns></returns>

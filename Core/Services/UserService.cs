@@ -260,6 +260,9 @@ namespace Charlie.OpenIam.Core.Models.Services
             await ValidateUserAsync(model.JobNo, model.Phone);
 
             var user = new ApplicationUser(model.Username, model.JobNo, model.Email, model.HomeAddress, model.IdCard, model.Phone, model.FirstName, model.LastName, model.Nickname, model.Position, model.Gender, model.IsActive, model.Motto, model.Avatar, model.Cover, model.Github, model.Twitter, model.SinaWeibo, model.Note);
+            
+            // 注册自动激活，便于游客使用
+            user.Switch(true);
 
             IdentityResult result = await _userMgr.CreateAsync(user, model.Password ?? "111111");
             if (result.Succeeded)
@@ -534,6 +537,39 @@ namespace Charlie.OpenIam.Core.Models.Services
             var allowedRoles = await _roleRepo.GetAllByIdsAsync(model.RoleIds, allowedClientIds);
 
             result = await _userMgr.AddToRolesAsync(user, allowedRoles.Select(itm => itm.Name));
+            if (!result.Succeeded)
+            {
+                throw new IamException(HttpStatusCode.BadRequest, String.Join(";", result.Errors.Select(err => err.Description)));
+            }
+        }
+
+        public async Task AddRolesByRoleNameAsync(string id, IEnumerable<string> roleNames, IEnumerable<string> allowedClientIds = null)
+        {
+            if (roleNames == null || !roleNames.Any())
+            {
+                return;
+            }
+
+            var user = await _userRepo.GetAsync(id, isReadonly: false);
+            if (user == null)
+            {
+                throw new IamException(HttpStatusCode.BadRequest, "用户不存在");
+            }
+            var exsitedRoles = await _userMgr.GetRolesAsync(user);
+
+            if (allowedClientIds != null)
+            {
+                var ownedRoles = await _roleRepo.GetAllByNamesAsync(exsitedRoles, allowedClientIds);
+                exsitedRoles = exsitedRoles.Except(ownedRoles.Select(itm => itm.Name)).ToList();
+            }
+
+            var allowedRoles = await _roleRepo.GetAllByNamesAsync(roleNames, allowedClientIds);
+            if (!allowedRoles.Any())
+            {
+                return;
+            }
+
+            var result = await _userMgr.AddToRolesAsync(user, allowedRoles.Select(itm => itm.Name).Except(exsitedRoles));
             if (!result.Succeeded)
             {
                 throw new IamException(HttpStatusCode.BadRequest, String.Join(";", result.Errors.Select(err => err.Description)));

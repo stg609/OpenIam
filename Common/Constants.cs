@@ -34,5 +34,15 @@
         /// 客户端自己的 Claim 前缀
         /// </summary>
         public static readonly string CLIENT_CLAIM_PREFIX = "client_";
+
+        /// <summary>
+        /// 游客 角色
+        /// </summary>
+        public static readonly string ROLES_GUEST = "Guest";
+
+        /// <summary>
+        /// Admin 角色
+        /// </summary>
+        public static readonly string ROLES_ADMIN = "Admin";
     }
 }

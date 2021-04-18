@@ -631,6 +631,36 @@
             系统信息
             </summary>
         </member>
+        <member name="P:Charlie.OpenIam.Web.Areas.Identity.Pages.Account.RegisterModel.InputModel.Username">
+            <summary>
+            用户名
+            </summary>
+        </member>
+        <member name="P:Charlie.OpenIam.Web.Areas.Identity.Pages.Account.RegisterModel.InputModel.Phone">
+            <summary>
+            手机号
+            </summary>
+        </member>
+        <member name="P:Charlie.OpenIam.Web.Areas.Identity.Pages.Account.RegisterModel.InputModel.JobNo">
+            <summary>
+            内部系统人员编号
+            </summary>
+        </member>
+        <member name="P:Charlie.OpenIam.Web.Areas.Identity.Pages.Account.RegisterModel.InputModel.Email">
+            <summary>
+            邮箱
+            </summary>
+        </member>
+        <member name="P:Charlie.OpenIam.Web.Areas.Identity.Pages.Account.RegisterModel.InputModel.Password">
+            <summary>
+            密码
+            </summary>
+        </member>
+        <member name="P:Charlie.OpenIam.Web.Areas.Identity.Pages.Account.RegisterModel.InputModel.ConfirmPassword">
+            <summary>
+            确认密码
+            </summary>
+        </member>
         <member name="P:Charlie.OpenIam.Web.Areas.Identity.Pages.Account.RegisterModel.InputModel.Avatar">
             <summary>
             头像
@@ -890,6 +920,12 @@
             获取详情页
             </summary>
             <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Charlie.OpenIam.Web.Controllers.UserController.CurrentDetails">
+            <summary>
+            获取当前用户的详情页
+            </summary>
             <returns></returns>
         </member>
         <member name="M:Charlie.OpenIam.Web.Controllers.UserController.Create">

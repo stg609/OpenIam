@@ -14,7 +14,7 @@
         <div class="layui-form-item">
             <label class="layui-form-label">手机号：</label>
             <div class="layui-input-inline">
-                <input type="text" name="phone" placeholder="请输入手机号" lay-verify="required|phone" autocomplete="off" class="layui-input">
+                <input type="text" name="phone" placeholder="请输入手机号" autocomplete="off" class="layui-input">
             </div>
         </div>
         <div class="layui-form-item">
@@ -51,17 +51,6 @@
             <label class="layui-form-label">个人封面：</label>
             <div class="layui-input-inline">
                 <input type="text" name="cover" placeholder="请输入个人封面地址" autocomplete="off" class="layui-input">
-            </div>
-        </div>
-        <div class="layui-form-item" id="selectParent">
-            <label class="layui-form-label">所属组织：</label>
-            <div class="layui-input-inline" id="orgIds">
-            </div>
-        </div>
-        <div class="layui-form-item">
-            <label class="layui-form-label">工号：</label>
-            <div class="layui-input-inline">
-                <input name="jobNo" placeholder="请输入工号" autocomplete="off" class="layui-input">
             </div>
         </div>
         <div class="layui-form-item">
@@ -107,12 +96,6 @@
                 </textarea>
             </div>
         </div>
-        <div class="layui-form-item">
-            <label class="layui-form-label">是否激活</label>
-            <div class="layui-input-inline">
-                <input name="isActive" lay-skin="switch" lay-text="是|否" type="checkbox" value="true">
-            </div>
-        </div>
         <div class="layui-form-item layui-hide">
             <input type="text" name="id" lay-verify="required" readonly autocomplete="off" class="layui-input">
             <input type="button" lay-submit lay-filter="btn_submit" id="btn_submit" value="确认">
@@ -131,20 +114,19 @@
 
             var orgIds = [];
             var id = $.request("id");
-            if (id != "" && id != null) {
-                $.ajax({
-                    type: 'get',
-                    url: '../api/user',
-                    dataType: "json",
-                    async: false,
-                    success: function (data) {
-                        form.val("Details", data);
-                        orgIds = data.organizations.map(function (org) {
-                            return org.id;
-                        });
-                    }
-                })
-            };
+
+            $.ajax({
+                type: 'get',
+                url: '../api/user',
+                dataType: "json",
+                async: false,
+                success: function (data) {
+                    form.val("Details", data);
+                    orgIds = data.organizations.map(function (org) {
+                        return org.id;
+                    });
+                }
+            });
 
             function renderTreeToSelect(data) {
                 var arr = data.map(function (itm) {
@@ -156,34 +138,7 @@
                 });
 
                 return arr;
-            }
-
-            $.ajax({
-                url: "../admin/api/organizations?treeView=true",
-                type: "GET",
-                contentType: "application/json"
-            }).done(function (data) {
-                var arr = renderTreeToSelect(data);
-                var orgIdsElm = xmSelect.render({
-                    el: "#orgIds",
-                    filterable: true,
-                    name: 'orgIds',
-                    layVerify: 'required',
-                    toolbar: { show: true },
-                    data: arr
-                });
-
-                if (orgIds.length > 0) {
-                    orgIdsElm.setValue(orgIds);
-                }
-            }).fail(function (jqXHR, error) {
-                if (jqXHR.responseJSON) {
-                    layer.msg('读取组织机构数据失败！ ' + jqXHR.responseJSON.detail);
-                }
-                else {
-                    layer.msg('读取组织机构数据失败！ ' + jqXHR.responseText);
-                }
-            });
+            }            
 
             form.render();
             form.on('submit(btn_submit)', function (data) {
@@ -191,7 +146,7 @@
                 field.isActive = field.isActive == "true";
 
                 $.ajax({
-                    url: "../admin/api/users/" + id,
+                    url: "../api/user/",
                     type: 'PUT',
                     contentType: "application/json",
                     data: JSON.stringify(field)

@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Threading.Tasks;
+using Charlie.OpenIam.Common;
 using Charlie.OpenIam.Core.Models;
 using Charlie.OpenIam.Core.Services.Abstractions;
 using Microsoft.AspNetCore.Authentication;
@@ -42,26 +43,44 @@ namespace Charlie.OpenIam.Web.Areas.Identity.Pages.Account
 
         public class InputModel
         {
+            /// <summary>
+            /// 用户名
+            /// </summary>
             [Required]
             [Display(Name = "用户名(*)")]
             public string Username { get; set; }
 
+            /// <summary>
+            /// 手机号
+            /// </summary>
             [Display(Name = "手机号")]
             public string Phone { get; set; }
 
+            /// <summary>
+            /// 内部系统人员编号
+            /// </summary>
             [Display(Name = "内部系统的人员编号")]
             public string JobNo { get; set; }
 
+            /// <summary>
+            /// 邮箱
+            /// </summary>
             [EmailAddress]
             [Display(Name = "邮箱")]
             public string Email { get; set; }
 
+            /// <summary>
+            /// 密码
+            /// </summary>
             [Required]
             [StringLength(100, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.", MinimumLength = 6)]
             [DataType(DataType.Password)]
             [Display(Name = "密码(*)")]
             public string Password { get; set; }
 
+            /// <summary>
+            /// 确认密码
+            /// </summary>
             [DataType(DataType.Password)]
             [Display(Name = "确认密码(*)")]
             [Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
@@ -128,6 +147,10 @@ namespace Charlie.OpenIam.Web.Areas.Identity.Pages.Account
                     Email = Input.Email,
                     Password = Input.Password
                 });
+
+                // 注册的用户只能是游客
+                await _userService.AddRolesByRoleNameAsync(uid, new[] { Constants.ROLES_GUEST });
+
                 return LocalRedirect(returnUrl);
             }
 
