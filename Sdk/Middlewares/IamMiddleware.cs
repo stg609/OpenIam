@@ -245,6 +245,7 @@ namespace Charlie.OpenIam.Sdk.Middlewares
                 });
             
             services.AddSingleton<IAuthorizationPolicyProvider, AuthorizationPolicyProvider>();
+            services.AddSingleton<IGeneralPermissionService, SdkPermissionService>();
 
             return services;
         }
