@@ -41,5 +41,6 @@ jobs:
         script: |
             docker pull stg609/openiam:v1.7.${{ github.run_number }}
             docker stop openiam
+            docker rm openiam
             docker run -d --name openiam -p 5000:80 -v /root/projects/openiam/appsettings.json:/app/appsettings.json -v /root/projects/openiam/logs:/app/logs -e Certificate__Path=lics/idsrv4.pfx -e ASPNETCORE_ENVIRONMENT=Production -e "ASPNETCORE_URLS=http://+:80;" stg609/openiam:v1.7.${{ github.run_number }}
 
