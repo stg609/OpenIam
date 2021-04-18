@@ -34,7 +34,7 @@ jobs:
     - name: Deploy To Aliyun
       uses: appleboy/ssh-action@v0.1.4
       with:
-        host: ${{ secretes.ALIYUN_SSH_HOST }}
+        host: ${{ secrets.ALIYUN_SSH_HOST }}
         username: ${{ secrets.ALIYUN_SSH_USERNAME }}
         password: ${{ secrets.ALIYUN_SSH_PASSWORD }}
         port: ${{ secrets.ALIYUN_SSH_PORT }}
