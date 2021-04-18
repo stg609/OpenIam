@@ -27,7 +27,7 @@
             {
               "Name": "File",
               "Args": {
-                "path": "./Logs/log.txt",
+                "path": "./logs/log.txt",
                 "rollingInterval": "Day",
                 "fileSizeLimitBytes": "10485760",
                 "rollOnFileSizeLimit": true,
