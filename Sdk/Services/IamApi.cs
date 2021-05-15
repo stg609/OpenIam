@@ -510,6 +510,8 @@ namespace Charlie.OpenIam.Sdk.Services
                     }
                 });
 
+                _logger.LogDebug($"disco from {identityServerAuthority}:{ JsonConvert.SerializeObject(disco)}.");
+
                 // request token
                 var tokenResponse = await _httpClient.RequestClientCredentialsTokenAsync(new ClientCredentialsTokenRequest
                 {

@@ -78,7 +78,10 @@ namespace Charlie.OpenIam.Sdk.Services
             }
 
             // 通过 client credentials 的方式获取用于同步的 token
+            _logger.LogInformation($"Get Token from {authority} before sync perms...");
             var token = await _api.GetTokenAsync(authority, nameof(SyncPermissionsAsync), clientId, clientSecret, Constants.IAM_API_SCOPE, _logger);
+
+            _logger.LogInformation($"Start sync perms...");
             var result = await _api.SyncPermissionsAsync(model, token);
             if (result.IsSucceed)
             {
