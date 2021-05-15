@@ -506,7 +506,10 @@ namespace Charlie.OpenIam.Sdk.Services
                     Address = identityServerAuthority,
                     Policy = new DiscoveryPolicy
                     {
-                        RequireHttps = false
+                        RequireHttps = false,  
+                        
+                        // 获取 Discovery Document 时候不需要验证 Issuer，因为 docker 中的地址可能不一样
+                        ValidateIssuerName = false
                     }
                 });
 
@@ -582,6 +585,8 @@ namespace Charlie.OpenIam.Sdk.Services
                 statusCode = (int)resp.StatusCode;
 
                 await resp.WhenResponseSuccess();
+
+                _logger.LogInformation("Sync Perm Succeeded.");
 
                 return new ApiResult
                 {
