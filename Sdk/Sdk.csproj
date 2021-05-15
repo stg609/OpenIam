@@ -10,9 +10,9 @@
     <PackageTags>OpenIam</PackageTags>
     <Description>用于集成 OpenIam 统一身份认证系统</Description>
     <TargetsForTfmSpecificBuildOutput>$(TargetsForTfmSpecificBuildOutput);CopyProjectReferencesToPackage</TargetsForTfmSpecificBuildOutput>
-    <Version>1.3.0</Version>
+    <Version>1.3.1</Version>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <PackageReleaseNotes>sdk 增加 ValidIssuers</PackageReleaseNotes>
+    <PackageReleaseNotes>sdk 中获取 Discovery Document 的时候忽略 Issuer Name，（在验证 token 的时候任然仅对 Valid Issuers 进行验证。）</PackageReleaseNotes>
   </PropertyGroup>
 
   <ItemGroup>
