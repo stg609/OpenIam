@@ -12,5 +12,7 @@ namespace Charlie.OpenIam.Sdk.Configurations
         /// </summary>
         [Required]
         public string Authority { get; set; }
+
+        public string[] ValidIssuers { get; set; }
     }
 }

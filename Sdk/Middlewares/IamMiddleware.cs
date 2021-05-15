@@ -230,6 +230,11 @@ namespace Charlie.OpenIam.Sdk.Middlewares
                     options.Authority = opts.Authority;
                     options.RequireHttpsMetadata = false;
 
+                    if (opts.ValidIssuers != null)
+                    {
+                        // OpenIam 可能从外网访问，也可能从内网访问，issuer 不同
+                        options.TokenValidationParameters.ValidIssuers = opts.ValidIssuers;
+                    }
                     options.Audience = opts.Audience;
                 });
 

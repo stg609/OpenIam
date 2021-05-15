@@ -10,9 +10,9 @@
     <PackageTags>OpenIam</PackageTags>
     <Description>用于集成 OpenIam 统一身份认证系统</Description>
     <TargetsForTfmSpecificBuildOutput>$(TargetsForTfmSpecificBuildOutput);CopyProjectReferencesToPackage</TargetsForTfmSpecificBuildOutput>
-    <Version>1.2.3</Version>
+    <Version>1.3.0</Version>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <PackageReleaseNotes>增加日志</PackageReleaseNotes>
+    <PackageReleaseNotes>sdk 增加 ValidIssuers</PackageReleaseNotes>
   </PropertyGroup>
 
   <ItemGroup>
